@@ -51,3 +51,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 45 | `backend/src/config/db.ts` | `7e0c15b` | `feat(backend): implement resilient MongoDB connection with Atlas support and memory-server fallback` | Verified pushed to `origin/main` | Mongoose connection lifecycle & in-memory fallback check |
 | 46 | `COMMIT_LOG.md` | `1a4beee` | `docs: record backend db.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 47 | `backend/src/models/User.ts` | `5e8ad01` | `feat(models): create User model with roles, Google auth fields, and indexes` | Verified pushed to `origin/main` | Schema validation, unique constraints, and timestamps verification |
+| 48 | `COMMIT_LOG.md` | `dbffb42` | `docs: record User model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 49 | `backend/src/models/CustomerProfile.ts` | `3ef1228` | `feat(models): create CustomerProfile model with saved providers and default address` | Verified pushed to `origin/main` | Relational reference check and coordinates schema validation |
