@@ -9,3 +9,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 3 | `README.md` | `3a975b3` | `docs: establish comprehensive Lehulu project overview and architecture summary` | Verified pushed to `origin/main` | Markdown verification, Mermaid architecture validation |
 | 4 | `COMMIT_LOG.md` | `6dc84aa` | `docs: record README commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 5 | `docs/REQUIREMENTS.md` | `b0264de` | `docs: define functional and non-functional requirements specification` | Verified pushed to `origin/main` | Functional & non-functional matrix review |
+| 6 | `COMMIT_LOG.md` | `6f341f6` | `docs: record REQUIREMENTS commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 7 | `docs/ARCHITECTURE.md` | `b432d7f` | `docs: establish comprehensive system architecture document` | Verified pushed to `origin/main` | Mermaid system and state diagram verification |
