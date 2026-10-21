@@ -37,3 +37,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 31 | `frontend/postcss.config.js` | `312ca7e` | `chore(frontend): configure PostCSS plugins for Tailwind CSS` | Verified pushed to `origin/main` | Autoprefixer and Tailwind plugin linkage check |
 | 32 | `COMMIT_LOG.md` | `8371cc5` | `docs: record postcss.config commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 33 | `frontend/.env.example` | `f8e2aba` | `chore(frontend): establish .env.example environment documentation template` | Verified pushed to `origin/main` | Client environment configuration review |
+| 34 | `COMMIT_LOG.md` | `af6672a` | `docs: record frontend .env.example commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 35 | `frontend/index.html` | `9a70ad6` | `feat(frontend): create index.html with Ethiopic fonts, Leaflet map support, and SEO metadata` | Verified pushed to `origin/main` | HTML5 validation, font imports, Leaflet CSS linkage |
