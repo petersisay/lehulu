@@ -27,3 +27,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 21 | `frontend/package.json` | `4f49cc0` | `chore(frontend): initialize frontend package.json with dependencies and scripts` | Verified pushed to `origin/main` | Frontend dependencies and script audit |
 | 22 | `COMMIT_LOG.md` | `ac326f0` | `docs: record frontend package.json commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 23 | `frontend/tsconfig.json` | `1f8ba8d` | `chore(frontend): configure TypeScript compiler for React Vite application` | Verified pushed to `origin/main` | React JSX & module resolution bundler validation |
+| 24 | `COMMIT_LOG.md` | `c7101f3` | `docs: record frontend tsconfig commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 25 | `frontend/tsconfig.node.json` | `64de141` | `chore(frontend): configure Node TypeScript settings for Vite build tooling` | Verified pushed to `origin/main` | Vite config composite project validation |
