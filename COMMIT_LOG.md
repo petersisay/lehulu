@@ -39,3 +39,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 33 | `frontend/.env.example` | `f8e2aba` | `chore(frontend): establish .env.example environment documentation template` | Verified pushed to `origin/main` | Client environment configuration review |
 | 34 | `COMMIT_LOG.md` | `af6672a` | `docs: record frontend .env.example commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 35 | `frontend/index.html` | `9a70ad6` | `feat(frontend): create index.html with Ethiopic fonts, Leaflet map support, and SEO metadata` | Verified pushed to `origin/main` | HTML5 validation, font imports, Leaflet CSS linkage |
+| 36 | `COMMIT_LOG.md` | `57790fc` | `docs: record index.html commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 37 | `frontend/public/lehulu-logo.jpg` | `1b82f0e` | `feat(branding): add modern high-resolution Lehulu handshake logo asset` | Verified pushed to `origin/main` | Asset resolution and format validation |
