@@ -47,3 +47,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 41 | `backend/src/types/index.ts` | `40c6dec` | `feat(backend): define shared types, enums, and request contracts` | Verified pushed to `origin/main` | TypeScript typecheck and enums validation |
 | 42 | `COMMIT_LOG.md` | `9430d6b` | `docs: record backend types commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 43 | `backend/src/config/env.ts` | `104cb69` | `feat(backend): implement validated environment configuration module` | Verified pushed to `origin/main` | Zod schema validation and type parsing check |
+| 44 | `COMMIT_LOG.md` | `ecb7450` | `docs: record backend env.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 45 | `backend/src/config/db.ts` | `7e0c15b` | `feat(backend): implement resilient MongoDB connection with Atlas support and memory-server fallback` | Verified pushed to `origin/main` | Mongoose connection lifecycle & in-memory fallback check |
