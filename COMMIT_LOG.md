@@ -31,3 +31,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 25 | `frontend/tsconfig.node.json` | `64de141` | `chore(frontend): configure Node TypeScript settings for Vite build tooling` | Verified pushed to `origin/main` | Vite config composite project validation |
 | 26 | `COMMIT_LOG.md` | `57e15ea` | `docs: record tsconfig.node commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 27 | `frontend/vite.config.ts` | `285bea6` | `chore(frontend): configure Vite build tool and development proxy` | Verified pushed to `origin/main` | Path alias @ and dev proxy mapping validation |
+| 28 | `COMMIT_LOG.md` | `22eb92a` | `docs: record vite.config commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 29 | `frontend/tailwind.config.js` | `288167d` | `chore(frontend): configure Tailwind CSS design system with brand palette and Ethiopic fonts` | Verified pushed to `origin/main` | Color tokens and font-family configuration check |
