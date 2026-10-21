@@ -11,3 +11,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 5 | `docs/REQUIREMENTS.md` | `b0264de` | `docs: define functional and non-functional requirements specification` | Verified pushed to `origin/main` | Functional & non-functional matrix review |
 | 6 | `COMMIT_LOG.md` | `6f341f6` | `docs: record REQUIREMENTS commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 7 | `docs/ARCHITECTURE.md` | `b432d7f` | `docs: establish comprehensive system architecture document` | Verified pushed to `origin/main` | Mermaid system and state diagram verification |
+| 8 | `COMMIT_LOG.md` | `40bc1d4` | `docs: record ARCHITECTURE commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 9 | `docs/ROLE_PERMISSIONS.md` | `4b8785d` | `docs: establish role-based access control and permissions matrix` | Verified pushed to `origin/main` | RBAC matrix and security rules verification |
