@@ -27,8 +27,8 @@ const startServer = async () => {
       await User.create({
         googleId: 'admin-auto-init',
         email: adminEmail,
-        displayName: 'Lehulu Platform Administrator',
-        username: 'lehulu_admin',
+        displayName: 'Petros Sisay (Administrator)',
+        username: 'petros_admin',
         role: 'ADMIN',
         preferredLanguage: 'am',
         city: 'Adama',
@@ -36,6 +36,11 @@ const startServer = async () => {
         isOnboarded: true,
       });
       console.log(`Auto-initialized administrator for: ${adminEmail}`);
+    } else if (existingAdmin.role !== 'ADMIN' || !existingAdmin.isOnboarded) {
+      existingAdmin.role = 'ADMIN';
+      existingAdmin.isOnboarded = true;
+      await existingAdmin.save();
+      console.log(`Enforced ADMIN role and full onboarded status for: ${adminEmail}`);
     }
 
     // 2. Initialize Express application
