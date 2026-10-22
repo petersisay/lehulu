@@ -11,21 +11,21 @@ import { requireAuth, requireRole } from '../middleware/rbac';
 
 const router = Router();
 
-// Provider submits quotation
+// Only assigned SERVICE_PROVIDER can submit quotation
 router.post(
   '/',
-  requireRole('SERVICE_PROVIDER', 'ADMIN'),
+  requireRole('SERVICE_PROVIDER'),
   validateRequest(createQuoteSchema),
   createQuote
 );
 
-// Quotes for a booking
+// Quotes for a booking (participants checked inside controller)
 router.get('/booking/:bookingId', requireAuth, getBookingQuotes);
 
-// Customer responds to quotation (ACCEPT / REJECT)
+// Only CUSTOMER can accept or reject quotation
 router.post(
   '/:quoteId/respond',
-  requireAuth,
+  requireRole('CUSTOMER'),
   validateRequest(respondToQuoteSchema),
   respondToQuote
 );
