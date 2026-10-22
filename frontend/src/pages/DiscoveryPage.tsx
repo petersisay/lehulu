@@ -40,7 +40,8 @@ export const DiscoveryPage: React.FC = () => {
       try {
         const res = await categoryApi.getAll();
         if (res.data.success) {
-          setCategories(res.data.data);
+          const list = (res.data as any).categories || res.data.data || [];
+          setCategories(Array.isArray(list) ? list : []);
         }
       } catch (err) {
         console.error('Failed to load categories', err);
@@ -66,7 +67,8 @@ export const DiscoveryPage: React.FC = () => {
 
       const res = await providerApi.search(params);
       if (res.data.success) {
-        setProviders(res.data.data);
+        const list = (res.data as any).providers || res.data.data || [];
+        setProviders(Array.isArray(list) ? list : []);
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to search providers.');
