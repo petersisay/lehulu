@@ -150,6 +150,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 144 | `frontend/src/context/SocketContext.tsx` | `c66710f` | `feat(realtime): implement SocketContext for live booking sync, in-app alerts, and messaging` | Verified pushed to `origin/main` | Socket.IO room lifecycle, auto-reconnect, and event bus check |
 | 145 | `COMMIT_LOG.md` | `8d04819` | `docs: record SocketContext commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 146 | `frontend/src/components/Navbar.tsx` | `a38ff92` | `feat(ui): create responsive Navbar component with bilingual toggle and role-aware navigation` | Verified pushed to `origin/main` | Header branding, drawer menu, and profile dropdown validation |
+| 147 | `COMMIT_LOG.md` | `c271b98` | `docs: record Navbar commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 148 | `frontend/src/components/Footer.tsx` | `0856f88` | `feat(ui): create responsive Footer component with Ethiopian localization hubs and trust badges` | Verified pushed to `origin/main` | Links, legal terms, city badges, and bilingual copyright check |
+
 
 
 
