@@ -127,3 +127,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 121 | `backend/src/config/seed.ts` | `6205883` | `feat(seed): implement database catalog seeder and administrator provisioning` | Verified pushed to `origin/main` | Trade catalog definitions and admin seed validation |
 | 122 | `COMMIT_LOG.md` | `0aa830c` | `docs: record seed.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 123 | `backend/src/app.ts` | `2d7c664` | `feat(app): configure Express application pipeline with Helmet, CORS, and versioned routes` | Verified pushed to `origin/main` | Helmet security, CORS allowlist, and route tree validation |
+| 124 | `COMMIT_LOG.md` | `fc37c26` | `docs: record app.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 125 | `backend/src/server.ts` | `a5eef8f` | `feat(server): implement HTTP server bootstrap, Socket.IO binding, and graceful shutdown` | Verified pushed to `origin/main` | Server listener, auto-initialization, and signal handlers check |
