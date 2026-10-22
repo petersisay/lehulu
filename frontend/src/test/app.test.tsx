@@ -224,4 +224,39 @@ describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
       expect(screen.getByTestId('nav-home')).toHaveTextContent('Home');
     });
   });
+
+  describe('4. Honest Provider Verification & Badge Security', () => {
+    it('does NOT display verified badge for unverified service providers', () => {
+      const unverifiedProvider: ProviderProfile = {
+        ...mockProvider,
+        _id: 'prov-unverified',
+        isVerified: false,
+        businessName: 'Unverified Handyman',
+      };
+
+      renderWithProviders(<ProviderCard provider={unverifiedProvider} />);
+
+      expect(screen.getByText('Unverified Handyman')).toBeInTheDocument();
+      expect(screen.queryByText('Verified Pro')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('5. Accurate Non-Misleading Hero Badges', () => {
+    const HeroBadgeTest: React.FC = () => {
+      const { t } = useLanguage();
+      return <div data-testid="hero-badge">{t('hero.badge')}</div>;
+    };
+
+    it('renders accurate community marketplace badge without misleading government claims', () => {
+      render(
+        <LanguageProvider>
+          <HeroBadgeTest />
+        </LanguageProvider>
+      );
+
+      const badgeText = screen.getByTestId('hero-badge').textContent;
+      expect(badgeText).not.toMatch(/Official Marketplace/i);
+      expect(badgeText).toMatch(/Local Services Marketplace|የአካባቢ አገልግሎት ገበያ/i);
+    });
+  });
 });
