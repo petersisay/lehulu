@@ -290,6 +290,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 284 | `backend/src/config/env.ts` | `58407e5` | `feat(security): enforce strict staging and test auth boundaries in env configuration` | Verified pushed to `origin/main` | Added APP_ENV and strict ALLOW_TEST_AUTH validation forbidding mock auth in staging/production |
 | 285 | `COMMIT_LOG.md` | `c015b54` | `docs: record env security hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 286 | `backend/src/config/db.ts` | `871f407` | `fix(db): prohibit in-memory database fallback in staging environments` | Verified pushed to `origin/main` | Enforced persistent database connection in staging as well as production |
+| 287 | `COMMIT_LOG.md` | `e8fccce` | `docs: record db persistence staging update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 288 | `backend/src/middleware/auth.ts` | `297a8fe` | `fix(auth): restrict mock tokens to isolated tests and enforce strict Google token verification` | Verified pushed to `origin/main` | Strictly forbade mock tokens in staging and production, required ALLOW_TEST_AUTH in tests, validated issuer and email_verified |
 
 
 
