@@ -79,3 +79,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 73 | `backend/src/middleware/auth.ts` | `ac68084` | `feat(auth): implement session cookie management and Google token verification middleware` | Verified pushed to `origin/main` | JWT signing, cookie security attributes, and Google ID token parsing check |
 | 74 | `COMMIT_LOG.md` | `2e7b045` | `docs: record auth middleware commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 75 | `backend/src/middleware/rbac.ts` | `fd489f1` | `feat(auth): implement role-based access control and verification gate middleware` | Verified pushed to `origin/main` | requireRole and requireVerifiedProvider boundary checks |
+| 76 | `COMMIT_LOG.md` | `dd80868` | `docs: record rbac middleware commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 77 | `backend/src/middleware/validate.ts` | `b67e726` | `feat(middleware): implement Zod request schema validation middleware` | Verified pushed to `origin/main` | Zod schema parsing and error formatting validation |
