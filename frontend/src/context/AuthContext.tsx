@@ -39,9 +39,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshUser = async () => {
     try {
       const response = await authApi.getMe();
-      if (response.data.success && response.data.data.user) {
-        setUser(response.data.data.user);
-        setProfile(response.data.data.profile || null);
+      const userData = (response.data as any).data?.user || (response.data as any).user;
+      const profileData = (response.data as any).data?.profile || (response.data as any).profile;
+      if (response.data.success && userData) {
+        setUser(userData);
+        setProfile(profileData || null);
       } else {
         setUser(null);
         setProfile(null);
@@ -62,7 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLoading(true);
     try {
       const response = await authApi.loginWithGoogle(idToken, targetRole);
-      const authenticatedUser = response.data.data.user;
+      const authenticatedUser = (response.data as any).data?.user || (response.data as any).user;
       setUser(authenticatedUser);
       await refreshUser();
       return authenticatedUser;
@@ -86,9 +88,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLoading(true);
     try {
       const response = await authApi.onboard(data);
-      const updatedUser = response.data.data.user;
+      const updatedUser = (response.data as any).data?.user || (response.data as any).user;
+      const updatedProfile = (response.data as any).data?.profile || (response.data as any).profile;
       setUser(updatedUser);
-      setProfile(response.data.data.profile || null);
+      setProfile(updatedProfile || null);
       return updatedUser;
     } finally {
       setLoading(false);
@@ -97,7 +100,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const updateUser = async (data: Partial<User>): Promise<User> => {
     const response = await userApi.updateProfile(data);
-    const updated = response.data.data.user;
+    const updated = (response.data as any).data?.user || (response.data as any).user;
     setUser(updated);
     return updated;
   };
