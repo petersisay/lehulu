@@ -260,6 +260,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 254 | `backend/src/middleware/auth.ts` | `31646ea` | `fix(auth): support dev tokens and resolve petrossisay1646@gmail.com administrator credentials in verifyGoogleIdToken` | Verified pushed to `origin/main` | Handled mock tokens and admin auto-resolution for petrossisay1646@gmail.com |
 | 255 | `COMMIT_LOG.md` | `ea8ef7d` | `docs: record auth middleware fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 256 | `backend/src/controllers/authController.ts` | `30607c1` | `fix(auth): ensure petrossisay1646@gmail.com is assigned ADMIN role and supply data envelope in auth responses` | Verified pushed to `origin/main` | Auto-promoted petrossisay1646@gmail.com to ADMIN on login and returned data response envelope |
+| 257 | `COMMIT_LOG.md` | `92af6c5` | `docs: record authController fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 258 | `backend/src/routes/authRoutes.ts` | `0e7899a` | `fix(auth): add /onboard route alias for client compatibility` | Verified pushed to `origin/main` | Registered /auth/onboard route matching /auth/onboarding |
 
 
 
