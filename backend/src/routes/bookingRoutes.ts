@@ -23,7 +23,7 @@ router.get('/customer', requireRole('CUSTOMER'), getCustomerBookings);
 router.get('/provider', requireRole('SERVICE_PROVIDER'), getProviderBookings);
 
 // General bookings list route dispatched by user role
-router.get('/', requireAuth, (req, res) => {
+router.get('/', requireAuth, (req: any, res) => {
   if (req.user?.role === 'SERVICE_PROVIDER') {
     return getProviderBookings(req, res);
   }
