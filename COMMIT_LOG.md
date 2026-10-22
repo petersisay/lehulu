@@ -296,6 +296,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 290 | `backend/tests/setup.ts` | `8fe09ee` | `test: add Jest setup file configuring isolated test auth environment` | Verified pushed to `origin/main` | Created setup file initializing process.env.ALLOW_TEST_AUTH='true' for automated tests |
 | 291 | `COMMIT_LOG.md` | `c90b9f5` | `docs: record test setup file in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 292 | `backend/jest.config.js` | `33beed2` | `test: configure Jest to load test auth setup file automatically` | Verified pushed to `origin/main` | Added setupFiles: ['./tests/setup.ts'] to Jest configuration |
+| 293 | `COMMIT_LOG.md` | `e2306ea` | `docs: record Jest setupFiles config in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 294 | `backend/tests/auth_security.test.ts` | `1d1f240` | `test(auth): add regression test suite for mock auth rejection in staging and Google token security` | Verified pushed to `origin/main` | Added 14 automated tests verifying mock auth rejection in staging/prod and Google token security |
+| 295 | `backend/src/middleware/auth.ts` | `11decb6` | `fix(auth): dynamically evaluate ALLOW_TEST_AUTH to guarantee strict test isolation` | Verified pushed to `origin/main` | Made isTestAuthAllowed dynamically check process.env.ALLOW_TEST_AUTH === 'true' |
 
 
 
