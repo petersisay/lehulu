@@ -1,15 +1,20 @@
 services:
+  # 1. Lehulu Staging Backend Web Service
   - type: web
-    name: lehulu-api
+    name: lehulu-api-staging
     runtime: node
     rootDir: backend
     buildCommand: npm ci && npm run build
     startCommand: npm start
-    healthCheckPath: /api/health
+    healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
+      - key: APP_ENV
+        value: staging
+      - key: ALLOW_TEST_AUTH
+        value: "false"
       - key: PORT
         value: 5000
       - key: MONGODB_URI
@@ -20,5 +25,38 @@ services:
         generateValue: true
       - key: GOOGLE_CLIENT_ID
         sync: false
+      - key: ADMIN_EMAIL
+        value: petrossisay1646@gmail.com
+      - key: CLIENT_URL
+        sync: false
+
+  # 2. Lehulu Production Backend Web Service
+  - type: web
+    name: lehulu-api-production
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    autoDeploy: false
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_ENV
+        value: production
+      - key: ALLOW_TEST_AUTH
+        value: "false"
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: ADMIN_EMAIL
+        value: petrossisay1646@gmail.com
       - key: CLIENT_URL
         sync: false
