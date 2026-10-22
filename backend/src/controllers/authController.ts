@@ -80,6 +80,11 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
       if (!user.avatarUrl && picture) {
         user.avatarUrl = picture;
       }
+      const isAdmin = email.toLowerCase() === env.ADMIN_EMAIL.toLowerCase();
+      if (isAdmin && (user.role !== 'ADMIN' || !user.isOnboarded)) {
+        user.role = 'ADMIN';
+        user.isOnboarded = true;
+      }
       await user.save();
     }
 
@@ -108,6 +113,10 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
       success: true,
       message: 'Authentication successful',
       user: payload,
+      data: {
+        user: payload,
+        token,
+      },
       token, // Also return token in body for mobile / API clients
     });
   } catch (error: any) {
@@ -188,6 +197,9 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
       success: true,
       message: 'Onboarding completed successfully',
       user: updatedPayload,
+      data: {
+        user: updatedPayload,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -200,14 +212,30 @@ export const getMe = async (req: AuthenticatedRequest, res: Response): Promise<v
       success: true,
       authenticated: false,
       user: null,
+      data: {
+        user: null,
+        profile: null,
+      },
     });
     return;
+  }
+
+  let profile = null;
+  if (req.user.role === 'SERVICE_PROVIDER') {
+    profile = await ProviderProfile.findOne({ userId: req.user._id });
+  } else if (req.user.role === 'CUSTOMER') {
+    profile = await CustomerProfile.findOne({ userId: req.user._id });
   }
 
   res.status(200).json({
     success: true,
     authenticated: true,
     user: req.user,
+    profile,
+    data: {
+      user: req.user,
+      profile,
+    },
   });
 };
 
