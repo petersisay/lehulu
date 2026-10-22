@@ -71,3 +71,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 65 | `backend/src/models/Review.ts` | `1f40b2d` | `feat(models): create Review model with unique completed booking constraint` | Verified pushed to `origin/main` | Unique bookingId index and rating validation check |
 | 66 | `COMMIT_LOG.md` | `a602a78` | `docs: record Review model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 67 | `backend/src/models/AuditLog.ts` | `d10afd8` | `feat(models): create AuditLog model for immutable administrative traceability` | Verified pushed to `origin/main` | Actor tracking and entity mutation indexing check |
+| 68 | `COMMIT_LOG.md` | `93d748b` | `docs: record AuditLog model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 69 | `backend/src/models/Dispute.ts` | `8877c62` | `feat(models): create Dispute model for problem reporting and administrative resolution` | Verified pushed to `origin/main` | Dispute status enum and evidence schema validation |
