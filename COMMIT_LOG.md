@@ -146,6 +146,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 140 | `frontend/src/services/api.ts` | `adb99ca` | `feat(api): create typed Axios API client service for all marketplace workflows` | Verified pushed to `origin/main` | Endpoint types, withCredentials cookies, and error response contracts check |
 | 141 | `COMMIT_LOG.md` | `f3b3835` | `docs: record api.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 142 | `frontend/src/context/AuthContext.tsx` | `a15e9d5` | `feat(auth): implement AuthContext with Google session hydration and role resolution` | Verified pushed to `origin/main` | Role flags, onboarding state, and session hydration validation |
+| 143 | `COMMIT_LOG.md` | `dcb26a8` | `docs: record AuthContext commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 144 | `frontend/src/context/SocketContext.tsx` | `c66710f` | `feat(realtime): implement SocketContext for live booking sync, in-app alerts, and messaging` | Verified pushed to `origin/main` | Socket.IO room lifecycle, auto-reconnect, and event bus check |
+
 
 
 
