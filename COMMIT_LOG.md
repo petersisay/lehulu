@@ -59,3 +59,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 53 | `backend/src/models/ProviderProfile.ts` | `10d4fcc` | `feat(models): create ProviderProfile model with 2dsphere location index and verification states` | Verified pushed to `origin/main` | 2dsphere index configuration, pricing model validation |
 | 54 | `COMMIT_LOG.md` | `e079c61` | `docs: record ProviderProfile model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 55 | `backend/src/models/ProviderVerification.ts` | `8b08567` | `feat(models): create ProviderVerification model for administrative credential audits` | Verified pushed to `origin/main` | Document URL fields, status state enum, and admin notes check |
+| 56 | `COMMIT_LOG.md` | `d455723` | `docs: record ProviderVerification model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 57 | `backend/src/models/Booking.ts` | `e96f791` | `feat(models): create Booking model with status transitions and private address security` | Verified pushed to `origin/main` | Booking status state machine, compound indexes check |
