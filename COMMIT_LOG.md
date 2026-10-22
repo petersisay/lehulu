@@ -202,6 +202,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 196 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `cc1e2fe` | `docs(report): generate comprehensive final project acceptance report with test results and delivery matrix` | Verified pushed to `origin/main` | Verification status matrix, test suite counts, and security review check |
 | 197 | `COMMIT_LOG.md` | `2138143` | `docs: record final acceptance report in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 198 | `backend/src/config/env.ts` | `dafd1e4` | `fix(config): enforce strict production environment and secrets validation` | Verified pushed to `origin/main` | Production schema superRefine, secret length and protocol checks |
+| 199 | `COMMIT_LOG.md` | `9af82c7` | `docs: record env.ts hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 200 | `backend/src/config/db.ts` | `ec9d7ab` | `fix(db): expose getDatabaseStatus, prevent silent database switching, and require persistent storage in production` | Verified pushed to `origin/main` | Storage type indicator, explicit in-memory warning, and production throw check |
+
 
 
 
