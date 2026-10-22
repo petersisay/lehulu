@@ -53,3 +53,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 47 | `backend/src/models/User.ts` | `5e8ad01` | `feat(models): create User model with roles, Google auth fields, and indexes` | Verified pushed to `origin/main` | Schema validation, unique constraints, and timestamps verification |
 | 48 | `COMMIT_LOG.md` | `dbffb42` | `docs: record User model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 49 | `backend/src/models/CustomerProfile.ts` | `3ef1228` | `feat(models): create CustomerProfile model with saved providers and default address` | Verified pushed to `origin/main` | Relational reference check and coordinates schema validation |
+| 50 | `COMMIT_LOG.md` | `9947075` | `docs: record CustomerProfile model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 51 | `backend/src/models/ServiceCategory.ts` | `6a51f4f` | `feat(models): create ServiceCategory model with bilingual metadata and subcategories` | Verified pushed to `origin/main` | Subcategory embedded schema and slug indexing check |
