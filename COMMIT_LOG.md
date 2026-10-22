@@ -77,3 +77,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 71 | `backend/src/models/PaymentTransaction.ts` | `e335a1b` | `feat(models): create PaymentTransaction model for modular payment settlement tracking` | Verified pushed to `origin/main` | ETB payment method enum and unique reference validation |
 | 72 | `COMMIT_LOG.md` | `d499740` | `docs: record PaymentTransaction model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 73 | `backend/src/middleware/auth.ts` | `ac68084` | `feat(auth): implement session cookie management and Google token verification middleware` | Verified pushed to `origin/main` | JWT signing, cookie security attributes, and Google ID token parsing check |
+| 74 | `COMMIT_LOG.md` | `2e7b045` | `docs: record auth middleware commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 75 | `backend/src/middleware/rbac.ts` | `fd489f1` | `feat(auth): implement role-based access control and verification gate middleware` | Verified pushed to `origin/main` | requireRole and requireVerifiedProvider boundary checks |
