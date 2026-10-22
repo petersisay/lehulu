@@ -34,6 +34,7 @@ All development strictly adhered to the mandatory rule: **ONE CHANGED FILE = ONE
 | 7 | **Absence of Client-Side Unit Tests** | Medium | No frontend test framework configured | Installed Vitest, `@testing-library/react`, and `jsdom`; configured `vite.config.ts` runner and created `app.test.tsx` | 6/6 frontend unit tests passing |
 | 8 | **Production Deployment Config Missing** | Medium | Missing Vercel SPA rewrites and Render web service blueprints | Added `frontend/vercel.json` (SPA rewrites and security headers) and `render.yaml` (Render Web Service blueprint) | Verified valid IaC syntax |
 | 9 | **Animated Hero, Badge Accuracy & Admin Privacy** | High | Hero background was flat/pale; badges used "Official Marketplace"; admin email was visible on login page | Added panoramic text-free Ethiopian landscape asset (`lehulu-hero-bg.jpg`) with flowing glowing vector trails and floating trade badges; updated badges to "Local Services Marketplace — Adama & Bishoftu"; hid admin email from public UI on `/login` | 100% verified across desktop, mobile and admin login in real browser |
+| 10 | **Unsafe Mock Auth Exposure & Staging Hardening** | Critical | Broad `NODE_ENV !== 'production'` check accepted mock tokens; staging risked in-memory DB fallback and privileged admin bypass | Enforced explicit `ALLOW_TEST_AUTH` gate restricted strictly to isolated automated tests; prohibited mock tokens and in-memory DB fallback in staging and production; added 14 automated auth security tests | 100% verified across 14 auth security regression tests |
 
 ---
 
@@ -182,28 +183,30 @@ PASS tests/api.test.ts
       √ Customer updates profile preferences and preferred language to Amharic (26 ms)
       √ POST /api/v1/auth/logout should clear session cookie (13 ms)
 
-Test Suites: 2 passed, 2 total
-Tests:       43 passed, 43 total
+Test Suites: 3 passed, 3 total
+Tests:       57 passed, 57 total (14 in auth_security, 16 in security_and_roles, 27 in api)
 Snapshots:   0 total
-Time:        10.299 s
+Time:        24.207 s
 Ran all test suites.
 ```
 
-### 8.2 Frontend Unit Tests (6 Tests Passing)
+### 8.2 Frontend Unit Tests (8 Tests Passing)
 Run command: `npm run test` inside `frontend/`
 
 ```text
- ✓ src/test/app.test.tsx (6 tests) 243ms
+ ✓ src/test/app.test.tsx (8 tests) 506ms
    ✓ renders navigation bar and branding in default Amharic
    ✓ renders navigation bar in English when switched
    ✓ renders appropriate navigation links for unauthenticated guest
    ✓ renders customer-specific navigation items when authenticated as CUSTOMER
    ✓ renders provider-specific navigation items when authenticated as SERVICE_PROVIDER
    ✓ renders provider card with verified badge and starting price in ETB
+   ✓ does NOT display verified badge for unverified service providers
+   ✓ renders accurate community marketplace badge without misleading government claims
 
  Test Files  1 passed (1)
-      Tests  6 passed (6)
-   Duration  3.26s
+      Tests  8 passed (8)
+   Duration  5.92s
 ```
 
 ### 8.3 Browser Live Verification Evidence
@@ -237,6 +240,7 @@ Run command: `npm run test` inside `frontend/`
 | **Google Authentication** | **Implemented** | **Tested locally** | ID token validation, subject id binding, HttpOnly cookie sessions |
 | **Role-Based Onboarding** | **Implemented** | **Tested locally** | Distinct Customer and Service Provider onboarding paths |
 | **Admin Auto-Provisioning & Privacy** | **Implemented** | **Tested locally** | Admin auto-promotion for configured email; public UI email hidden |
+| **Mock Auth Rejection Gate** | **Implemented** | **Tested locally** | Mock auth strictly prohibited in staging/prod; requires explicit ALLOW_TEST_AUTH in tests |
 | **Animated Hero & Visual Identity** | **Implemented** | **Tested locally** | Panoramic Bishoftu/Adama scenery, glowing trails & floating badges |
 | **Service Categories Engine** | **Implemented** | **Tested locally** | 5 core seeded trades (Electrician, Plumber, Auto, Cleaner, Computer) |
 | **Location & Geospatial Search** | **Implemented** | **Tested locally** | MongoDB 2dsphere index for Adama and Bishoftu coordinates |
@@ -252,22 +256,23 @@ Run command: `npm run test` inside `frontend/`
 | **Ethiopic & English i18n** | **Implemented** | **Tested locally** | Bilingual UI with default Amharic locale and instant toggle |
 | **Production Frontend Build** | **Implemented** | **Tested locally** | Vite build: **86.66 kB** main JS bundle (27.34 kB gzipped) |
 | **Vercel Deployment Spec** | **Implemented** | **Tested locally** | `frontend/vercel.json` configured with SPA rewrites & security headers |
-| **Render Web Service Spec** | **Implemented** | **Tested locally** | `render.yaml` configured for Node.js API with health checks |
+| **Render Staging & Prod Spec** | **Implemented** | **Tested locally** | `render.yaml` configured with separate staging and production services |
 | **Persistent Object Storage** | **Implemented** | **Not configured** | Cloudinary/S3 architecture ready; awaiting production cloud credentials |
 | **Live Payment Gateway** | **Implemented (Modular)**| **Blocked/Awaiting Approval** | Telebirr / Chapa webhook stubs ready; awaiting commercial credentials |
-| **Cloud Production Hosting** | **Implemented** | **Awaiting Approval** | Ready for automated deployment upon user direction |
+| **Cloud Staging Deployment** | **Implemented (IaC)** | **Awaiting Approval/Keys** | `render.yaml` & `vercel.json` ready; awaiting cloud provider tokens |
 
 ---
 
 ## 10. Deployment Readiness Checklist
 
 - [x] **Production Build**: `npm run build` succeeds cleanly in backend (`tsc`) and frontend (`vite build`).
-- [x] **Environment Hardening**: Production rejects missing secrets or development fallback keys.
-- [x] **Database Isolation**: In-memory MongoDB for local tests; persistent URI support for production MongoDB Atlas.
+- [x] **Environment Hardening**: Production & staging reject missing secrets or development fallback keys.
+- [x] **Database Isolation**: In-memory MongoDB prohibited in production and staging; persistent Atlas URI enforced.
+- [x] **Mock Auth Elimination**: Mock tokens strictly forbidden in staging and production; isolated test gate verified.
 - [x] **CORS Configuration**: Allowed origins restricted to authorized client domains.
 - [x] **Security Headers**: Helmet and Vercel configured with strict Content-Type, Frame-Options, and XSS protection.
 - [x] **SPA Routing**: `vercel.json` rewrites all client routes to `/index.html`.
-- [x] **Health Check**: `GET /api/health` returns status `UP` with platform version and uptime.
+- [x] **Health Check**: `GET /api/v1/health` returns status `UP` with platform version and uptime.
 - [x] **Clean Working Tree**: All modified source files committed and pushed under the strict 1 file = 1 commit rule.
 
 ---
@@ -277,6 +282,6 @@ Run command: `npm run test` inside `frontend/`
 The assignment was executed with 100% adherence to the mandatory rule:
 **ONE CHANGED FILE = ONE COMMIT = ONE PUSH**.
 
-- **Total Commits to Date**: **282+ atomic commits**
+- **Total Commits to Date**: **305+ atomic commits**
 - **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
