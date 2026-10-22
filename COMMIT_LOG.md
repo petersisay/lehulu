@@ -248,6 +248,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 242 | `frontend/src/pages/DiscoveryPage.tsx` | `a4f1b89` | `fix(discovery): safely resolve categories and providers arrays from search response` | Verified pushed to `origin/main` | Defensive handling of category and provider search array payloads |
 | 243 | `COMMIT_LOG.md` | `8a10268` | `docs: record DiscoveryPage payload resolution in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 244 | `frontend/vercel.json` | `2696445` | `feat(deploy): configure Vercel SPA rewrites and production security headers` | Verified pushed to `origin/main` | Production SPA rewrites and modern browser security response headers for Vercel edge deployment |
+| 245 | `COMMIT_LOG.md` | `c9436b2` | `docs: record vercel deployment config in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 246 | `render.yaml` | `4c6e0a3` | `feat(deploy): add render.yaml blueprint for backend service deployment` | Verified pushed to `origin/main` | Infrastructure-as-code deployment specification for Render web service |
 
 
 
