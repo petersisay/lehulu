@@ -294,6 +294,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 288 | `backend/src/middleware/auth.ts` | `297a8fe` | `fix(auth): restrict mock tokens to isolated tests and enforce strict Google token verification` | Verified pushed to `origin/main` | Strictly forbade mock tokens in staging and production, required ALLOW_TEST_AUTH in tests, validated issuer and email_verified |
 | 289 | `COMMIT_LOG.md` | `2a9f2a8` | `docs: record auth middleware security hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 290 | `backend/tests/setup.ts` | `8fe09ee` | `test: add Jest setup file configuring isolated test auth environment` | Verified pushed to `origin/main` | Created setup file initializing process.env.ALLOW_TEST_AUTH='true' for automated tests |
+| 291 | `COMMIT_LOG.md` | `c90b9f5` | `docs: record test setup file in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 292 | `backend/jest.config.js` | `33beed2` | `test: configure Jest to load test auth setup file automatically` | Verified pushed to `origin/main` | Added setupFiles: ['./tests/setup.ts'] to Jest configuration |
 
 
 
