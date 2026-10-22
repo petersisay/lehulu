@@ -224,6 +224,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 218 | `frontend/vite.config.ts` | `35a22f8` | `perf(build): configure fine-grained Rollup manualChunks for vendor and map code-splitting` | Verified pushed to `origin/main` | Vendor chunks for React, maps, icons, and data querying dropping main JS to 86kB |
 | 219 | `COMMIT_LOG.md` | `7d12178` | `docs: record vite manualChunks optimization in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 220 | `backend/tests/security_and_roles.test.ts` | `fb36804` | `test(security): add comprehensive security, multi-tenant isolation, and RBAC boundary test suite` | Verified pushed to `origin/main` | 16 new test cases verifying role enforcement, tenancy protection, and error boundaries |
+| 221 | `COMMIT_LOG.md` | `965eb88` | `docs: record security and roles test suite in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 222 | `frontend/package.json` | `f3c67d8` | `chore(frontend): configure vitest and react testing library dependencies and test script` | Verified pushed to `origin/main` | Vitest, React Testing Library, and test script setup |
+| 223 | `frontend/package-lock.json` | `5c3045a` | `chore(frontend): update package-lock.json with vitest and testing-library dependency tree` | Verified pushed to `origin/main` | Lockfile synchronization for client testing dependencies |
 
 
 
