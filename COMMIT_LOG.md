@@ -75,3 +75,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 69 | `backend/src/models/Dispute.ts` | `8877c62` | `feat(models): create Dispute model for problem reporting and administrative resolution` | Verified pushed to `origin/main` | Dispute status enum and evidence schema validation |
 | 70 | `COMMIT_LOG.md` | `e5c0df8` | `docs: record Dispute model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 71 | `backend/src/models/PaymentTransaction.ts` | `e335a1b` | `feat(models): create PaymentTransaction model for modular payment settlement tracking` | Verified pushed to `origin/main` | ETB payment method enum and unique reference validation |
+| 72 | `COMMIT_LOG.md` | `d499740` | `docs: record PaymentTransaction model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 73 | `backend/src/middleware/auth.ts` | `ac68084` | `feat(auth): implement session cookie management and Google token verification middleware` | Verified pushed to `origin/main` | JWT signing, cookie security attributes, and Google ID token parsing check |
