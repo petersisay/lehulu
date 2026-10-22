@@ -218,6 +218,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 212 | `backend/src/routes/providerRoutes.ts` | `ae5fc1c` | `fix(providers): add /profile and /verification route aliases for client compatibility` | Verified pushed to `origin/main` | Compatibility aliases for provider profile and verification endpoints |
 | 213 | `COMMIT_LOG.md` | `fe928d6` | `docs: record provider route aliases in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 214 | `frontend/src/pages/ProfilePage.tsx` | `6713f02` | `feat(profile): add comprehensive bilingual ProfilePage for account and provider management` | Verified pushed to `origin/main` | Account details, Ethiopian phone hints, availability toggle, provider pricing controls |
+| 215 | `COMMIT_LOG.md` | `1961896` | `docs: record ProfilePage creation in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 216 | `frontend/src/App.tsx` | `0841787` | `feat(routing): enforce strict role boundary guards, add profile route, and enable route-level code splitting` | Verified pushed to `origin/main` | Strict single-role dashboard guards, React.lazy suspense chunks, profile route |
 
 
 
