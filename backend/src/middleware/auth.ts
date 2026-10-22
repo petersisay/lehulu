@@ -55,8 +55,12 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
   }
 
   // Rule 2: Explicit test-only mechanism: requires NODE_ENV === 'test' AND ALLOW_TEST_AUTH === 'true'
-  // Local development must not accidentally enable privileged mock authentication.
-  const isTestAuthAllowed = env.IS_TEST && (env.ALLOW_TEST_AUTH || process.env.ALLOW_TEST_AUTH === 'true');
+  // Local development and staging must not accidentally enable mock authentication.
+  const isTestAuthAllowed =
+    env.IS_TEST &&
+    process.env.ALLOW_TEST_AUTH === 'true' &&
+    !isProduction &&
+    !isStaging;
 
   if (isMockToken) {
     if (!isTestAuthAllowed) {
