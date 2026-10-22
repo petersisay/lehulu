@@ -206,6 +206,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 200 | `backend/src/config/db.ts` | `ec9d7ab` | `fix(db): expose getDatabaseStatus, prevent silent database switching, and require persistent storage in production` | Verified pushed to `origin/main` | Storage type indicator, explicit in-memory warning, and production throw check |
 | 201 | `COMMIT_LOG.md` | `07fc8ea` | `docs: record db.ts hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 202 | `backend/src/app.ts` | `dce75cb` | `feat(health): include database connection and storage status in health endpoint` | Verified pushed to `origin/main` | Health check endpoint integration with getDatabaseStatus check |
+| 203 | `COMMIT_LOG.md` | `ee15cbd` | `docs: record health endpoint update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 204 | `backend/src/routes/bookingRoutes.ts` | `85c15ea` | `fix(rbac): enforce strict CUSTOMER and SERVICE_PROVIDER boundaries on booking routes` | Verified pushed to `origin/main` | Disallow admin/provider self-booking and enforce role requirements |
+
 
 
 
