@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import { env } from './config/env';
+import { getDatabaseStatus } from './config/db';
 import { authenticate } from './middleware/auth';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -74,6 +75,7 @@ export const createApp = (): Application => {
       timestamp: new Date().toISOString(),
       environment: env.NODE_ENV,
       version: '1.0.0',
+      database: getDatabaseStatus(),
     });
   });
 
