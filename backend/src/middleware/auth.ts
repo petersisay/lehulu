@@ -44,14 +44,47 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
   picture?: string;
 }> => {
   // If in dev or test mode and mock token prefix is used, decode or parse safely
-  if (env.NODE_ENV !== 'production' && idToken.startsWith('mock-google-token-')) {
-    const email = idToken.replace('mock-google-token-', '');
-    return {
-      googleId: `mock-google-id-${email}`,
-      email,
-      name: email.split('@')[0],
-      picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=059669&color=fff`,
-    };
+  if (env.NODE_ENV !== 'production') {
+    if (idToken.startsWith('mock-google-token-')) {
+      const email = idToken.replace('mock-google-token-', '').trim().toLowerCase();
+      const isAdmin = email === env.ADMIN_EMAIL.toLowerCase();
+      return {
+        googleId: `mock-google-id-${email}`,
+        email,
+        name: isAdmin ? 'Petros Sisay (Administrator)' : email.split('@')[0],
+        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(isAdmin ? 'Petros Sisay' : email.split('@')[0])}&background=059669&color=fff`,
+      };
+    }
+
+    if (idToken.startsWith('mock_token_admin') || idToken === 'mock-admin') {
+      const email = env.ADMIN_EMAIL.toLowerCase();
+      return {
+        googleId: `mock-google-id-${email}`,
+        email,
+        name: 'Petros Sisay (Administrator)',
+        picture: 'https://ui-avatars.com/api/?name=Petros+Sisay&background=059669&color=fff',
+      };
+    }
+
+    if (idToken.startsWith('mock_token_service_provider') || idToken === 'mock-provider') {
+      const email = 'provider@lehulu.et';
+      return {
+        googleId: `mock-google-id-${email}`,
+        email,
+        name: 'Abebe Kebede (Technician)',
+        picture: 'https://ui-avatars.com/api/?name=Abebe+Kebede&background=059669&color=fff',
+      };
+    }
+
+    if (idToken.startsWith('mock_token_customer') || idToken === 'mock-customer' || idToken.startsWith('mock_token_')) {
+      const email = 'customer@lehulu.et';
+      return {
+        googleId: `mock-google-id-${email}`,
+        email,
+        name: 'Almaz Tadesse',
+        picture: 'https://ui-avatars.com/api/?name=Almaz+Tadesse&background=059669&color=fff',
+      };
+    }
   }
 
   if (!env.GOOGLE_CLIENT_ID) {
