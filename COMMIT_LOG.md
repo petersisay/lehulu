@@ -125,3 +125,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 119 | `backend/src/sockets/index.ts` | `78342da` | `feat(realtime): implement Socket.IO authentication and room management broker` | Verified pushed to `origin/main` | WebSocket handshake auth and room tenancy check |
 | 120 | `COMMIT_LOG.md` | `6b29ab0` | `docs: record sockets commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 121 | `backend/src/config/seed.ts` | `6205883` | `feat(seed): implement database catalog seeder and administrator provisioning` | Verified pushed to `origin/main` | Trade catalog definitions and admin seed validation |
+| 122 | `COMMIT_LOG.md` | `0aa830c` | `docs: record seed.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 123 | `backend/src/app.ts` | `2d7c664` | `feat(app): configure Express application pipeline with Helmet, CORS, and versioned routes` | Verified pushed to `origin/main` | Helmet security, CORS allowlist, and route tree validation |
