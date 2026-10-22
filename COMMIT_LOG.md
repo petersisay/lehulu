@@ -258,6 +258,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 252 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `18ae6fe` | `docs: publish final evidence-based project acceptance report` | Verified pushed to `origin/main` | Comprehensive final acceptance report covering all 43 backend tests, 6 frontend tests, browser recording, bundle metrics, and deployment readiness |
 | 253 | `COMMIT_LOG.md` | `93df29a` | `docs: record final acceptance report publication in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 254 | `backend/src/middleware/auth.ts` | `31646ea` | `fix(auth): support dev tokens and resolve petrossisay1646@gmail.com administrator credentials in verifyGoogleIdToken` | Verified pushed to `origin/main` | Handled mock tokens and admin auto-resolution for petrossisay1646@gmail.com |
+| 255 | `COMMIT_LOG.md` | `ea8ef7d` | `docs: record auth middleware fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 256 | `backend/src/controllers/authController.ts` | `30607c1` | `fix(auth): ensure petrossisay1646@gmail.com is assigned ADMIN role and supply data envelope in auth responses` | Verified pushed to `origin/main` | Auto-promoted petrossisay1646@gmail.com to ADMIN on login and returned data response envelope |
 
 
 
