@@ -22,7 +22,7 @@ export const en = {
     logout: 'Log Out',
   },
   hero: {
-    badge: 'Official Marketplace — Adama & Bishoftu, Ethiopia',
+    badge: 'Local Services Marketplace — Adama & Bishoftu',
     title: 'Find Trusted Local Services Near You',
     subtitle: 'From urgent electrical and plumbing repairs to vehicle diagnostics and home cleaning. Verified professionals, transparent ETB quotations, and honest reviews.',
     searchPlaceholder: 'Search for plumber, electrician, mechanic, cleaning...',
