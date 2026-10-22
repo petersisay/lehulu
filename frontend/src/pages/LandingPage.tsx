@@ -51,10 +51,12 @@ export const LandingPage: React.FC = () => {
         ]);
 
         if (catRes.data.success) {
-          setCategories(catRes.data.data);
+          const catList = (catRes.data as any).categories || catRes.data.data || [];
+          setCategories(Array.isArray(catList) ? catList : []);
         }
         if (provRes.data.success) {
-          setFeaturedProviders(provRes.data.data);
+          const provList = (provRes.data as any).providers || provRes.data.data || [];
+          setFeaturedProviders(Array.isArray(provList) ? provList : []);
         }
       } catch (err) {
         console.error('Landing page data fetch error:', err);
