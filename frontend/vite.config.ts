@@ -22,5 +22,17 @@ export default defineConfig({
         ws: true
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-maps': ['leaflet'],
+          'vendor-icons': ['lucide-react'],
+          'vendor-data': ['@tanstack/react-query', 'axios']
+        }
+      }
+    }
   }
 });
