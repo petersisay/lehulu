@@ -208,6 +208,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 202 | `backend/src/app.ts` | `dce75cb` | `feat(health): include database connection and storage status in health endpoint` | Verified pushed to `origin/main` | Health check endpoint integration with getDatabaseStatus check |
 | 203 | `COMMIT_LOG.md` | `ee15cbd` | `docs: record health endpoint update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 204 | `backend/src/routes/bookingRoutes.ts` | `85c15ea` | `fix(rbac): enforce strict CUSTOMER and SERVICE_PROVIDER boundaries on booking routes` | Verified pushed to `origin/main` | Disallow admin/provider self-booking and enforce role requirements |
+| 205 | `COMMIT_LOG.md` | `0d3ec4c` | `docs: record booking routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 206 | `backend/src/routes/quoteRoutes.ts` | `fafba63` | `fix(rbac): restrict quotation submission to SERVICE_PROVIDER and response to CUSTOMER` | Verified pushed to `origin/main` | Role requirements for quote creation and customer acceptance check |
+
 
 
 
