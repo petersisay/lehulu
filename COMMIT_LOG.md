@@ -107,3 +107,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 101 | `backend/src/routes/authRoutes.ts` | `58718ad` | `feat(routes): establish authentication REST API endpoints` | Verified pushed to `origin/main` | Express route wiring and validation middleware check |
 | 102 | `COMMIT_LOG.md` | `45c3aa0` | `docs: record authRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 103 | `backend/src/routes/userRoutes.ts` | `f83a439` | `feat(routes): establish user profile, notification, and favorite provider routes` | Verified pushed to `origin/main` | Route security and controller linking check |
+| 104 | `COMMIT_LOG.md` | `75c6b5d` | `docs: record userRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 105 | `backend/src/routes/categoryRoutes.ts` | `50f270c` | `feat(routes): establish service category public and administrative routes` | Verified pushed to `origin/main` | Public read & Admin-only mutation routing check |
