@@ -144,6 +144,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 138 | `COMMIT_LOG.md` | `716ae47` | `docs: record LanguageContext commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 139 | `backend/package-lock.json` | `0420398` | `chore(backend): add package-lock.json for reproducible backend dependencies` | Verified pushed to `origin/main` | Dependency tree locking verification |
 | 140 | `frontend/src/services/api.ts` | `adb99ca` | `feat(api): create typed Axios API client service for all marketplace workflows` | Verified pushed to `origin/main` | Endpoint types, withCredentials cookies, and error response contracts check |
+| 141 | `COMMIT_LOG.md` | `f3b3835` | `docs: record api.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 142 | `frontend/src/context/AuthContext.tsx` | `a15e9d5` | `feat(auth): implement AuthContext with Google session hydration and role resolution` | Verified pushed to `origin/main` | Role flags, onboarding state, and session hydration validation |
+
 
 
 
