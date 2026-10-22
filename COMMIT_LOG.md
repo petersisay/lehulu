@@ -184,6 +184,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 178 | `frontend/src/pages/TermsPage.tsx` | `ed3916a` | `feat(legal): create TermsPage establishing marketplace usage standards and ETB pricing policies` | Verified pushed to `origin/main` | Legal terms, currency rules, dispute procedures, and fraud prevention check |
 | 179 | `COMMIT_LOG.md` | `eb23838` | `docs: record TermsPage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 180 | `frontend/src/pages/PrivacyPage.tsx` | `d8a5277` | `feat(legal): create PrivacyPage explaining address confidentiality and credential protection policies` | Verified pushed to `origin/main` | Privacy policy, customer address safeguards, and Google session security check |
+| 181 | `COMMIT_LOG.md` | `f74f341` | `docs: record PrivacyPage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 182 | `frontend/src/pages/NotFoundPage.tsx` | `463ee3b` | `feat(ui): create NotFoundPage with bilingual error messaging and fast recovery links` | Verified pushed to `origin/main` | 404 error template, recovery actions, and responsive layout check |
+
 
 
 
