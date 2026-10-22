@@ -17,6 +17,7 @@ import {
   Star,
   Users,
   Award,
+  Zap,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { categoryApi, providerApi } from '../services/api';
@@ -78,39 +79,132 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="space-y-20 pb-20 overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-emerald-50/60 via-slate-50/40 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Premium Animated Ethiopian Hero Section */}
+      <section className="relative min-h-[580px] lg:min-h-[660px] flex items-center justify-center pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden">
+        {/* Panoramic Ethiopian Landscape Background Plate */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+          <img
+            src="/lehulu-hero-bg.jpg"
+            alt="Lehulu Ethiopian Local Services Marketplace"
+            className="w-full h-full object-cover object-[center_35%] filter brightness-[1.02] contrast-[1.03]"
+            loading="eager"
+          />
+          {/* Subtle Ambient Vignettes & Contrast Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/20 via-transparent to-emerald-950/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white" />
+        </div>
+
+        {/* Subtle Animated Emerald & Gold Connection Arcs */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-70"
+          viewBox="0 0 1440 700"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M-50 480 C 300 420, 500 560, 850 460 C 1100 390, 1300 480, 1500 420"
+            stroke="url(#emeraldTrail)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            className="animate-flow-dash"
+          />
+          <path
+            d="M-50 510 C 250 460, 600 580, 920 480 C 1180 410, 1350 500, 1500 450"
+            stroke="url(#goldTrail)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.6"
+            className="animate-flow-dash"
+          />
+          <defs>
+            <linearGradient id="emeraldTrail" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#10b981" stopOpacity="0.1" />
+              <stop offset="30%" stopColor="#059669" stopOpacity="0.9" />
+              <stop offset="70%" stopColor="#34d399" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#059669" stopOpacity="0.2" />
+            </linearGradient>
+            <linearGradient id="goldTrail" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
+              <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Floating Service Badges (Desktop/Tablet) */}
+        <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Zap className="w-4 h-4 text-emerald-100" />
+          </div>
+          <div className="text-left">
+            <p className="text-[11px] font-black text-slate-900 leading-tight">Electrical & Wiring</p>
+            <p className="text-[9px] text-emerald-700 font-semibold">Verified Specialists</p>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-reverse">
+          <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Car className="w-4 h-4 text-emerald-100" />
+          </div>
+          <div className="text-left">
+            <p className="text-[11px] font-black text-slate-900 leading-tight">Auto Diagnostics</p>
+            <p className="text-[9px] text-emerald-700 font-semibold">On-Demand Mechanics</p>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Home className="w-4 h-4 text-teal-100" />
+          </div>
+          <div className="text-left">
+            <p className="text-[11px] font-black text-slate-900 leading-tight">Home & Office Cleaning</p>
+            <p className="text-[9px] text-teal-700 font-semibold">Vetted Housekeepers</p>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex absolute bottom-24 right-8 xl:right-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-300/70 shadow-lg shadow-amber-950/5 animate-float-reverse">
+          <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Sparkles className="w-4 h-4 text-amber-100" />
+          </div>
+          <div className="text-left">
+            <p className="text-[11px] font-black text-slate-900 leading-tight">Fair ETB Quotations</p>
+            <p className="text-[9px] text-amber-700 font-semibold">Transparent Pricing</p>
+          </div>
+        </div>
+
+        {/* Central Content Card */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-300 text-emerald-800 text-xs font-bold animate-in fade-in">
-              <Sparkles className="w-4 h-4 text-emerald-700" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-emerald-400/60 text-emerald-900 text-xs font-black shadow-sm">
+              <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse-glow" />
               <span>{t('hero.badge')}</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.15]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.14] drop-shadow-xs">
               {t('hero.title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-700 max-w-2xl mx-auto leading-relaxed font-medium drop-shadow-xs">
               {t('hero.subtitle')}
             </p>
 
             {/* Search Bar */}
             <form
               onSubmit={handleSearch}
-              className="mt-8 p-2 bg-white rounded-2xl shadow-xl border border-slate-200/80 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto"
+              className="mt-8 p-2.5 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-white/90 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto"
             >
-              <div className="flex items-center gap-2.5 px-3 flex-1 w-full border-b sm:border-b-0 sm:border-r border-slate-100 py-2 sm:py-0">
+              <div className="flex items-center gap-2.5 px-3 flex-1 w-full border-b sm:border-b-0 sm:border-r border-slate-200/80 py-2 sm:py-0">
                 <Search className="w-5 h-5 text-slate-400 shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('hero.searchPlaceholder')}
-                  className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
+                  className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent"
                 />
               </div>
 
@@ -119,7 +213,7 @@ export const LandingPage: React.FC = () => {
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
-                  className="w-full sm:w-36 text-xs sm:text-sm font-medium text-slate-700 focus:outline-none bg-transparent cursor-pointer"
+                  className="w-full sm:w-36 text-xs sm:text-sm font-semibold text-slate-700 focus:outline-none bg-transparent cursor-pointer"
                 >
                   <option value="">{t('hero.allCities')}</option>
                   <option value="Adama">{t('locations.adama')}</option>
@@ -130,15 +224,32 @@ export const LandingPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md hover:shadow-lg transition-all shrink-0 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-700/20 hover:shadow-lg transition-all shrink-0 cursor-pointer"
               >
                 {t('hero.searchButton')}
               </button>
             </form>
 
-            <p className="text-xs text-slate-400">
-              {t('hero.popularSearch')}
-            </p>
+            {/* Popular Quick-Filter Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 text-xs">
+              <span className="text-slate-600 font-semibold">{t('hero.popularSearch')}:</span>
+              {['Electrician', 'Plumber', 'Mechanic', 'Cleaning'].map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery(term);
+                    const params = new URLSearchParams();
+                    params.set('search', term);
+                    if (selectedCity) params.set('city', selectedCity);
+                    navigate(`/discover?${params.toString()}`);
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white text-slate-700 hover:text-emerald-700 font-medium border border-slate-200/60 shadow-2xs transition-all cursor-pointer"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
