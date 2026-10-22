@@ -212,6 +212,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 206 | `backend/src/routes/quoteRoutes.ts` | `fafba63` | `fix(rbac): restrict quotation submission to SERVICE_PROVIDER and response to CUSTOMER` | Verified pushed to `origin/main` | Role requirements for quote creation and customer acceptance check |
 | 207 | `COMMIT_LOG.md` | `1208032` | `docs: record quote routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 208 | `backend/src/routes/reviewRoutes.ts` | `f88cec1` | `fix(rbac): enforce CUSTOMER role for reviews and SERVICE_PROVIDER for responses` | Verified pushed to `origin/main` | Role check for customer reviews and provider responses |
+| 209 | `COMMIT_LOG.md` | `ab75442` | `docs: record review routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 210 | `backend/src/sockets/index.ts` | `ec057e3` | `fix(security): enforce room participant authorization on Socket.IO booking connections` | Verified pushed to `origin/main` | DB check for user membership (customer, provider, or admin) before joining room |
 
 
 
