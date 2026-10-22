@@ -220,6 +220,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 214 | `frontend/src/pages/ProfilePage.tsx` | `6713f02` | `feat(profile): add comprehensive bilingual ProfilePage for account and provider management` | Verified pushed to `origin/main` | Account details, Ethiopian phone hints, availability toggle, provider pricing controls |
 | 215 | `COMMIT_LOG.md` | `1961896` | `docs: record ProfilePage creation in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 216 | `frontend/src/App.tsx` | `0841787` | `feat(routing): enforce strict role boundary guards, add profile route, and enable route-level code splitting` | Verified pushed to `origin/main` | Strict single-role dashboard guards, React.lazy suspense chunks, profile route |
+| 217 | `COMMIT_LOG.md` | `e7ca152` | `docs: record App.tsx routing and lazy loading in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 218 | `frontend/vite.config.ts` | `35a22f8` | `perf(build): configure fine-grained Rollup manualChunks for vendor and map code-splitting` | Verified pushed to `origin/main` | Vendor chunks for React, maps, icons, and data querying dropping main JS to 86kB |
 
 
 
