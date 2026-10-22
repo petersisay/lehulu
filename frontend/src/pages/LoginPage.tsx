@@ -164,7 +164,7 @@ export const LoginPage: React.FC = () => {
         {/* Step 1: Authentication */}
         {step === 'auth' && (
           <div className="space-y-5">
-            {/* Administrator Quick Access */}
+            {/* Administrator Platform Access */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
@@ -172,55 +172,20 @@ export const LoginPage: React.FC = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Platform Administration</h4>
-                  <p className="text-[11px] text-purple-700 font-medium">Authorized staff and platform operators</p>
+                  <p className="text-[11px] text-purple-700 font-medium">Authorized operators and marketplace administrators</p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => handleDevLogin('ADMIN')}
-                disabled={loading}
-                className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-                <span>Sign in as Platform Administrator</span>
-              </button>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                Platform administrators must authenticate using their authorized Google workspace credentials below. Privileged access is server-verified.
+              </p>
             </div>
-
-            {/* Direct Email Sign-In */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (directEmail.trim()) {
-                  handleDevLogin(requestedRole, directEmail.trim());
-                }
-              }}
-              className="space-y-2 pt-1"
-            >
-              <label className="text-xs font-bold text-slate-700 block">Sign In with Email</label>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={directEmail}
-                  onChange={(e) => setDirectEmail(e.target.value)}
-                  placeholder="Enter your email (e.g. user@example.com)"
-                  className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white"
-                />
-                <button
-                  type="submit"
-                  disabled={loading || !directEmail.trim()}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer disabled:opacity-50 shrink-0"
-                >
-                  Sign In
-                </button>
-              </div>
-            </form>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-3 text-slate-400 font-semibold">Or with Google Cloud ID</span>
+                <span className="bg-white px-3 text-slate-400 font-semibold">Sign in with Google Cloud ID</span>
               </div>
             </div>
 
@@ -237,47 +202,40 @@ export const LoginPage: React.FC = () => {
               />
             </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
+            {/* Local Dev Fast-Login only active in local development */}
+            {import.meta.env.DEV && (
+              <div className="space-y-2 pt-2">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-dashed border-slate-200" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-3 text-slate-400 font-semibold text-[10px]">Local Dev Fast-Login</span>
+                  </div>
+                </div>
+                <p className="text-[10px] text-slate-400 text-center">
+                  Quick mock sessions for local testing (customer and provider only):
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDevLogin('CUSTOMER')}
+                    disabled={loading}
+                    className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
+                  >
+                    Customer
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDevLogin('SERVICE_PROVIDER')}
+                    disabled={loading}
+                    className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
+                  >
+                    Provider
+                  </button>
+                </div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-3 text-slate-400 font-semibold">Local Dev Fast-Login</span>
-              </div>
-            </div>
-
-            {/* Dev Fallbacks if Google client id is waiting on live DNS */}
-            <div className="space-y-2">
-              <p className="text-[11px] text-slate-400 text-center">
-                Select a role to test secure sessions immediately:
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleDevLogin('CUSTOMER')}
-                  disabled={loading}
-                  className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
-                >
-                  Customer
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDevLogin('SERVICE_PROVIDER')}
-                  disabled={loading}
-                  className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
-                >
-                  Provider
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDevLogin('ADMIN')}
-                  disabled={loading}
-                  className="p-2.5 rounded-xl border border-purple-200 hover:border-purple-500 hover:bg-purple-50 text-purple-700 text-xs font-bold transition-all text-center cursor-pointer"
-                >
-                  Admin
-                </button>
-              </div>
-            </div>
+            )}
 
             <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-[11px]">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
