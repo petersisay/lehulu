@@ -264,6 +264,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 258 | `backend/src/routes/authRoutes.ts` | `0e7899a` | `fix(auth): add /onboard route alias for client compatibility` | Verified pushed to `origin/main` | Registered /auth/onboard route matching /auth/onboarding |
 | 259 | `COMMIT_LOG.md` | `0bab5c4` | `docs: record authRoutes alias in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 260 | `backend/src/server.ts` | `93aa286` | `fix(server): guarantee petrossisay1646@gmail.com has ADMIN role and onboarded status on startup` | Verified pushed to `origin/main` | Enforced ADMIN role initialization and persistence for petrossisay1646@gmail.com on startup |
+| 261 | `COMMIT_LOG.md` | `0b631de` | `docs: record server startup admin fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 262 | `frontend/src/context/AuthContext.tsx` | `59e6667` | `fix(auth): defensively resolve user and profile objects from API responses in AuthContext` | Verified pushed to `origin/main` | Handled both root-level and data-envelope user/profile response shapes in AuthContext |
 
 
 
