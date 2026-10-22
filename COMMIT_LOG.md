@@ -131,3 +131,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 125 | `backend/src/server.ts` | `a5eef8f` | `feat(server): implement HTTP server bootstrap, Socket.IO binding, and graceful shutdown` | Verified pushed to `origin/main` | Server listener, auto-initialization, and signal handlers check |
 | 126 | `COMMIT_LOG.md` | `963ccc2` | `docs: record server.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 127 | `backend/jest.config.js` | `3d62328` | `test(backend): configure Jest test runner for TypeScript integration test suites` | Verified pushed to `origin/main` | ts-jest preset and timeout configuration check |
+| 128 | `COMMIT_LOG.md` | `e9f3bb0` | `docs: record jest.config commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 129 | `backend/tests/api.test.ts` | `cdb78f9` | `test(backend): implement comprehensive end-to-end API integration tests for all marketplace workflows` | Verified pushed to `origin/main` | 18 full-lifecycle integration test suites check |
