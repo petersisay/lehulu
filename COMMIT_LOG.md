@@ -55,3 +55,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 49 | `backend/src/models/CustomerProfile.ts` | `3ef1228` | `feat(models): create CustomerProfile model with saved providers and default address` | Verified pushed to `origin/main` | Relational reference check and coordinates schema validation |
 | 50 | `COMMIT_LOG.md` | `9947075` | `docs: record CustomerProfile model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 51 | `backend/src/models/ServiceCategory.ts` | `6a51f4f` | `feat(models): create ServiceCategory model with bilingual metadata and subcategories` | Verified pushed to `origin/main` | Subcategory embedded schema and slug indexing check |
+| 52 | `COMMIT_LOG.md` | `cb7528f` | `docs: record ServiceCategory model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 53 | `backend/src/models/ProviderProfile.ts` | `10d4fcc` | `feat(models): create ProviderProfile model with 2dsphere location index and verification states` | Verified pushed to `origin/main` | 2dsphere index configuration, pricing model validation |
