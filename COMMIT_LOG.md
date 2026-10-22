@@ -254,6 +254,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 248 | `backend/src/routes/bookingRoutes.ts` | `bcfa627` | `fix(bookings): properly type request in role-dispatched bookings router` | Verified pushed to `origin/main` | Resolved TS2339 property user type check on booking route handler |
 | 249 | `COMMIT_LOG.md` | `8042c40` | `docs: record booking route fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 250 | `frontend/tsconfig.json` | `3b4ff6c` | `build(types): exclude test files from production typescript compilation` | Verified pushed to `origin/main` | Separated test file type-checking from production build compilation |
+| 251 | `COMMIT_LOG.md` | `15d49e3` | `docs: record tsconfig build exclusion in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 252 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `18ae6fe` | `docs: publish final evidence-based project acceptance report` | Verified pushed to `origin/main` | Comprehensive final acceptance report covering all 43 backend tests, 6 frontend tests, browser recording, bundle metrics, and deployment readiness |
 
 
 
