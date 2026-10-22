@@ -256,6 +256,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 250 | `frontend/tsconfig.json` | `3b4ff6c` | `build(types): exclude test files from production typescript compilation` | Verified pushed to `origin/main` | Separated test file type-checking from production build compilation |
 | 251 | `COMMIT_LOG.md` | `15d49e3` | `docs: record tsconfig build exclusion in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 252 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `18ae6fe` | `docs: publish final evidence-based project acceptance report` | Verified pushed to `origin/main` | Comprehensive final acceptance report covering all 43 backend tests, 6 frontend tests, browser recording, bundle metrics, and deployment readiness |
+| 253 | `COMMIT_LOG.md` | `93df29a` | `docs: record final acceptance report publication in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 254 | `backend/src/middleware/auth.ts` | `31646ea` | `fix(auth): support dev tokens and resolve petrossisay1646@gmail.com administrator credentials in verifyGoogleIdToken` | Verified pushed to `origin/main` | Handled mock tokens and admin auto-resolution for petrossisay1646@gmail.com |
 
 
 
