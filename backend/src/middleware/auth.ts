@@ -17,22 +17,22 @@ export const createSessionToken = (payload: AuthUserPayload): string => {
 };
 
 export const setSessionCookie = (res: Response, token: string): void => {
-  const isProduction = env.NODE_ENV === 'production';
+  const isSecure = env.IS_PRODUCTION || env.IS_STAGING;
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    secure: isSecure,
+    sameSite: isSecure ? 'strict' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   });
 };
 
 export const clearSessionCookie = (res: Response): void => {
-  const isProduction = env.NODE_ENV === 'production';
+  const isSecure = env.IS_PRODUCTION || env.IS_STAGING;
   res.clearCookie(COOKIE_NAME, {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    secure: isSecure,
+    sameSite: isSecure ? 'strict' : 'lax',
     path: '/',
   });
 };
@@ -43,10 +43,30 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
   name: string;
   picture?: string;
 }> => {
-  // If in dev or test mode and mock token prefix is used, decode or parse safely
-  if (env.NODE_ENV !== 'production') {
+  const isMockToken = idToken.startsWith('mock') || idToken.startsWith('test-');
+  const isProduction = env.IS_PRODUCTION;
+  const isStaging = env.IS_STAGING || process.env.APP_ENV === 'staging' || process.env.STAGING === 'true';
+
+  // Rule 1: Production and Staging strictly reject mock tokens under all circumstances
+  if (isProduction || isStaging) {
+    if (isMockToken) {
+      throw new Error('Mock authentication tokens are strictly prohibited in staging and production environments.');
+    }
+  }
+
+  // Rule 2: Explicit test-only mechanism: requires NODE_ENV === 'test' AND ALLOW_TEST_AUTH === 'true'
+  // Local development must not accidentally enable privileged mock authentication.
+  const isTestAuthAllowed = env.IS_TEST && (env.ALLOW_TEST_AUTH || process.env.ALLOW_TEST_AUTH === 'true');
+
+  if (isMockToken) {
+    if (!isTestAuthAllowed) {
+      throw new Error('Mock authentication is disabled. Real Google Identity verification is required.');
+    }
+
+    // Inside isolated automated tests with ALLOW_TEST_AUTH:
     if (idToken.startsWith('mock-google-token-')) {
       const email = idToken.replace('mock-google-token-', '').trim().toLowerCase();
+      // Only assign administrator privileges if in isolated test and email exactly matches configured ADMIN_EMAIL
       const isAdmin = email === env.ADMIN_EMAIL.toLowerCase();
       return {
         googleId: `mock-google-id-${email}`,
@@ -85,9 +105,12 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
         picture: 'https://ui-avatars.com/api/?name=Almaz+Tadesse&background=059669&color=fff',
       };
     }
+
+    throw new Error('Unrecognized mock authentication token.');
   }
 
-  if (!env.GOOGLE_CLIENT_ID) {
+  // Real Google ID Token Verification
+  if (!env.GOOGLE_CLIENT_ID || env.GOOGLE_CLIENT_ID.trim() === '') {
     throw new Error('Google OAuth Client ID is not configured on the server.');
   }
 
@@ -98,12 +121,21 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
 
   const payload = ticket.getPayload();
   if (!payload || !payload.email) {
-    throw new Error('Invalid Google ID token payload.');
+    throw new Error('Invalid Google ID token payload: missing email.');
+  }
+
+  if (!payload.email_verified) {
+    throw new Error('Unverified Google email accounts are not permitted on Lehulu.');
+  }
+
+  const validIssuers = ['accounts.google.com', 'https://accounts.google.com'];
+  if (!payload.iss || !validIssuers.includes(payload.iss)) {
+    throw new Error('Invalid Google token issuer.');
   }
 
   return {
     googleId: payload.sub,
-    email: payload.email,
+    email: payload.email.toLowerCase(),
     name: payload.name || payload.email.split('@')[0],
     picture: payload.picture,
   };
