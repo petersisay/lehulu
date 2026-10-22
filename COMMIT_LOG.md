@@ -87,3 +87,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 81 | `backend/src/middleware/audit.ts` | `044f3b0` | `feat(middleware): create recordAuditLog utility for administrative audit tracking` | Verified pushed to `origin/main` | Actor IP and user-agent logging check |
 | 82 | `COMMIT_LOG.md` | `c082779` | `docs: record audit utility commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 83 | `backend/src/controllers/authController.ts` | `dd6f481` | `feat(auth): implement Google authentication, session cookies, and role onboarding controller` | Verified pushed to `origin/main` | Role onboarding validation, token cookie generation check |
+| 84 | `COMMIT_LOG.md` | `19e820f` | `docs: record authController commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 85 | `backend/src/controllers/userController.ts` | `0df163d` | `feat(users): implement user profile updates, notification management, and saved providers controller` | Verified pushed to `origin/main` | Notification pagination, profile mutation validation |
