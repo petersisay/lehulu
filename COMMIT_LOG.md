@@ -278,6 +278,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 272 | `frontend/src/locales/en.ts` | `228955c` | `fix(i18n): update English hero badge to accurate non-misleading wording` | Verified pushed to `origin/main` | Replaced Official Marketplace with Local Services Marketplace — Adama & Bishoftu |
 | 273 | `COMMIT_LOG.md` | `728ae4d` | `docs: record en.ts hero badge update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 274 | `frontend/src/locales/am.ts` | `e155e9b` | `fix(i18n): update Amharic hero badge to accurate non-misleading wording` | Verified pushed to `origin/main` | Replaced official marketplace text with authentic community marketplace badge in Amharic |
+| 275 | `COMMIT_LOG.md` | `558e76a` | `docs: record am.ts hero badge update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 276 | `frontend/src/index.css` | `c749c0f` | `feat(styles): add hero connection keyframes and motion accessibility utilities in index.css` | Verified pushed to `origin/main` | Added keyframes for floatSlow, pulseGlow, flowDash and prefers-reduced-motion queries |
 
 
 
