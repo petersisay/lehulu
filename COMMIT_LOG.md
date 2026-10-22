@@ -286,6 +286,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 280 | `frontend/package.json` | `6999196` | `fix(test): configure vitest to use thread pool for stable Windows execution` | Verified pushed to `origin/main` | Updated test script with --pool=threads flag for fast reliable test execution |
 | 281 | `COMMIT_LOG.md` | `4ac263b` | `docs: record vitest pool configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 282 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `174905e` | `docs: finalize acceptance report with animated hero, privacy and verification evidence` | Verified pushed to `origin/main` | Updated acceptance report with evidence of animated hero, browser verification and tests |
+| 283 | `COMMIT_LOG.md` | `4ed3dca` | `docs: record acceptance report finalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 284 | `backend/src/config/env.ts` | `58407e5` | `feat(security): enforce strict staging and test auth boundaries in env configuration` | Verified pushed to `origin/main` | Added APP_ENV and strict ALLOW_TEST_AUTH validation forbidding mock auth in staging/production |
 
 
 
