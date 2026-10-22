@@ -292,6 +292,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 286 | `backend/src/config/db.ts` | `871f407` | `fix(db): prohibit in-memory database fallback in staging environments` | Verified pushed to `origin/main` | Enforced persistent database connection in staging as well as production |
 | 287 | `COMMIT_LOG.md` | `e8fccce` | `docs: record db persistence staging update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 288 | `backend/src/middleware/auth.ts` | `297a8fe` | `fix(auth): restrict mock tokens to isolated tests and enforce strict Google token verification` | Verified pushed to `origin/main` | Strictly forbade mock tokens in staging and production, required ALLOW_TEST_AUTH in tests, validated issuer and email_verified |
+| 289 | `COMMIT_LOG.md` | `2a9f2a8` | `docs: record auth middleware security hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 290 | `backend/tests/setup.ts` | `8fe09ee` | `test: add Jest setup file configuring isolated test auth environment` | Verified pushed to `origin/main` | Created setup file initializing process.env.ALLOW_TEST_AUTH='true' for automated tests |
 
 
 
