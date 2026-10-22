@@ -63,3 +63,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 57 | `backend/src/models/Booking.ts` | `e96f791` | `feat(models): create Booking model with status transitions and private address security` | Verified pushed to `origin/main` | Booking status state machine, compound indexes check |
 | 58 | `COMMIT_LOG.md` | `28f4c11` | `docs: record Booking model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 59 | `backend/src/models/Quote.ts` | `6e63924` | `feat(models): create Quote model for itemized proposals and price agreements` | Verified pushed to `origin/main` | Quotation item schema and ETB currency calculation check |
+| 60 | `COMMIT_LOG.md` | `9b0e24b` | `docs: record Quote model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 61 | `backend/src/models/Message.ts` | `f0b105c` | `feat(models): create Message model with booking-participant scoping` | Verified pushed to `origin/main` | Tenancy indexing and role authorization validation |
