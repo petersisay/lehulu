@@ -182,6 +182,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 176 | `frontend/src/pages/AdminDashboard.tsx` | `8d3fa2e` | `feat(admin): implement AdminDashboard with live database statistics, verification moderation queue, and audit log inspection` | Verified pushed to `origin/main` | Operational metrics, document moderation queue, and category configuration check |
 | 177 | `COMMIT_LOG.md` | `735bac8` | `docs: record AdminDashboard commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 178 | `frontend/src/pages/TermsPage.tsx` | `ed3916a` | `feat(legal): create TermsPage establishing marketplace usage standards and ETB pricing policies` | Verified pushed to `origin/main` | Legal terms, currency rules, dispute procedures, and fraud prevention check |
+| 179 | `COMMIT_LOG.md` | `eb23838` | `docs: record TermsPage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 180 | `frontend/src/pages/PrivacyPage.tsx` | `d8a5277` | `feat(legal): create PrivacyPage explaining address confidentiality and credential protection policies` | Verified pushed to `origin/main` | Privacy policy, customer address safeguards, and Google session security check |
+
 
 
 
