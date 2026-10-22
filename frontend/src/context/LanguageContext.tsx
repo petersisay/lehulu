@@ -6,7 +6,8 @@ import { Language } from '../types';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: typeof en;
+  dict: typeof en;
+  t: (path: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -27,10 +28,32 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.lang = language;
   }, [language]);
 
-  const t = language === 'am' ? am : en;
+  const dict = language === 'am' ? am : en;
+
+  const t = (path: string): string => {
+    const keys = path.split('.');
+    let current: any = dict;
+    for (const key of keys) {
+      if (current && typeof current === 'object' && key in current) {
+        current = current[key];
+      } else {
+        // Fallback to English
+        let fallback: any = en;
+        for (const fbKey of keys) {
+          if (fallback && typeof fallback === 'object' && fbKey in fallback) {
+            fallback = fallback[fbKey];
+          } else {
+            return path;
+          }
+        }
+        return typeof fallback === 'string' ? fallback : path;
+      }
+    }
+    return typeof current === 'string' ? current : path;
+  };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, dict, t }}>
       {children}
     </LanguageContext.Provider>
   );
