@@ -301,6 +301,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 295 | `backend/src/middleware/auth.ts` | `11decb6` | `fix(auth): dynamically evaluate ALLOW_TEST_AUTH to guarantee strict test isolation` | Verified pushed to `origin/main` | Made isTestAuthAllowed dynamically check process.env.ALLOW_TEST_AUTH === 'true' |
 | 296 | `COMMIT_LOG.md` | `7f4d20f` | `docs: record auth_security tests and dynamic auth evaluation in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 297 | `frontend/src/pages/LoginPage.tsx` | `d94ae6a` | `fix(auth): guard dev login helpers to DEV mode only and require real Google admin sign-in` | Verified pushed to `origin/main` | Guarded mock buttons inside DEV mode only and required authorized Google sign-in for platform admin |
+| 298 | `COMMIT_LOG.md` | `15f011b` | `docs: record LoginPage auth UI hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 299 | `backend/.env.example` | `3f5e400` | `docs(env): document staging configuration profiles and explicit test auth gate` | Verified pushed to `origin/main` | Documented APP_ENV, ALLOW_TEST_AUTH, and separate staging vs production MongoDB Atlas URIs |
 
 
 
