@@ -85,3 +85,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 79 | `backend/src/middleware/errorHandler.ts` | `43ec2c4` | `feat(middleware): implement centralized error handling with AppError class` | Verified pushed to `origin/main` | Status code resolution and production stack safety check |
 | 80 | `COMMIT_LOG.md` | `aa33dbb` | `docs: record errorHandler middleware commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 81 | `backend/src/middleware/audit.ts` | `044f3b0` | `feat(middleware): create recordAuditLog utility for administrative audit tracking` | Verified pushed to `origin/main` | Actor IP and user-agent logging check |
+| 82 | `COMMIT_LOG.md` | `c082779` | `docs: record audit utility commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 83 | `backend/src/controllers/authController.ts` | `dd6f481` | `feat(auth): implement Google authentication, session cookies, and role onboarding controller` | Verified pushed to `origin/main` | Role onboarding validation, token cookie generation check |
