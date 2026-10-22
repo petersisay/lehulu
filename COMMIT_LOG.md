@@ -231,6 +231,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 225 | `frontend/src/test/setup.ts` | `ef3644b` | `test(frontend): add Vitest jest-dom setup file` | Verified pushed to `origin/main` | Jest-dom matchers configuration for React component testing |
 | 226 | `COMMIT_LOG.md` | `3597711` | `docs: record test setup in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 227 | `frontend/vite.config.ts` | `f345c53` | `test(config): configure Vitest jsdom runner and test environment in vite.config.ts` | Verified pushed to `origin/main` | Vitest environment jsdom and setupFiles declaration |
+| 228 | `COMMIT_LOG.md` | `fc804e8` | `docs: record vite test configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 229 | `frontend/src/context/AuthContext.tsx` | `aadc2ec` | `refactor(auth): export AuthContext for component testing and direct context consumers` | Verified pushed to `origin/main` | Export AuthContext symbol for unit and integration testing |
+| 230 | `frontend/src/test/app.test.tsx` | `b86e400` | `test(frontend): add comprehensive component, navigation, and localization tests with Vitest` | Verified pushed to `origin/main` | 6 unit tests covering navbar roles, provider cards, and bilingual language switching |
 
 
 
