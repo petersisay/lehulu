@@ -13,16 +13,16 @@ import { requireAuth, requireRole } from '../middleware/rbac';
 
 const router = Router();
 
-// Customer creates booking
-router.post('/', requireAuth, validateRequest(createBookingSchema), createBooking);
+// Only authenticated CUSTOMER can request services
+router.post('/', requireRole('CUSTOMER'), validateRequest(createBookingSchema), createBooking);
 
-// Customer gets own bookings
-router.get('/customer', requireAuth, getCustomerBookings);
+// Only CUSTOMER can access customer bookings
+router.get('/customer', requireRole('CUSTOMER'), getCustomerBookings);
 
-// Provider gets assigned bookings
-router.get('/provider', requireRole('SERVICE_PROVIDER', 'ADMIN'), getProviderBookings);
+// Only SERVICE_PROVIDER can access assigned provider bookings
+router.get('/provider', requireRole('SERVICE_PROVIDER'), getProviderBookings);
 
-// Booking detail & status updates
+// Booking detail & status updates (participants checked inside controller)
 router.get('/:id', requireAuth, getBookingById);
 router.patch('/:id/status', requireAuth, validateRequest(updateBookingStatusSchema), updateBookingStatus);
 
