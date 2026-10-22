@@ -160,6 +160,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 154 | `frontend/src/components/QuotationView.tsx` | `a82ce7c` | `feat(ui): create QuotationView component with itemized breakdown and customer confirmation actions` | Verified pushed to `origin/main` | Itemized table, subtotal, inspection fee, and accept/reject actions check |
 | 155 | `COMMIT_LOG.md` | `a23c5d2` | `docs: record QuotationView commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 156 | `frontend/src/components/BookingChat.tsx` | `70b85b9` | `feat(ui): create BookingChat component with real-time Socket.IO synchronization and persistent messaging` | Verified pushed to `origin/main` | Message room joining, live delivery, auto-scroll, and REST history check |
+| 157 | `COMMIT_LOG.md` | `3db1d3d` | `docs: record BookingChat commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 158 | `frontend/src/components/ReviewModal.tsx` | `5ee1e4e` | `feat(ui): create ReviewModal component enforcing completed-booking review submissions` | Verified pushed to `origin/main` | Star rating picker, review constraints, and submission API check |
+
 
 
 
