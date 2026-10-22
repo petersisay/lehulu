@@ -176,6 +176,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 170 | `frontend/src/pages/CustomerDashboard.tsx` | `7f2401e` | `feat(customer): implement CustomerDashboard with booking status trackers, quotation alerts, and review triggers` | Verified pushed to `origin/main` | Active vs completed tabs, status badges, price display, and review modal trigger check |
 | 171 | `COMMIT_LOG.md` | `f31820f` | `docs: record CustomerDashboard commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 172 | `frontend/src/pages/ProviderDashboard.tsx` | `8c430ee` | `feat(provider): implement ProviderDashboard with quotation builder, availability toggle, and verification workflow` | Verified pushed to `origin/main` | Dynamic itemized quote builder, status transitions, availability switcher, and ID upload check |
+| 173 | `COMMIT_LOG.md` | `511d32a` | `docs: record ProviderDashboard commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 174 | `frontend/src/pages/BookingDetailPage.tsx` | `d76dcee` | `feat(bookings): implement BookingDetailPage with status timeline stepper, quotation actions, and real-time chat` | Verified pushed to `origin/main` | Lifecycle timeline, quote actions, completion verification, and chat container check |
+
 
 
 
