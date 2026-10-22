@@ -129,3 +129,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 123 | `backend/src/app.ts` | `2d7c664` | `feat(app): configure Express application pipeline with Helmet, CORS, and versioned routes` | Verified pushed to `origin/main` | Helmet security, CORS allowlist, and route tree validation |
 | 124 | `COMMIT_LOG.md` | `fc37c26` | `docs: record app.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 125 | `backend/src/server.ts` | `a5eef8f` | `feat(server): implement HTTP server bootstrap, Socket.IO binding, and graceful shutdown` | Verified pushed to `origin/main` | Server listener, auto-initialization, and signal handlers check |
+| 126 | `COMMIT_LOG.md` | `963ccc2` | `docs: record server.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 127 | `backend/jest.config.js` | `3d62328` | `test(backend): configure Jest test runner for TypeScript integration test suites` | Verified pushed to `origin/main` | ts-jest preset and timeout configuration check |
