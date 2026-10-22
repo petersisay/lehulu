@@ -268,6 +268,7 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 262 | `frontend/src/context/AuthContext.tsx` | `59e6667` | `fix(auth): defensively resolve user and profile objects from API responses in AuthContext` | Verified pushed to `origin/main` | Handled both root-level and data-envelope user/profile response shapes in AuthContext |
 | 263 | `COMMIT_LOG.md` | `087dbfe` | `docs: record AuthContext fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 264 | `frontend/src/pages/LoginPage.tsx` | `1cad32b` | `feat(auth): add one-click administrator access for petrossisay1646@gmail.com and direct email sign-in to LoginPage` | Verified pushed to `origin/main` | Super admin one-click card, email sign-in form, and explicit role login buttons |
+| 265 | `COMMIT_LOG.md` | `e405850` | `docs: record LoginPage enhancements in commit log` | Verified pushed to `origin/main` | Log entry verification |
 
 
 
