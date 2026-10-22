@@ -250,6 +250,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 244 | `frontend/vercel.json` | `2696445` | `feat(deploy): configure Vercel SPA rewrites and production security headers` | Verified pushed to `origin/main` | Production SPA rewrites and modern browser security response headers for Vercel edge deployment |
 | 245 | `COMMIT_LOG.md` | `c9436b2` | `docs: record vercel deployment config in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 246 | `render.yaml` | `4c6e0a3` | `feat(deploy): add render.yaml blueprint for backend service deployment` | Verified pushed to `origin/main` | Infrastructure-as-code deployment specification for Render web service |
+| 247 | `COMMIT_LOG.md` | `2407055` | `docs: record render deployment config in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 248 | `backend/src/routes/bookingRoutes.ts` | `bcfa627` | `fix(bookings): properly type request in role-dispatched bookings router` | Verified pushed to `origin/main` | Resolved TS2339 property user type check on booking route handler |
 
 
 
