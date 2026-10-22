@@ -282,6 +282,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 276 | `frontend/src/index.css` | `c749c0f` | `feat(styles): add hero connection keyframes and motion accessibility utilities in index.css` | Verified pushed to `origin/main` | Added keyframes for floatSlow, pulseGlow, flowDash and prefers-reduced-motion queries |
 | 277 | `COMMIT_LOG.md` | `e5098ee` | `docs: record index.css animation utilities in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 278 | `frontend/src/pages/LandingPage.tsx` | `2d38fb8` | `feat(landing): implement animated panoramic Ethiopian hero with connection trails and floating service badges` | Verified pushed to `origin/main` | Added panoramic background layer, glowing vector trails, floating trade chips, accessible glassmorphic search |
+| 279 | `COMMIT_LOG.md` | `ed78615` | `docs: record LandingPage animated hero in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 280 | `frontend/package.json` | `6999196` | `fix(test): configure vitest to use thread pool for stable Windows execution` | Verified pushed to `origin/main` | Updated test script with --pool=threads flag for fast reliable test execution |
 
 
 
