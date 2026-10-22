@@ -151,6 +151,7 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
     res.status(200).json({
       success: true,
       providers,
+      data: providers,
       pagination: {
         page: pageNum,
         limit: limitNum,
@@ -189,6 +190,7 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
     res.status(200).json({
       success: true,
       provider: profile,
+      data: profile,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -229,6 +231,7 @@ export const getMyProviderProfile = async (
     res.status(200).json({
       success: true,
       provider: profile,
+      data: profile,
       verification,
     });
   } catch (error: any) {
