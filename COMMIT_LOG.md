@@ -262,6 +262,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 256 | `backend/src/controllers/authController.ts` | `30607c1` | `fix(auth): ensure petrossisay1646@gmail.com is assigned ADMIN role and supply data envelope in auth responses` | Verified pushed to `origin/main` | Auto-promoted petrossisay1646@gmail.com to ADMIN on login and returned data response envelope |
 | 257 | `COMMIT_LOG.md` | `92af6c5` | `docs: record authController fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 258 | `backend/src/routes/authRoutes.ts` | `0e7899a` | `fix(auth): add /onboard route alias for client compatibility` | Verified pushed to `origin/main` | Registered /auth/onboard route matching /auth/onboarding |
+| 259 | `COMMIT_LOG.md` | `0bab5c4` | `docs: record authRoutes alias in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 260 | `backend/src/server.ts` | `93aa286` | `fix(server): guarantee petrossisay1646@gmail.com has ADMIN role and onboarded status on startup` | Verified pushed to `origin/main` | Enforced ADMIN role initialization and persistence for petrossisay1646@gmail.com on startup |
 
 
 
