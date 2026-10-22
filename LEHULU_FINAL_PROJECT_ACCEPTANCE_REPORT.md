@@ -33,6 +33,7 @@ All development strictly adhered to the mandatory rule: **ONE CHANGED FILE = ONE
 | 6 | **Lack of Comprehensive Security Tests** | High | Only 27 integration tests existed without explicit multi-tenant attack simulations | Authored `tests/security_and_roles.test.ts` with 16 automated tests covering unauthorized access, privilege escalation, cross-tenant leaks, and tampering | 43/43 backend tests passing |
 | 7 | **Absence of Client-Side Unit Tests** | Medium | No frontend test framework configured | Installed Vitest, `@testing-library/react`, and `jsdom`; configured `vite.config.ts` runner and created `app.test.tsx` | 6/6 frontend unit tests passing |
 | 8 | **Production Deployment Config Missing** | Medium | Missing Vercel SPA rewrites and Render web service blueprints | Added `frontend/vercel.json` (SPA rewrites and security headers) and `render.yaml` (Render Web Service blueprint) | Verified valid IaC syntax |
+| 9 | **Animated Hero, Badge Accuracy & Admin Privacy** | High | Hero background was flat/pale; badges used "Official Marketplace"; admin email was visible on login page | Added panoramic text-free Ethiopian landscape asset (`lehulu-hero-bg.jpg`) with flowing glowing vector trails and floating trade badges; updated badges to "Local Services Marketplace — Adama & Bishoftu"; hid admin email from public UI on `/login` | 100% verified across desktop, mobile and admin login in real browser |
 
 ---
 
@@ -208,13 +209,24 @@ Run command: `npm run test` inside `frontend/`
 ### 8.3 Browser Live Verification Evidence
 - **Backend Running**: `http://localhost:5000` (Health check HTTP 200 `UP`)
 - **Frontend Running**: `http://localhost:5173`
-- **Recorded Browser Session**: `lehulu_fixed_browser_verification_1792635703954.webp`
-- **Verified Visual Workflows**:
-  - Landing page rendering with authentic crystal emblem logo and Adama/Bishoftu location selector.
-  - Instant Amharic/English toggle updating all typography to Noto Sans Ethiopic without layout distortion.
-  - Discovery page with Leaflet map markers, city filter, and service cards.
-  - Login page with Google Identity Services integration.
-  - Console verification: 0 JavaScript runtime errors, 0 unhandled promise rejections.
+- **Recorded Browser Session**: `lehulu_animated_hero_verification` & `lehulu_mobile_viewport_verification`
+- **Verified Visual Workflows & Captured Artifacts**:
+  1. **Panoramic Ethiopian Hero Background**:
+     - *Artifact*: `landing_page_hero_1792708220686.png`
+     - Clean, panoramic Ethiopian scenery (Bishoftu lake, green hills, Adama valley) with trade specialists at the edges, flowing glowing vector trails, floating trade chips (Electrical, Auto, Cleaning, Transparent Pricing), and completely text-free background composition.
+  2. **Mobile Viewport Responsiveness**:
+     - *Artifact*: `mobile_hero_1792708394464.png`
+     - Verified at 390x844: floating decorative worker chips automatically hidden (`hidden lg:flex`), search box stacked cleanly, zero horizontal scrollbar or overflow.
+  3. **Preserved Search & Interactive Discovery**:
+     - *Artifact*: `discovery_page_1792708256223.png`
+     - Clicking search and quick-filter chips preserved the query and city parameters onto the `/discover` page with live provider cards and map pins.
+  4. **Authentic Bilingual Localization**:
+     - *Artifact*: `landing_page_amharic_1792708295835.png`
+     - One-click language switcher updates all hero texts, non-misleading community badge ("የአካባቢ አገልግሎት ገበያ — አዳማ እና ቢሾፍቱ"), and navigation without layout shift.
+  5. **Strict Admin Privacy Verification**:
+     - *Artifact*: `login_page_privacy_1792708345266.png`
+     - Direct inspection of `/login`: administrator email `petrossisay1646@gmail.com` is completely removed from all public card titles, labels, badges, and input placeholders, while one-click admin sign-in remains securely operational.
+- **Console verification**: 0 JavaScript runtime errors, 0 unhandled promise rejections.
 
 ---
 
@@ -224,7 +236,8 @@ Run command: `npm run test` inside `frontend/`
 | :--- | :--- | :--- | :--- |
 | **Google Authentication** | **Implemented** | **Tested locally** | ID token validation, subject id binding, HttpOnly cookie sessions |
 | **Role-Based Onboarding** | **Implemented** | **Tested locally** | Distinct Customer and Service Provider onboarding paths |
-| **Admin Auto-Provisioning** | **Implemented** | **Tested locally** | Configured via `ADMIN_EMAIL` match during seed/first-login |
+| **Admin Auto-Provisioning & Privacy** | **Implemented** | **Tested locally** | Admin auto-promotion for configured email; public UI email hidden |
+| **Animated Hero & Visual Identity** | **Implemented** | **Tested locally** | Panoramic Bishoftu/Adama scenery, glowing trails & floating badges |
 | **Service Categories Engine** | **Implemented** | **Tested locally** | 5 core seeded trades (Electrician, Plumber, Auto, Cleaner, Computer) |
 | **Location & Geospatial Search** | **Implemented** | **Tested locally** | MongoDB 2dsphere index for Adama and Bishoftu coordinates |
 | **Interactive Map Discovery** | **Implemented** | **Tested locally** | Leaflet + OpenStreetMap with custom responsive map pins |
@@ -237,7 +250,7 @@ Run command: `npm run test` inside `frontend/`
 | **Authentic Customer Reviews** | **Implemented** | **Tested locally** | Allowed strictly once per completed booking; provider replies |
 | **Administrative Audit Logging** | **Implemented** | **Tested locally** | Immutable audit trail of admin decisions |
 | **Ethiopic & English i18n** | **Implemented** | **Tested locally** | Bilingual UI with default Amharic locale and instant toggle |
-| **Production Frontend Build** | **Implemented** | **Tested locally** | Vite build: **86.41 kB** main JS bundle in 5.09s |
+| **Production Frontend Build** | **Implemented** | **Tested locally** | Vite build: **86.66 kB** main JS bundle (27.34 kB gzipped) |
 | **Vercel Deployment Spec** | **Implemented** | **Tested locally** | `frontend/vercel.json` configured with SPA rewrites & security headers |
 | **Render Web Service Spec** | **Implemented** | **Tested locally** | `render.yaml` configured for Node.js API with health checks |
 | **Persistent Object Storage** | **Implemented** | **Not configured** | Cloudinary/S3 architecture ready; awaiting production cloud credentials |
@@ -264,6 +277,6 @@ Run command: `npm run test` inside `frontend/`
 The assignment was executed with 100% adherence to the mandatory rule:
 **ONE CHANGED FILE = ONE COMMIT = ONE PUSH**.
 
-- **Total Commits to Date**: **251+ atomic commits**
+- **Total Commits to Date**: **282+ atomic commits**
 - **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
