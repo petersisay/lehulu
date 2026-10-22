@@ -137,3 +137,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 131 | `frontend/src/types/index.ts` | `1bfecf8` | `feat(frontend): define TypeScript interfaces and contract types for client application` | Verified pushed to `origin/main` | Client types alignment with backend contracts |
 | 132 | `COMMIT_LOG.md` | `4cdbec7` | `docs: record frontend types commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 133 | `frontend/src/locales/en.ts` | `5f65255` | `feat(i18n): establish comprehensive English translation dictionary for all platform views` | Verified pushed to `origin/main` | Key-value coverage across discovery, bookings, and admin check |
+| 134 | `COMMIT_LOG.md` | `1363239` | `docs: record en.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 135 | `frontend/src/locales/am.ts` | `0ce6c49` | `feat(i18n): establish authentic Amharic translation dictionary across all user workflows` | Verified pushed to `origin/main` | Ethiopic typography and parity with English keys validation |
