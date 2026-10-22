@@ -115,3 +115,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 109 | `backend/src/routes/bookingRoutes.ts` | `b40167c` | `feat(routes): establish service booking creation and lifecycle management routes` | Verified pushed to `origin/main` | Customer and provider booking endpoints check |
 | 110 | `COMMIT_LOG.md` | `349ddcc` | `docs: record bookingRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 111 | `backend/src/routes/quoteRoutes.ts` | `738647e` | `feat(routes): establish quotation submission and customer acceptance routes` | Verified pushed to `origin/main` | Quote creation and response endpoints check |
+| 112 | `COMMIT_LOG.md` | `7915205` | `docs: record quoteRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 113 | `backend/src/routes/messageRoutes.ts` | `2f95204` | `feat(routes): establish in-booking messaging REST API routes` | Verified pushed to `origin/main` | In-booking chat endpoint validation |
