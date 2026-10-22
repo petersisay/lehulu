@@ -192,6 +192,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 186 | `frontend/src/App.tsx` | `1b002d4` | `feat(routes): configure App router with role-protected layouts and marketplace endpoints` | Verified pushed to `origin/main` | Route table, ProtectedRoute guard, and layout wrapping check |
 | 187 | `COMMIT_LOG.md` | `ffbae44` | `docs: record App.tsx commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 188 | `frontend/src/main.tsx` | `09c7b92` | `feat(client): implement main.tsx client entrypoint mounting GoogleOAuth and state providers` | Verified pushed to `origin/main` | Root mount, React Query provider, GoogleOAuth provider, and CSS import check |
+| 189 | `COMMIT_LOG.md` | `04bab32` | `docs: record main.tsx commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 190 | `frontend/src/vite-env.d.ts` | `bb6de27` | `types(client): declare Vite client environment variable types` | Verified pushed to `origin/main` | import.meta.env type definitions check |
+
 
 
 
