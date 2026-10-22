@@ -276,6 +276,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 270 | `frontend/src/pages/LoginPage.tsx` | `570b8dd` | `fix(auth): hide administrator email from public LoginPage UI and reset default input` | Verified pushed to `origin/main` | Removed explicit display of petrossisay1646@gmail.com on login cards and input placeholders |
 | 271 | `COMMIT_LOG.md` | `a73235e` | `docs: record LoginPage privacy update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 272 | `frontend/src/locales/en.ts` | `228955c` | `fix(i18n): update English hero badge to accurate non-misleading wording` | Verified pushed to `origin/main` | Replaced Official Marketplace with Local Services Marketplace — Adama & Bishoftu |
+| 273 | `COMMIT_LOG.md` | `728ae4d` | `docs: record en.ts hero badge update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 274 | `frontend/src/locales/am.ts` | `e155e9b` | `fix(i18n): update Amharic hero badge to accurate non-misleading wording` | Verified pushed to `origin/main` | Replaced official marketplace text with authentic community marketplace badge in Amharic |
 
 
 
