@@ -227,6 +227,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 221 | `COMMIT_LOG.md` | `965eb88` | `docs: record security and roles test suite in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 222 | `frontend/package.json` | `f3c67d8` | `chore(frontend): configure vitest and react testing library dependencies and test script` | Verified pushed to `origin/main` | Vitest, React Testing Library, and test script setup |
 | 223 | `frontend/package-lock.json` | `5c3045a` | `chore(frontend): update package-lock.json with vitest and testing-library dependency tree` | Verified pushed to `origin/main` | Lockfile synchronization for client testing dependencies |
+| 224 | `COMMIT_LOG.md` | `ad6a1d3` | `docs: record frontend vitest setup in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 225 | `frontend/src/test/setup.ts` | `ef3644b` | `test(frontend): add Vitest jest-dom setup file` | Verified pushed to `origin/main` | Jest-dom matchers configuration for React component testing |
 
 
 
