@@ -32,6 +32,7 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
     res.status(200).json({
       success: true,
       categories,
+      data: categories,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -44,6 +45,7 @@ export const getAllCategoriesAdmin = async (req: Request, res: Response): Promis
     res.status(200).json({
       success: true,
       categories,
+      data: categories,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
