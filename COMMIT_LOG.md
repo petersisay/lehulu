@@ -164,6 +164,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 158 | `frontend/src/components/ReviewModal.tsx` | `5ee1e4e` | `feat(ui): create ReviewModal component enforcing completed-booking review submissions` | Verified pushed to `origin/main` | Star rating picker, review constraints, and submission API check |
 | 159 | `COMMIT_LOG.md` | `1078f67` | `docs: record ReviewModal commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 160 | `frontend/src/components/MapDiscovery.tsx` | `71a5e4d` | `feat(ui): create Leaflet MapDiscovery component with custom marker pins and popup cards` | Verified pushed to `origin/main` | OpenStreetMap tiles, custom HTML divIcon pins, and city recentering check |
+| 161 | `COMMIT_LOG.md` | `c0aea7b` | `docs: record MapDiscovery commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 162 | `frontend/src/pages/LandingPage.tsx` | `3d13f20` | `feat(ui): create responsive LandingPage with hero search, service categories, and verified provider spotlight` | Verified pushed to `origin/main` | Hero search form, trust badges, category navigation, and how-it-works workflow check |
+
 
 
 
