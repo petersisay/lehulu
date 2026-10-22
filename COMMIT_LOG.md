@@ -111,3 +111,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 105 | `backend/src/routes/categoryRoutes.ts` | `50f270c` | `feat(routes): establish service category public and administrative routes` | Verified pushed to `origin/main` | Public read & Admin-only mutation routing check |
 | 106 | `COMMIT_LOG.md` | `07857ad` | `docs: record categoryRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 107 | `backend/src/routes/providerRoutes.ts` | `e4496f0` | `feat(routes): establish service provider search, profile, and verification application routes` | Verified pushed to `origin/main` | Provider query endpoints and role check validation |
+| 108 | `COMMIT_LOG.md` | `8fa4988` | `docs: record providerRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 109 | `backend/src/routes/bookingRoutes.ts` | `b40167c` | `feat(routes): establish service booking creation and lifecycle management routes` | Verified pushed to `origin/main` | Customer and provider booking endpoints check |
