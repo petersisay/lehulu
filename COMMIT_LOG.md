@@ -194,6 +194,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 188 | `frontend/src/main.tsx` | `09c7b92` | `feat(client): implement main.tsx client entrypoint mounting GoogleOAuth and state providers` | Verified pushed to `origin/main` | Root mount, React Query provider, GoogleOAuth provider, and CSS import check |
 | 189 | `COMMIT_LOG.md` | `04bab32` | `docs: record main.tsx commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 190 | `frontend/src/vite-env.d.ts` | `bb6de27` | `types(client): declare Vite client environment variable types` | Verified pushed to `origin/main` | import.meta.env type definitions check |
+| 191 | `COMMIT_LOG.md` | `75791c2` | `docs: record vite-env.d.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 192 | `frontend/src/context/LanguageContext.tsx` | `08d2185` | `feat(i18n): implement dot-notation path resolver with English fallback in LanguageContext` | Verified pushed to `origin/main` | Recursive key lookup, dict export, and locale fallback check |
+
 
 
 
