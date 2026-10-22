@@ -274,6 +274,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 268 | `frontend/public/lehulu-hero-bg.jpg` | `d6cbce5` | `feat(assets): add cinematic text-free Ethiopian landscape hero background asset for Lehulu` | Verified pushed to `origin/main` | High-definition panorama asset inspired by Bishoftu lake, Adama valley and local trades |
 | 269 | `COMMIT_LOG.md` | `52ae114` | `docs: record hero background asset in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 270 | `frontend/src/pages/LoginPage.tsx` | `570b8dd` | `fix(auth): hide administrator email from public LoginPage UI and reset default input` | Verified pushed to `origin/main` | Removed explicit display of petrossisay1646@gmail.com on login cards and input placeholders |
+| 271 | `COMMIT_LOG.md` | `a73235e` | `docs: record LoginPage privacy update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 272 | `frontend/src/locales/en.ts` | `228955c` | `fix(i18n): update English hero badge to accurate non-misleading wording` | Verified pushed to `origin/main` | Replaced Official Marketplace with Local Services Marketplace — Adama & Bishoftu |
 
 
 
