@@ -236,6 +236,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 230 | `frontend/src/test/app.test.tsx` | `b86e400` | `test(frontend): add comprehensive component, navigation, and localization tests with Vitest` | Verified pushed to `origin/main` | 6 unit tests covering navbar roles, provider cards, and bilingual language switching |
 | 231 | `COMMIT_LOG.md` | `0b81db7` | `docs: record frontend component tests in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 232 | `backend/src/controllers/categoryController.ts` | `8f7683f` | `fix(api): provide data field in category responses for client payload compatibility` | Verified pushed to `origin/main` | Response envelope compatibility for categories list |
+| 233 | `COMMIT_LOG.md` | `09f51fe` | `docs: record category response format fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 234 | `backend/src/controllers/providerController.ts` | `d6991fb` | `fix(providers): add data field to provider search and profile responses for client compatibility` | Verified pushed to `origin/main` | Response envelope compatibility for provider search and profile endpoints |
 
 
 
