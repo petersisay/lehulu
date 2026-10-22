@@ -61,3 +61,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 55 | `backend/src/models/ProviderVerification.ts` | `8b08567` | `feat(models): create ProviderVerification model for administrative credential audits` | Verified pushed to `origin/main` | Document URL fields, status state enum, and admin notes check |
 | 56 | `COMMIT_LOG.md` | `d455723` | `docs: record ProviderVerification model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 57 | `backend/src/models/Booking.ts` | `e96f791` | `feat(models): create Booking model with status transitions and private address security` | Verified pushed to `origin/main` | Booking status state machine, compound indexes check |
+| 58 | `COMMIT_LOG.md` | `28f4c11` | `docs: record Booking model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 59 | `backend/src/models/Quote.ts` | `6e63924` | `feat(models): create Quote model for itemized proposals and price agreements` | Verified pushed to `origin/main` | Quotation item schema and ETB currency calculation check |
