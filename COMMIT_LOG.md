@@ -303,6 +303,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 297 | `frontend/src/pages/LoginPage.tsx` | `d94ae6a` | `fix(auth): guard dev login helpers to DEV mode only and require real Google admin sign-in` | Verified pushed to `origin/main` | Guarded mock buttons inside DEV mode only and required authorized Google sign-in for platform admin |
 | 298 | `COMMIT_LOG.md` | `15f011b` | `docs: record LoginPage auth UI hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 299 | `backend/.env.example` | `3f5e400` | `docs(env): document staging configuration profiles and explicit test auth gate` | Verified pushed to `origin/main` | Documented APP_ENV, ALLOW_TEST_AUTH, and separate staging vs production MongoDB Atlas URIs |
+| 300 | `COMMIT_LOG.md` | `168a751` | `docs: record backend env documentation in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 301 | `render.yaml` | `d543986` | `ci(deploy): configure staging and production web service blueprints in render.yaml` | Verified pushed to `origin/main` | Added lehulu-api-staging and lehulu-api-production web service definitions with explicit health check path and env configurations |
 
 
 
