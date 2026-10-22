@@ -240,6 +240,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 234 | `backend/src/controllers/providerController.ts` | `d6991fb` | `fix(providers): add data field to provider search and profile responses for client compatibility` | Verified pushed to `origin/main` | Response envelope compatibility for provider search and profile endpoints |
 | 235 | `COMMIT_LOG.md` | `c082bf0` | `docs: record provider response format fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 236 | `backend/src/controllers/bookingController.ts` | `5dc2046` | `fix(bookings): add data field to all booking responses for client API consistency` | Verified pushed to `origin/main` | Response envelope compatibility for all booking endpoints |
+| 237 | `COMMIT_LOG.md` | `5395c92` | `docs: record booking response format fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 238 | `backend/src/routes/bookingRoutes.ts` | `3c61be4` | `feat(bookings): add role-dispatched GET / route for unified booking queries` | Verified pushed to `origin/main` | Support GET /bookings dispatched automatically by role |
 
 
 
