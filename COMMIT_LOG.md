@@ -210,6 +210,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 204 | `backend/src/routes/bookingRoutes.ts` | `85c15ea` | `fix(rbac): enforce strict CUSTOMER and SERVICE_PROVIDER boundaries on booking routes` | Verified pushed to `origin/main` | Disallow admin/provider self-booking and enforce role requirements |
 | 205 | `COMMIT_LOG.md` | `0d3ec4c` | `docs: record booking routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 206 | `backend/src/routes/quoteRoutes.ts` | `fafba63` | `fix(rbac): restrict quotation submission to SERVICE_PROVIDER and response to CUSTOMER` | Verified pushed to `origin/main` | Role requirements for quote creation and customer acceptance check |
+| 207 | `COMMIT_LOG.md` | `1208032` | `docs: record quote routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 208 | `backend/src/routes/reviewRoutes.ts` | `f88cec1` | `fix(rbac): enforce CUSTOMER role for reviews and SERVICE_PROVIDER for responses` | Verified pushed to `origin/main` | Role check for customer reviews and provider responses |
+
 
 
 
