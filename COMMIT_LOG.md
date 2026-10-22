@@ -170,6 +170,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 164 | `frontend/src/pages/DiscoveryPage.tsx` | `b64eb05` | `feat(discovery): implement DiscoveryPage with split map-list view, trade pills, and location filtering` | Verified pushed to `origin/main` | Search parameters, Leaflet integration, geolocation trigger, and responsive toggle check |
 | 165 | `COMMIT_LOG.md` | `cd9d6dd` | `docs: record DiscoveryPage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 166 | `frontend/src/pages/ProviderProfilePage.tsx` | `aacfaaa` | `feat(providers): implement ProviderProfilePage with verified credentials, ETB pricing, and real reviews` | Verified pushed to `origin/main` | Bio, skills, work portfolio, working hours schedule, and booking modal integration check |
+| 167 | `COMMIT_LOG.md` | `cfd151b` | `docs: record ProviderProfilePage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 168 | `frontend/src/pages/LoginPage.tsx` | `eb834dc` | `feat(auth): implement LoginPage with Google Identity Services, role selection, and onboarding flow` | Verified pushed to `origin/main` | Google OAuth button, dev mode bypass, role selector, and onboarding form check |
+
 
 
 
