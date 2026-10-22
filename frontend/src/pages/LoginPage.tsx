@@ -25,7 +25,7 @@ export const LoginPage: React.FC = () => {
   const [experienceYears, setExperienceYears] = useState<number>(2);
   const [startingPrice, setStartingPrice] = useState<number>(500);
 
-  const [directEmail, setDirectEmail] = useState<string>('petrossisay1646@gmail.com');
+  const [directEmail, setDirectEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,13 +69,17 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      let email = customEmail || 'customer@lehulu.et';
-      if (!customEmail) {
-        if (mockRole === 'ADMIN') email = 'petrossisay1646@gmail.com';
-        else if (mockRole === 'SERVICE_PROVIDER') email = 'provider@lehulu.et';
-        else email = 'customer@lehulu.et';
+      let mockToken: string;
+      if (customEmail) {
+        mockToken = `mock-google-token-${customEmail.trim().toLowerCase()}`;
+      } else if (mockRole === 'ADMIN') {
+        mockToken = 'mock_token_admin';
+      } else if (mockRole === 'SERVICE_PROVIDER') {
+        mockToken = 'mock_token_service_provider';
+      } else {
+        mockToken = 'mock_token_customer';
       }
-      const mockToken = `mock-google-token-${email.trim().toLowerCase()}`;
+
       const loggedUser = await loginWithGoogle(mockToken, mockRole);
       if (!loggedUser.isOnboarded) {
         setSelectedRole(mockRole);
@@ -160,25 +164,25 @@ export const LoginPage: React.FC = () => {
         {/* Step 1: Authentication */}
         {step === 'auth' && (
           <div className="space-y-5">
-            {/* Super Admin Quick Access */}
+            {/* Administrator Quick Access */}
             <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
                   ADM
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Super Administrator</h4>
-                  <p className="text-[11px] text-purple-700 font-medium truncate">petrossisay1646@gmail.com</p>
+                  <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Platform Administration</h4>
+                  <p className="text-[11px] text-purple-700 font-medium">Authorized staff and platform operators</p>
                 </div>
               </div>
               <button
                 type="button"
-                onClick={() => handleDevLogin('ADMIN', 'petrossisay1646@gmail.com')}
+                onClick={() => handleDevLogin('ADMIN')}
                 disabled={loading}
                 className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-                <span>Sign in as petrossisay1646@gmail.com (Admin)</span>
+                <span>Sign in as Platform Administrator</span>
               </button>
             </div>
 
@@ -187,8 +191,7 @@ export const LoginPage: React.FC = () => {
               onSubmit={(e) => {
                 e.preventDefault();
                 if (directEmail.trim()) {
-                  const targetRole = directEmail.trim().toLowerCase() === 'petrossisay1646@gmail.com' ? 'ADMIN' : requestedRole;
-                  handleDevLogin(targetRole, directEmail.trim());
+                  handleDevLogin(requestedRole, directEmail.trim());
                 }
               }}
               className="space-y-2 pt-1"
@@ -199,7 +202,7 @@ export const LoginPage: React.FC = () => {
                   type="email"
                   value={directEmail}
                   onChange={(e) => setDirectEmail(e.target.value)}
-                  placeholder="e.g. petrossisay1646@gmail.com"
+                  placeholder="Enter your email (e.g. user@example.com)"
                   className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white"
                 />
                 <button
@@ -251,7 +254,7 @@ export const LoginPage: React.FC = () => {
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('CUSTOMER', 'customer@lehulu.et')}
+                  onClick={() => handleDevLogin('CUSTOMER')}
                   disabled={loading}
                   className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
@@ -259,7 +262,7 @@ export const LoginPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('SERVICE_PROVIDER', 'provider@lehulu.et')}
+                  onClick={() => handleDevLogin('SERVICE_PROVIDER')}
                   disabled={loading}
                   className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
@@ -267,7 +270,7 @@ export const LoginPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('ADMIN', 'petrossisay1646@gmail.com')}
+                  onClick={() => handleDevLogin('ADMIN')}
                   disabled={loading}
                   className="p-2.5 rounded-xl border border-purple-200 hover:border-purple-500 hover:bg-purple-50 text-purple-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
