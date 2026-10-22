@@ -115,6 +115,7 @@ export const createBooking = async (
       success: true,
       message: 'Service request created successfully',
       booking,
+      data: booking,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -160,6 +161,7 @@ export const getCustomerBookings = async (
     res.status(200).json({
       success: true,
       bookings,
+      data: bookings,
       pagination: {
         page: pageNum,
         limit: limitNum,
@@ -211,6 +213,7 @@ export const getProviderBookings = async (
     res.status(200).json({
       success: true,
       bookings,
+      data: bookings,
       pagination: {
         page: pageNum,
         limit: limitNum,
@@ -266,6 +269,7 @@ export const getBookingById = async (
     res.status(200).json({
       success: true,
       booking,
+      data: booking,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -391,6 +395,7 @@ export const updateBookingStatus = async (
       success: true,
       message: `Booking status updated to ${booking.status}`,
       booking,
+      data: booking,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
