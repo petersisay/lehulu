@@ -204,6 +204,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 198 | `backend/src/config/env.ts` | `dafd1e4` | `fix(config): enforce strict production environment and secrets validation` | Verified pushed to `origin/main` | Production schema superRefine, secret length and protocol checks |
 | 199 | `COMMIT_LOG.md` | `9af82c7` | `docs: record env.ts hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 200 | `backend/src/config/db.ts` | `ec9d7ab` | `fix(db): expose getDatabaseStatus, prevent silent database switching, and require persistent storage in production` | Verified pushed to `origin/main` | Storage type indicator, explicit in-memory warning, and production throw check |
+| 201 | `COMMIT_LOG.md` | `07fc8ea` | `docs: record db.ts hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 202 | `backend/src/app.ts` | `dce75cb` | `feat(health): include database connection and storage status in health endpoint` | Verified pushed to `origin/main` | Health check endpoint integration with getDatabaseStatus check |
+
 
 
 
