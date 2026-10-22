@@ -103,3 +103,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 97 | `backend/src/controllers/reviewController.ts` | `51dd55e` | `feat(reviews): implement genuine completed booking review verification and rating recalculation controller` | Verified pushed to `origin/main` | Completed status requirement and aggregate rating math check |
 | 98 | `COMMIT_LOG.md` | `b6d4773` | `docs: record reviewController commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 99 | `backend/src/controllers/adminController.ts` | `3944792` | `feat(admin): implement provider verification queue, database analytics, and dispute moderation controller` | Verified pushed to `origin/main` | Verification status transitions, dispute handling, honest metrics check |
+| 100 | `COMMIT_LOG.md` | `cefc988` | `docs: record adminController commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 101 | `backend/src/routes/authRoutes.ts` | `58718ad` | `feat(routes): establish authentication REST API endpoints` | Verified pushed to `origin/main` | Express route wiring and validation middleware check |
