@@ -305,6 +305,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 299 | `backend/.env.example` | `3f5e400` | `docs(env): document staging configuration profiles and explicit test auth gate` | Verified pushed to `origin/main` | Documented APP_ENV, ALLOW_TEST_AUTH, and separate staging vs production MongoDB Atlas URIs |
 | 300 | `COMMIT_LOG.md` | `168a751` | `docs: record backend env documentation in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 301 | `render.yaml` | `d543986` | `ci(deploy): configure staging and production web service blueprints in render.yaml` | Verified pushed to `origin/main` | Added lehulu-api-staging and lehulu-api-production web service definitions with explicit health check path and env configurations |
+| 302 | `COMMIT_LOG.md` | `fc51046` | `docs: record render.yaml staging blueprint in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 303 | `frontend/src/test/app.test.tsx` | `b76790d` | `test(frontend): expand component tests to verify unverified provider badges and hero badge accuracy` | Verified pushed to `origin/main` | Added tests verifying honest unverified badge handling and non-misleading hero badge wording |
 
 
 
