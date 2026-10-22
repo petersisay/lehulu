@@ -222,6 +222,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 216 | `frontend/src/App.tsx` | `0841787` | `feat(routing): enforce strict role boundary guards, add profile route, and enable route-level code splitting` | Verified pushed to `origin/main` | Strict single-role dashboard guards, React.lazy suspense chunks, profile route |
 | 217 | `COMMIT_LOG.md` | `e7ca152` | `docs: record App.tsx routing and lazy loading in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 218 | `frontend/vite.config.ts` | `35a22f8` | `perf(build): configure fine-grained Rollup manualChunks for vendor and map code-splitting` | Verified pushed to `origin/main` | Vendor chunks for React, maps, icons, and data querying dropping main JS to 86kB |
+| 219 | `COMMIT_LOG.md` | `7d12178` | `docs: record vite manualChunks optimization in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 220 | `backend/tests/security_and_roles.test.ts` | `fb36804` | `test(security): add comprehensive security, multi-tenant isolation, and RBAC boundary test suite` | Verified pushed to `origin/main` | 16 new test cases verifying role enforcement, tenancy protection, and error boundaries |
 
 
 
