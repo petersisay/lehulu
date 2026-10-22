@@ -154,6 +154,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 148 | `frontend/src/components/Footer.tsx` | `0856f88` | `feat(ui): create responsive Footer component with Ethiopian localization hubs and trust badges` | Verified pushed to `origin/main` | Links, legal terms, city badges, and bilingual copyright check |
 | 149 | `COMMIT_LOG.md` | `98d5f39` | `docs: record Footer commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 150 | `frontend/src/components/ProviderCard.tsx` | `7294a2a` | `feat(ui): create ProviderCard component with verified badge, genuine reviews, and ETB pricing` | Verified pushed to `origin/main` | Card layout, review counts, distance calculation, and ETB currency display check |
+| 151 | `COMMIT_LOG.md` | `747cb46` | `docs: record ProviderCard commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 152 | `frontend/src/components/BookingModal.tsx` | `c2f2834` | `feat(ui): create BookingModal component with private address handling and service scheduling` | Verified pushed to `origin/main` | Form validation, privacy badge, date picker, and booking submission check |
+
 
 
 
