@@ -162,6 +162,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 156 | `frontend/src/components/BookingChat.tsx` | `70b85b9` | `feat(ui): create BookingChat component with real-time Socket.IO synchronization and persistent messaging` | Verified pushed to `origin/main` | Message room joining, live delivery, auto-scroll, and REST history check |
 | 157 | `COMMIT_LOG.md` | `3db1d3d` | `docs: record BookingChat commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 158 | `frontend/src/components/ReviewModal.tsx` | `5ee1e4e` | `feat(ui): create ReviewModal component enforcing completed-booking review submissions` | Verified pushed to `origin/main` | Star rating picker, review constraints, and submission API check |
+| 159 | `COMMIT_LOG.md` | `1078f67` | `docs: record ReviewModal commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 160 | `frontend/src/components/MapDiscovery.tsx` | `71a5e4d` | `feat(ui): create Leaflet MapDiscovery component with custom marker pins and popup cards` | Verified pushed to `origin/main` | OpenStreetMap tiles, custom HTML divIcon pins, and city recentering check |
+
 
 
 
