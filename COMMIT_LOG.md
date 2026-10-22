@@ -214,6 +214,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 208 | `backend/src/routes/reviewRoutes.ts` | `f88cec1` | `fix(rbac): enforce CUSTOMER role for reviews and SERVICE_PROVIDER for responses` | Verified pushed to `origin/main` | Role check for customer reviews and provider responses |
 | 209 | `COMMIT_LOG.md` | `ab75442` | `docs: record review routes rbac in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 210 | `backend/src/sockets/index.ts` | `ec057e3` | `fix(security): enforce room participant authorization on Socket.IO booking connections` | Verified pushed to `origin/main` | DB check for user membership (customer, provider, or admin) before joining room |
+| 211 | `COMMIT_LOG.md` | `de975da` | `docs: record socket authorization in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 212 | `backend/src/routes/providerRoutes.ts` | `ae5fc1c` | `fix(providers): add /profile and /verification route aliases for client compatibility` | Verified pushed to `origin/main` | Compatibility aliases for provider profile and verification endpoints |
 
 
 
