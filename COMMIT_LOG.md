@@ -299,6 +299,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 293 | `COMMIT_LOG.md` | `e2306ea` | `docs: record Jest setupFiles config in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 294 | `backend/tests/auth_security.test.ts` | `1d1f240` | `test(auth): add regression test suite for mock auth rejection in staging and Google token security` | Verified pushed to `origin/main` | Added 14 automated tests verifying mock auth rejection in staging/prod and Google token security |
 | 295 | `backend/src/middleware/auth.ts` | `11decb6` | `fix(auth): dynamically evaluate ALLOW_TEST_AUTH to guarantee strict test isolation` | Verified pushed to `origin/main` | Made isTestAuthAllowed dynamically check process.env.ALLOW_TEST_AUTH === 'true' |
+| 296 | `COMMIT_LOG.md` | `7f4d20f` | `docs: record auth_security tests and dynamic auth evaluation in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 297 | `frontend/src/pages/LoginPage.tsx` | `d94ae6a` | `fix(auth): guard dev login helpers to DEV mode only and require real Google admin sign-in` | Verified pushed to `origin/main` | Guarded mock buttons inside DEV mode only and required authorized Google sign-in for platform admin |
 
 
 
