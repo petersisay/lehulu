@@ -196,6 +196,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 190 | `frontend/src/vite-env.d.ts` | `bb6de27` | `types(client): declare Vite client environment variable types` | Verified pushed to `origin/main` | import.meta.env type definitions check |
 | 191 | `COMMIT_LOG.md` | `75791c2` | `docs: record vite-env.d.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 192 | `frontend/src/context/LanguageContext.tsx` | `08d2185` | `feat(i18n): implement dot-notation path resolver with English fallback in LanguageContext` | Verified pushed to `origin/main` | Recursive key lookup, dict export, and locale fallback check |
+| 193 | `COMMIT_LOG.md` | `f06b5d0` | `docs: record LanguageContext update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 194 | `frontend/package-lock.json` | `061bcd0` | `chore(frontend): add package-lock.json for reproducible client dependencies` | Verified pushed to `origin/main` | Lockfile verification and reproducible build tree check |
+
 
 
 
