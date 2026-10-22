@@ -119,3 +119,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 113 | `backend/src/routes/messageRoutes.ts` | `2f95204` | `feat(routes): establish in-booking messaging REST API routes` | Verified pushed to `origin/main` | In-booking chat endpoint validation |
 | 114 | `COMMIT_LOG.md` | `e80b62d` | `docs: record messageRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 115 | `backend/src/routes/reviewRoutes.ts` | `d4f9320` | `feat(routes): establish review submission and provider response REST API routes` | Verified pushed to `origin/main` | Verified review and provider response routes check |
+| 116 | `COMMIT_LOG.md` | `46c8046` | `docs: record reviewRoutes commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 117 | `backend/src/routes/adminRoutes.ts` | `1d27cad` | `feat(routes): establish administrative verification, dispute moderation, and audit log routes` | Verified pushed to `origin/main` | Admin RBAC middleware gate and endpoints check |
