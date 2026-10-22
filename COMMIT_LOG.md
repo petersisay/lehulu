@@ -91,3 +91,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 85 | `backend/src/controllers/userController.ts` | `0df163d` | `feat(users): implement user profile updates, notification management, and saved providers controller` | Verified pushed to `origin/main` | Notification pagination, profile mutation validation |
 | 86 | `COMMIT_LOG.md` | `824db4c` | `docs: record userController commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 87 | `backend/src/controllers/categoryController.ts` | `56715f0` | `feat(categories): implement category discovery and administrative management controller` | Verified pushed to `origin/main` | Category CRUD operations and audit logging check |
+| 88 | `COMMIT_LOG.md` | `8c50ecd` | `docs: record categoryController commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 89 | `backend/src/controllers/providerController.ts` | `1a77dc8` | `feat(providers): implement provider discovery, geolocation filtering, and verification application controller` | Verified pushed to `origin/main` | 2dsphere nearSphere queries, role sanitization check |
