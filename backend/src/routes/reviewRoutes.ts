@@ -11,16 +11,16 @@ import { requireAuth, requireRole } from '../middleware/rbac';
 
 const router = Router();
 
-// Customer submits review for completed service
-router.post('/', requireAuth, validateRequest(createReviewSchema), createReview);
+// Only authenticated CUSTOMER can submit review for completed service
+router.post('/', requireRole('CUSTOMER'), validateRequest(createReviewSchema), createReview);
 
 // Public provider reviews listing
 router.get('/provider/:providerId', getProviderReviews);
 
-// Provider response to customer review
+// Only assigned SERVICE_PROVIDER can respond to customer review
 router.post(
   '/:reviewId/respond',
-  requireRole('SERVICE_PROVIDER', 'ADMIN'),
+  requireRole('SERVICE_PROVIDER'),
   validateRequest(respondToReviewSchema),
   respondToReview
 );
