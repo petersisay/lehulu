@@ -246,6 +246,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 240 | `frontend/src/pages/LandingPage.tsx` | `95af6cd` | `fix(landing): safely resolve categories and featured providers arrays from API response` | Verified pushed to `origin/main` | Prevent undefined .map error on category and provider lists |
 | 241 | `COMMIT_LOG.md` | `eb71cee` | `docs: record LandingPage payload resolution in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 242 | `frontend/src/pages/DiscoveryPage.tsx` | `a4f1b89` | `fix(discovery): safely resolve categories and providers arrays from search response` | Verified pushed to `origin/main` | Defensive handling of category and provider search array payloads |
+| 243 | `COMMIT_LOG.md` | `8a10268` | `docs: record DiscoveryPage payload resolution in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 244 | `frontend/vercel.json` | `2696445` | `feat(deploy): configure Vercel SPA rewrites and production security headers` | Verified pushed to `origin/main` | Production SPA rewrites and modern browser security response headers for Vercel edge deployment |
 
 
 
