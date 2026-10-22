@@ -252,6 +252,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 246 | `render.yaml` | `4c6e0a3` | `feat(deploy): add render.yaml blueprint for backend service deployment` | Verified pushed to `origin/main` | Infrastructure-as-code deployment specification for Render web service |
 | 247 | `COMMIT_LOG.md` | `2407055` | `docs: record render deployment config in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 248 | `backend/src/routes/bookingRoutes.ts` | `bcfa627` | `fix(bookings): properly type request in role-dispatched bookings router` | Verified pushed to `origin/main` | Resolved TS2339 property user type check on booking route handler |
+| 249 | `COMMIT_LOG.md` | `8042c40` | `docs: record booking route fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 250 | `frontend/tsconfig.json` | `3b4ff6c` | `build(types): exclude test files from production typescript compilation` | Verified pushed to `origin/main` | Separated test file type-checking from production build compilation |
 
 
 
