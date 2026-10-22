@@ -46,9 +46,12 @@ export const connectDB = async (): Promise<void> => {
       console.log(`===================================================================`);
       return;
     } catch (err: any) {
-      if (env.IS_PRODUCTION) {
-        console.error('FATAL ERROR: Failed to connect to production MongoDB instance:', err.message);
-        throw new Error(`Production MongoDB connection failed: ${err.message}. Refusing fallback in production.`);
+      const isProductionOrStaging =
+        env.IS_PRODUCTION || env.IS_STAGING || process.env.APP_ENV === 'staging' || process.env.STAGING === 'true';
+
+      if (isProductionOrStaging) {
+        console.error('FATAL ERROR: Failed to connect to persistent MongoDB instance in production/staging:', err.message);
+        throw new Error(`Production/Staging MongoDB connection failed: ${err.message}. In-memory fallback is strictly prohibited.`);
       }
 
       console.warn(`\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
