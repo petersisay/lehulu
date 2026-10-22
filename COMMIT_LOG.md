@@ -139,3 +139,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 133 | `frontend/src/locales/en.ts` | `5f65255` | `feat(i18n): establish comprehensive English translation dictionary for all platform views` | Verified pushed to `origin/main` | Key-value coverage across discovery, bookings, and admin check |
 | 134 | `COMMIT_LOG.md` | `1363239` | `docs: record en.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 135 | `frontend/src/locales/am.ts` | `0ce6c49` | `feat(i18n): establish authentic Amharic translation dictionary across all user workflows` | Verified pushed to `origin/main` | Ethiopic typography and parity with English keys validation |
+| 136 | `COMMIT_LOG.md` | `7ee405e` | `docs: record am.ts commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 137 | `frontend/src/context/LanguageContext.tsx` | `865ba2c` | `feat(i18n): implement LanguageContext with local storage persistence and default Amharic locale` | Verified pushed to `origin/main` | React context provider, hook, and locale switcher validation |
