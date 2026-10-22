@@ -152,6 +152,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 146 | `frontend/src/components/Navbar.tsx` | `a38ff92` | `feat(ui): create responsive Navbar component with bilingual toggle and role-aware navigation` | Verified pushed to `origin/main` | Header branding, drawer menu, and profile dropdown validation |
 | 147 | `COMMIT_LOG.md` | `c271b98` | `docs: record Navbar commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 148 | `frontend/src/components/Footer.tsx` | `0856f88` | `feat(ui): create responsive Footer component with Ethiopian localization hubs and trust badges` | Verified pushed to `origin/main` | Links, legal terms, city badges, and bilingual copyright check |
+| 149 | `COMMIT_LOG.md` | `98d5f39` | `docs: record Footer commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 150 | `frontend/src/components/ProviderCard.tsx` | `7294a2a` | `feat(ui): create ProviderCard component with verified badge, genuine reviews, and ETB pricing` | Verified pushed to `origin/main` | Card layout, review counts, distance calculation, and ETB currency display check |
+
 
 
 
