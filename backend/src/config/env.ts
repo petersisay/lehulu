@@ -10,6 +10,8 @@ const DEV_FALLBACK_MONGO = 'mongodb://127.0.0.1:27017/lehulu';
 const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+    APP_ENV: z.enum(['development', 'staging', 'production', 'test']).default('development'),
+    ALLOW_TEST_AUTH: z.string().optional().default('false').transform((val) => val === 'true'),
     PORT: z.string().transform((val) => parseInt(val, 10)).default('5000'),
     CLIENT_URL: z.string().default('http://localhost:5173'),
     MONGODB_URI: z.string().default(DEV_FALLBACK_MONGO),
@@ -24,6 +26,17 @@ const envSchema = z
     RATE_LIMIT_MAX_REQUESTS: z.string().transform((val) => parseInt(val, 10)).default('100'),
   })
   .superRefine((data, ctx) => {
+    const isProductionOrStaging =
+      data.NODE_ENV === 'production' || data.APP_ENV === 'production' || data.APP_ENV === 'staging';
+
+    if (isProductionOrStaging && data.ALLOW_TEST_AUTH) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['ALLOW_TEST_AUTH'],
+        message: 'ALLOW_TEST_AUTH cannot be enabled in staging or production environments.',
+      });
+    }
+
     if (data.NODE_ENV === 'production') {
       if (!data.SESSION_SECRET || data.SESSION_SECRET === DEV_FALLBACK_SESSION || data.SESSION_SECRET.length < 32) {
         ctx.addIssue({
@@ -84,7 +97,12 @@ if (!parsedEnv.success) {
 
 export const env = {
   ...parsedEnv.data,
-  IS_PRODUCTION: parsedEnv.data.NODE_ENV === 'production',
+  IS_PRODUCTION: parsedEnv.data.NODE_ENV === 'production' || parsedEnv.data.APP_ENV === 'production',
+  IS_STAGING: parsedEnv.data.APP_ENV === 'staging',
   IS_TEST: parsedEnv.data.NODE_ENV === 'test',
-  IS_DEV: parsedEnv.data.NODE_ENV === 'development',
+  IS_DEV:
+    parsedEnv.data.NODE_ENV === 'development' &&
+    parsedEnv.data.APP_ENV !== 'staging' &&
+    parsedEnv.data.APP_ENV !== 'production',
+  ALLOW_TEST_AUTH: Boolean(parsedEnv.data.ALLOW_TEST_AUTH && parsedEnv.data.NODE_ENV === 'test'),
 };
