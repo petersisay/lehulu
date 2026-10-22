@@ -288,6 +288,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 282 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `174905e` | `docs: finalize acceptance report with animated hero, privacy and verification evidence` | Verified pushed to `origin/main` | Updated acceptance report with evidence of animated hero, browser verification and tests |
 | 283 | `COMMIT_LOG.md` | `4ed3dca` | `docs: record acceptance report finalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 284 | `backend/src/config/env.ts` | `58407e5` | `feat(security): enforce strict staging and test auth boundaries in env configuration` | Verified pushed to `origin/main` | Added APP_ENV and strict ALLOW_TEST_AUTH validation forbidding mock auth in staging/production |
+| 285 | `COMMIT_LOG.md` | `c015b54` | `docs: record env security hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 286 | `backend/src/config/db.ts` | `871f407` | `fix(db): prohibit in-memory database fallback in staging environments` | Verified pushed to `origin/main` | Enforced persistent database connection in staging as well as production |
 
 
 
