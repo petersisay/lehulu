@@ -65,3 +65,5 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 59 | `backend/src/models/Quote.ts` | `6e63924` | `feat(models): create Quote model for itemized proposals and price agreements` | Verified pushed to `origin/main` | Quotation item schema and ETB currency calculation check |
 | 60 | `COMMIT_LOG.md` | `9b0e24b` | `docs: record Quote model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 61 | `backend/src/models/Message.ts` | `f0b105c` | `feat(models): create Message model with booking-participant scoping` | Verified pushed to `origin/main` | Tenancy indexing and role authorization validation |
+| 62 | `COMMIT_LOG.md` | `4588f60` | `docs: record Message model commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 63 | `backend/src/models/Notification.ts` | `a98fa31` | `feat(models): create Notification model with bilingual alerts and read tracking` | Verified pushed to `origin/main` | Notification enum and compound indexing check |
