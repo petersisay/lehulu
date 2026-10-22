@@ -166,6 +166,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 160 | `frontend/src/components/MapDiscovery.tsx` | `71a5e4d` | `feat(ui): create Leaflet MapDiscovery component with custom marker pins and popup cards` | Verified pushed to `origin/main` | OpenStreetMap tiles, custom HTML divIcon pins, and city recentering check |
 | 161 | `COMMIT_LOG.md` | `c0aea7b` | `docs: record MapDiscovery commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 162 | `frontend/src/pages/LandingPage.tsx` | `3d13f20` | `feat(ui): create responsive LandingPage with hero search, service categories, and verified provider spotlight` | Verified pushed to `origin/main` | Hero search form, trust badges, category navigation, and how-it-works workflow check |
+| 163 | `COMMIT_LOG.md` | `6638822` | `docs: record LandingPage commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 164 | `frontend/src/pages/DiscoveryPage.tsx` | `b64eb05` | `feat(discovery): implement DiscoveryPage with split map-list view, trade pills, and location filtering` | Verified pushed to `origin/main` | Search parameters, Leaflet integration, geolocation trigger, and responsive toggle check |
+
 
 
 
