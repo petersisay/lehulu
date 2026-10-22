@@ -234,6 +234,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 228 | `COMMIT_LOG.md` | `fc804e8` | `docs: record vite test configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 229 | `frontend/src/context/AuthContext.tsx` | `aadc2ec` | `refactor(auth): export AuthContext for component testing and direct context consumers` | Verified pushed to `origin/main` | Export AuthContext symbol for unit and integration testing |
 | 230 | `frontend/src/test/app.test.tsx` | `b86e400` | `test(frontend): add comprehensive component, navigation, and localization tests with Vitest` | Verified pushed to `origin/main` | 6 unit tests covering navbar roles, provider cards, and bilingual language switching |
+| 231 | `COMMIT_LOG.md` | `0b81db7` | `docs: record frontend component tests in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 232 | `backend/src/controllers/categoryController.ts` | `8f7683f` | `fix(api): provide data field in category responses for client payload compatibility` | Verified pushed to `origin/main` | Response envelope compatibility for categories list |
 
 
 
