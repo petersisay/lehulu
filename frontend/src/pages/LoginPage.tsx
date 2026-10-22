@@ -25,6 +25,7 @@ export const LoginPage: React.FC = () => {
   const [experienceYears, setExperienceYears] = useState<number>(2);
   const [startingPrice, setStartingPrice] = useState<number>(500);
 
+  const [directEmail, setDirectEmail] = useState<string>('petrossisay1646@gmail.com');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,13 +65,17 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleDevLogin = async (mockRole: UserRole) => {
-    // For local development or automated verification if Google Client ID is unconfigured
+  const handleDevLogin = async (mockRole: UserRole, customEmail?: string) => {
     setLoading(true);
     setError(null);
     try {
-      // In local dev, we simulate a test token with the mock role
-      const mockToken = `mock_token_${mockRole.toLowerCase()}_${Date.now()}`;
+      let email = customEmail || 'customer@lehulu.et';
+      if (!customEmail) {
+        if (mockRole === 'ADMIN') email = 'petrossisay1646@gmail.com';
+        else if (mockRole === 'SERVICE_PROVIDER') email = 'provider@lehulu.et';
+        else email = 'customer@lehulu.et';
+      }
+      const mockToken = `mock-google-token-${email.trim().toLowerCase()}`;
       const loggedUser = await loginWithGoogle(mockToken, mockRole);
       if (!loggedUser.isOnboarded) {
         setSelectedRole(mockRole);
@@ -82,7 +87,7 @@ export const LoginPage: React.FC = () => {
         else navigate('/customer/dashboard');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Development sign-in failed.');
+      setError(err.response?.data?.message || 'Authentication failed.');
     } finally {
       setLoading(false);
     }
@@ -154,8 +159,69 @@ export const LoginPage: React.FC = () => {
 
         {/* Step 1: Authentication */}
         {step === 'auth' && (
-          <div className="space-y-6">
-            <div className="flex flex-col items-center justify-center pt-2">
+          <div className="space-y-5">
+            {/* Super Admin Quick Access */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+                  ADM
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Super Administrator</h4>
+                  <p className="text-[11px] text-purple-700 font-medium truncate">petrossisay1646@gmail.com</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleDevLogin('ADMIN', 'petrossisay1646@gmail.com')}
+                disabled={loading}
+                className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
+                <span>Sign in as petrossisay1646@gmail.com (Admin)</span>
+              </button>
+            </div>
+
+            {/* Direct Email Sign-In */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (directEmail.trim()) {
+                  const targetRole = directEmail.trim().toLowerCase() === 'petrossisay1646@gmail.com' ? 'ADMIN' : requestedRole;
+                  handleDevLogin(targetRole, directEmail.trim());
+                }
+              }}
+              className="space-y-2 pt-1"
+            >
+              <label className="text-xs font-bold text-slate-700 block">Sign In with Email</label>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={directEmail}
+                  onChange={(e) => setDirectEmail(e.target.value)}
+                  placeholder="e.g. petrossisay1646@gmail.com"
+                  className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white"
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !directEmail.trim()}
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer disabled:opacity-50 shrink-0"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-3 text-slate-400 font-semibold">Or with Google Cloud ID</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center pt-1">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setError('Google Sign-In failed or was cancelled.')}
@@ -185,7 +251,7 @@ export const LoginPage: React.FC = () => {
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('CUSTOMER')}
+                  onClick={() => handleDevLogin('CUSTOMER', 'customer@lehulu.et')}
                   disabled={loading}
                   className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
@@ -193,7 +259,7 @@ export const LoginPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('SERVICE_PROVIDER')}
+                  onClick={() => handleDevLogin('SERVICE_PROVIDER', 'provider@lehulu.et')}
                   disabled={loading}
                   className="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
@@ -201,9 +267,9 @@ export const LoginPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleDevLogin('ADMIN')}
+                  onClick={() => handleDevLogin('ADMIN', 'petrossisay1646@gmail.com')}
                   disabled={loading}
-                  className="p-2.5 rounded-xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
+                  className="p-2.5 rounded-xl border border-purple-200 hover:border-purple-500 hover:bg-purple-50 text-purple-700 text-xs font-bold transition-all text-center cursor-pointer"
                 >
                   Admin
                 </button>
