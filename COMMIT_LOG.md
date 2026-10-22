@@ -190,6 +190,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 184 | `frontend/src/index.css` | `35a4dac` | `style(ui): configure index.css with Tailwind directives, Ethiopic fonts, and Leaflet styles` | Verified pushed to `origin/main` | Font family integration, scrollbars, and Leaflet pin CSS check |
 | 185 | `COMMIT_LOG.md` | `9e4b891` | `docs: record index.css commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 186 | `frontend/src/App.tsx` | `1b002d4` | `feat(routes): configure App router with role-protected layouts and marketplace endpoints` | Verified pushed to `origin/main` | Route table, ProtectedRoute guard, and layout wrapping check |
+| 187 | `COMMIT_LOG.md` | `ffbae44` | `docs: record App.tsx commit in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 188 | `frontend/src/main.tsx` | `09c7b92` | `feat(client): implement main.tsx client entrypoint mounting GoogleOAuth and state providers` | Verified pushed to `origin/main` | Root mount, React Query provider, GoogleOAuth provider, and CSS import check |
+
 
 
 
