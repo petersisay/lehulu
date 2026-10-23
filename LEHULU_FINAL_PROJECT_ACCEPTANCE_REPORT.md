@@ -297,6 +297,30 @@ Run command: `npm run test` inside `frontend/`
      - Direct inspection of `/login`: administrator email `petrossisay1646@gmail.com` is completely removed from all public card titles, labels, badges, and input placeholders, while one-click admin sign-in remains securely operational.
 - **Console verification**: 0 JavaScript runtime errors, 0 unhandled promise rejections.
 
+### 8.4 Live Cloud Staging Verification (Render + MongoDB Atlas)
+- **Render Web Service ID**: `srv-dbdanh1srm7s73b3eq1g` (`lehulu-api-staging`)
+- **Live Public Endpoint**: `https://lehulu.onrender.com`
+- **Live Health Check**: `https://lehulu.onrender.com/api/v1/health`
+- **Deploy Status**: `Deploy succeeded | Live` (Commit `10d74a9`, duration 59.3s)
+- **Visual Evidence Artifact**: `render_staging_deploy_live_10d74a9.png`
+- **Live Response (HTTP 200 OK)**:
+```json
+{
+  "status": "UP",
+  "service": "Lehulu API",
+  "timestamp": "2026-10-23T01:56:06.973Z",
+  "environment": "staging",
+  "version": "1.0.0",
+  "database": {
+    "isConnected": true,
+    "isInMemory": false,
+    "storageType": "PERSISTENT_STORAGE",
+    "databaseName": "lehulu-staging"
+  }
+}
+```
+- **Database Persistence & Isolation**: Connected to persistent MongoDB Atlas cluster with automatic staging isolation targeting database `lehulu-staging`. In-memory storage is completely disabled.
+
 ---
 
 ## 9. Comprehensive Implementation Status Matrix
@@ -305,7 +329,7 @@ Run command: `npm run test` inside `frontend/`
 | :--- | :--- | :--- | :--- |
 | **Google Authentication** | **Implemented** | **Tested locally** | ID token validation, subject id binding, HttpOnly cookie sessions |
 | **Role-Based Onboarding** | **Implemented** | **Tested locally** | Distinct Customer and Service Provider onboarding paths |
-| **Admin Auto-Provisioning & Privacy** | **Implemented** | **Tested locally** | Admin auto-promotion for configured email; public UI email hidden |
+| **Admin Auto-Provisioning & Privacy** | **Implemented** | **Tested locally & in cloud** | Admin auto-promotion with profile repair fallback; public UI email hidden |
 | **Mock Auth Rejection Gate** | **Implemented** | **Tested locally** | Mock auth strictly prohibited in staging/prod; requires explicit ALLOW_TEST_AUTH in tests |
 | **Animated Hero & Visual Identity** | **Implemented** | **Tested locally** | Panoramic Bishoftu/Adama scenery, glowing trails & floating badges |
 | **Service Categories Engine** | **Implemented** | **Tested locally** | 5 core seeded trades (Electrician, Plumber, Auto, Cleaner, Computer) |
@@ -322,10 +346,9 @@ Run command: `npm run test` inside `frontend/`
 | **Ethiopic & English i18n** | **Implemented** | **Tested locally** | Bilingual UI with default Amharic locale and instant toggle |
 | **Production Frontend Build** | **Implemented** | **Tested locally** | Vite build: **86.66 kB** main JS bundle (27.34 kB gzipped) |
 | **Vercel Deployment Spec** | **Implemented** | **Tested locally** | `frontend/vercel.json` configured with SPA rewrites & security headers |
-| **Render Staging & Prod Spec** | **Implemented** | **Tested locally** | `render.yaml` configured with separate staging and production services |
+| **Render Staging Deployment** | **Deployed & Verified** | **Live Verified (HTTP 200)** | Render service `lehulu-api-staging` live at `https://lehulu.onrender.com` connected to MongoDB Atlas `lehulu-staging` |
 | **Persistent Object Storage** | **Implemented** | **Not configured** | Cloudinary/S3 architecture ready; awaiting production cloud credentials |
 | **Live Payment Gateway** | **Implemented (Modular)**| **Blocked/Awaiting Approval** | Telebirr / Chapa webhook stubs ready; awaiting commercial credentials |
-| **Cloud Staging Deployment** | **Implemented (IaC)** | **Awaiting Approval/Keys** | `render.yaml` & `vercel.json` ready; awaiting cloud provider tokens |
 
 ---
 
@@ -338,7 +361,7 @@ Run command: `npm run test` inside `frontend/`
 - [x] **CORS Configuration**: Allowed origins restricted to authorized client domains.
 - [x] **Security Headers**: Helmet and Vercel configured with strict Content-Type, Frame-Options, and XSS protection.
 - [x] **SPA Routing**: `vercel.json` rewrites all client routes to `/index.html`.
-- [x] **Health Check**: `GET /api/v1/health` returns status `UP` with platform version and uptime.
+- [x] **Live Cloud Staging Health Check**: `GET https://lehulu.onrender.com/api/v1/health` returns HTTP 200 `UP` with persistent Atlas database `lehulu-staging`.
 - [x] **Clean Working Tree**: All modified source files committed and pushed under the strict 1 file = 1 commit rule.
 
 ---
@@ -348,6 +371,7 @@ Run command: `npm run test` inside `frontend/`
 The assignment was executed with 100% adherence to the mandatory rule:
 **ONE CHANGED FILE = ONE COMMIT = ONE PUSH**.
 
-- **Total Commits to Date**: **315+ atomic commits**
+- **Total Commits to Date**: **348+ atomic commits**
 - **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
+
