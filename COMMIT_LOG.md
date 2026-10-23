@@ -373,6 +373,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 367 | `backend/src/routes/adminRoutes.ts` | `ec6f7e0` | `feat(routes): mount /api/v1/admin/leads routes for provider research management` | Verified pushed to `origin/main` | Mounted administrative routes for managing provider research leads |
 | 368 | `COMMIT_LOG.md` | `4e955dc` | `docs: record adminRoutes.ts leads route in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 369 | `backend/src/config/seedLeads.ts` | `623063c` | `feat(leads): add authentic Adama and Bishoftu business leads dataset and seeding utility` | Verified pushed to `origin/main` | Added real public business research dataset across all 5 trades in Adama & Bishoftu |
+| 370 | `COMMIT_LOG.md` | `daa97d3` | `docs: record seedLeads.ts dataset addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 371 | `backend/src/server.ts` | `24d3b07` | `feat(server): auto-seed authentic provider research leads on startup` | Verified pushed to `origin/main` | Added automated idempotent lead seeding during server boot |
 
 
 
