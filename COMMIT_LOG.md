@@ -325,6 +325,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 319 | `package.json` | `1a2f9b1` | `build: add start and start:backend scripts to root package.json` | Verified pushed to `origin/main` | Added start and start:backend scripts delegating to backend directory |
 | 320 | `COMMIT_LOG.md` | `780d412` | `docs: record root package.json start script in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 321 | `render.yaml` | `77b5ea2` | `ci(deploy): isolate render.yaml to staging web service and disable autoDeploy` | Verified pushed to `origin/main` | Disabled autoDeploy and isolated blueprint strictly to staging service |
+| 322 | `COMMIT_LOG.md` | `faeaa29` | `docs: record render.yaml staging-only isolation in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 323 | `backend/tsconfig.json` | `1d3ebae` | `build(ts): remove deprecated moduleResolution=node from backend tsconfig.json` | Verified pushed to `origin/main` | Removed deprecated moduleResolution option preventing TS5108 error on Render build |
+
 
 
 
