@@ -335,6 +335,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 329 | `backend/package-lock.json` | `0ea1ac3` | `build: synchronize backend package-lock.json with promoted dependencies` | Verified pushed to `origin/main` | Synchronized lockfile for npm ci execution |
 | 330 | `COMMIT_LOG.md` | `fde037f` | `docs: record package-lock.json update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 331 | `render.yaml` | `2940e00` | `ci(deploy): add --include=dev to npm ci in render.yaml buildCommand` | Verified pushed to `origin/main` | Added --include=dev flag to ensure build dependencies install under NODE_ENV=production |
+| 332 | `COMMIT_LOG.md` | `276b898` | `docs: record render.yaml --include=dev build flag in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 333 | `backend/package.json` | `ce5a67f` | `build(deps): add gcp-metadata to dependencies to resolve lockfile sync on Render` | Verified pushed to `origin/main` | Added gcp-metadata explicit dependency to eliminate lockfile mismatch on npm ci |
+
 
 
 
