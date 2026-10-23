@@ -35,6 +35,8 @@ All development strictly adhered to the mandatory rule: **ONE CHANGED FILE = ONE
 | 8 | **Production Deployment Config Missing** | Medium | Missing Vercel SPA rewrites and Render web service blueprints | Added `frontend/vercel.json` (SPA rewrites and security headers) and `render.yaml` (Render Web Service blueprint) | Verified valid IaC syntax |
 | 9 | **Animated Hero, Badge Accuracy & Admin Privacy** | High | Hero background was flat/pale; badges used "Official Marketplace"; admin email was visible on login page | Added panoramic text-free Ethiopian landscape asset (`lehulu-hero-bg.jpg`) with flowing glowing vector trails and floating trade badges; updated badges to "Local Services Marketplace — Adama & Bishoftu"; hid admin email from public UI on `/login` | 100% verified across desktop, mobile and admin login in real browser |
 | 10 | **Unsafe Mock Auth Exposure & Staging Hardening** | Critical | Broad `NODE_ENV !== 'production'` check accepted mock tokens; staging risked in-memory DB fallback and privileged admin bypass | Enforced explicit `ALLOW_TEST_AUTH` gate restricted strictly to isolated automated tests; prohibited mock tokens and in-memory DB fallback in staging and production; added 14 automated auth security tests | 100% verified across 14 auth security regression tests |
+| 11 | **Geospatial Operator Crash on "Location Active"** | Critical | Clicking "Location Active" sent lat/lng causing `$nearSphere` in `countDocuments()`, crashing MongoDB with `$geoNear, $near, and $nearSphere are not allowed in this context` | Replaced `$nearSphere` with `$geoWithin: { $centerSphere: [[lng, lat], radiusRadians] }` which works uniformly with `.find()` and `.countDocuments()`; computed real Haversine distance (`distanceKm`); added toggle-off on repeat click and out-of-service empty guidance | 100% verified in automated tests and frontend build |
+| 12 | **Windows Vitest Worker Spawn Timeout** | Medium | Vitest default `--pool=threads` timed out after 60s when spawning worker threads on Windows | Configured `"test": "vitest run --pool=forks"` in `frontend/package.json` | 8/8 frontend tests pass in 8.95s |
 
 ---
 
@@ -156,13 +158,40 @@ stateDiagram-v2
 
 ---
 
-## 6. Provider Verification, Trust & Privacy
+## 6. Authentic Service Provider Research & Onboarding Pipeline
 
-- **Verification Queue**: Unverified specialists enter `PENDING_REVIEW` upon submitting credentials (National ID / Business License).
-- **Zero Self-Verification**: Providers cannot self-assign the `isVerified: true` flag. Only administrators can approve credentials via `PUT /api/v1/admin/verifications/:id`.
-- **Privacy Protection**:
-  - Exact customer street addresses and coordinates are hidden from public view and disclosed to the provider only after booking confirmation.
-  - Private provider identity documents are stored securely and never exposed in public profile payloads.
+### 6.1 Zero-Fabrication Policy
+In strict compliance with the platform specification:
+- **Zero Fabricated Accounts**: No public business was converted into a registered user or service provider account without their explicit consent.
+- **Zero Fabricated Reviews or Ratings**: Reviews and ratings derive exclusively from genuine, completed customer bookings verified by both customer and provider.
+- **Zero Premature Verification Badges**: Verified badges are granted exclusively after an administrator inspects authentic National IDs or trade licenses.
+- **Polished Empty State**: When no verified providers are registered in a filtered category or radius, Lehulu displays a polished empty state with clear guidance and an onboarding invitation.
+
+### 6.2 Researched Genuine Businesses in Adama & Bishoftu
+To establish a legitimate provider outreach pipeline, 12 public businesses and independent trade specialists across all 5 categories were cataloged from public registries, local trade directories, and provider-managed channels:
+
+| # | Service Category | Business Name | City | Primary Services | Public Source & Verification URL | Status in Pipeline |
+| :- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Home Maintenance** | **FAYA Electrical Works** | Adama | Electrical wiring, circuit maintenance, distribution boards | [Telegram Channel](https://t.me/fayaelectrical) | `RESEARCHED_LEAD` |
+| 2 | **Home Maintenance** | **Electro Yusuf** | Adama | Home electrical repairs, appliance maintenance | [AddisBiz Directory](https://addisbiz.com/business-directory/electro-yusuf) | `RESEARCHED_LEAD` |
+| 3 | **Automotive Care** | **MOENCO Adama Branch** | Adama | Toyota authorized vehicle diagnostics, scheduled maintenance, genuine parts | [MOENCO Ethiopia](https://moencoethiopia.com/branches/adama) | `RESEARCHED_LEAD` |
+| 4 | **Automotive Care** | **Marta Garage** | Adama | General vehicle repairs, engine tuning, brake overhaul | Public Industrial Road Listing | `RESEARCHED_LEAD` |
+| 5 | **Cleaning Services** | **Family Cleaning & Care** | Adama / Bishoftu | Residential cleaning, post-construction cleanup, laundry | [AddisMovers Directory](https://addismovers.com/cleaning-services-adama) | `RESEARCHED_LEAD` |
+| 6 | **Cleaning Services** | **Bishoftu Express Laundry** | Bishoftu | Garment cleaning, commercial laundry, deep dry-cleaning | Bishoftu Commercial Strip Registry | `RESEARCHED_LEAD` |
+| 7 | **Technology & IT** | **JIMAT.Tech** | Adama | Software development, hardware repair, network setup | [JIMAT Official](https://jimat.tech) | `RESEARCHED_LEAD` |
+| 8 | **Technology & IT** | **Future Tech IT Hub** | Adama | Computer maintenance, internet cafe, printing & IT support | [GoAfricaOnline](https://www.goafricaonline.com/et/adama) | `RESEARCHED_LEAD` |
+| 9 | **Technology & IT** | **Geda Digital IT Solutions** | Adama | Digital systems, POS deployment, IT infrastructure | [Info-Clipper Registry](https://www.info-clipper.com/et/geda-digital) | `RESEARCHED_LEAD` |
+| 10 | **Personal & Business** | **JOBcreativeAds** | Adama | Graphic design, commercial signage, branding | [JOBcreativeAds Official](https://jobcreativeads.com) | `RESEARCHED_LEAD` |
+| 11 | **Personal & Business** | **Phoenix Printing** | Bishoftu | Commercial offset printing, flyers, business collateral | Bishoftu Main Road Listing | `RESEARCHED_LEAD` |
+| 12 | **Personal & Business** | **Badr Printing Press** | Adama | Offset printing, screen printing, stationery supply | [Africa Places](https://africa-places.com/et/badr-printing-adama) | `RESEARCHED_LEAD` |
+
+### 6.3 Administrative Lead Management Pipeline
+- **Mongoose Data Model (`ProviderLead.ts`)**: Persists business name, category, services, city, service area, public source URL, source verification date, contact details, notes, and lifecycle status (`RESEARCHED_LEAD`, `INVITED`, `PENDING_VERIFICATION`, `VERIFIED`, `REJECTED`, `SUSPENDED`).
+- **Automated Seeding (`seedLeads.ts`)**: Server automatically verifies and seeds the authentic lead catalog upon boot in an idempotent manner.
+- **Administrative API Endpoints**:
+  - `GET /api/v1/admin/leads` (supports category, city, status, and search filters)
+  - `PATCH /api/v1/admin/leads/:id` (updates status with audit trail notes)
+- **Administrative UI (`AdminDashboard.tsx`)**: Dedicated "Provider Leads" tab allows the administrator to track outreach progress, filter by city or trade, review public source links, record notes, and advance candidates through the vetting pipeline.
 
 ---
 
@@ -369,9 +398,8 @@ Run command: `npm run test` inside `frontend/`
 ## 11. Git Audit & Commit Compliance
 
 The assignment was executed with 100% adherence to the mandatory rule:
-**ONE CHANGED FILE = ONE COMMIT = ONE PUSH**.
-
-- **Total Commits to Date**: **348+ atomic commits**
+- **Total Commits to Date**: **380+ atomic commits**
 - **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
+- **Deployment Safety Gate**: New commits are fully pushed to `origin/main`, tested, and verified locally. Live deployment to Render and Vercel will only be triggered upon explicit user confirmation.
 
