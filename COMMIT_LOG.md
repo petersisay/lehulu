@@ -333,6 +333,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 327 | `backend/package.json` | `0b640c7` | `build: promote typescript and type declarations to dependencies in backend package.json` | Verified pushed to `origin/main` | Promoted @types and typescript to dependencies to guarantee availability during production build |
 | 328 | `COMMIT_LOG.md` | `88c6382` | `docs: record backend package.json type dependencies promotion in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 329 | `backend/package-lock.json` | `0ea1ac3` | `build: synchronize backend package-lock.json with promoted dependencies` | Verified pushed to `origin/main` | Synchronized lockfile for npm ci execution |
+| 330 | `COMMIT_LOG.md` | `fde037f` | `docs: record package-lock.json update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 331 | `render.yaml` | `2940e00` | `ci(deploy): add --include=dev to npm ci in render.yaml buildCommand` | Verified pushed to `origin/main` | Added --include=dev flag to ensure build dependencies install under NODE_ENV=production |
+
 
 
 
