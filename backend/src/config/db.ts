@@ -27,15 +27,33 @@ export const connectDB = async (): Promise<void> => {
     mongoose.set('strictQuery', true);
 
     let uri = env.MONGODB_URI;
+    const targetDb = env.IS_PRODUCTION ? 'lehulu-production' : 'lehulu-staging';
+
+    // Parse URI to inspect if database name is missing or defaulted to 'test'
+    const urlPattern = /^(mongodb(?:\+srv)?:\/\/[^\/?#]+)(?:\/([^?#]*))?(\?.*)?$/;
+    const match = uri.match(urlPattern);
+
+    const connectOptions: mongoose.ConnectOptions = {
+      serverSelectionTimeoutMS: 10000,
+    };
+
+    if (match) {
+      const base = match[1];
+      const existingDb = (match[2] || '').trim();
+      const query = match[3] || '';
+
+      if (!existingDb || existingDb === 'test') {
+        uri = `${base}/${targetDb}${query}`;
+        connectOptions.dbName = targetDb;
+      }
+    }
 
     // Direct connection attempt to configured MongoDB instance
     try {
       const sanitized = uri.replace(/\/\/[^@]*@/, '//***:***@');
       console.log(`[DATABASE]: Attempting connection to MongoDB at: ${sanitized}`);
       
-      await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 10000,
-      });
+      await mongoose.connect(uri, connectOptions);
 
       isInMemoryActive = false;
       activeDatabaseUri = uri;
