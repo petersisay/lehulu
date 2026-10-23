@@ -311,6 +311,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 305 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `15b19b8` | `docs: finalize acceptance report with mock auth elimination, 57 backend tests and staging specs` | Verified pushed to `origin/main` | Finalized comprehensive acceptance report covering mock auth rejection, 57 backend tests, 8 frontend tests, and staging specs |
 | 306 | `COMMIT_LOG.md` | `547e836` | `docs: record acceptance report finalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 307 | `render.yaml` | `9ce3a77` | `ci(deploy): specify Node.js 20.18.0 LTS runtime in render.yaml blueprints` | Verified pushed to `origin/main` | Added NODE_VERSION: 20.18.0 to both staging and production blueprints |
+| 308 | `COMMIT_LOG.md` | `e26790f` | `docs: record render.yaml Node runtime update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 309 | `backend/src/config/db.ts` | `2b55c90` | `fix(db): increase MongoDB server selection timeout to 10s for Atlas cloud resilience` | Verified pushed to `origin/main` | Increased serverSelectionTimeoutMS to 10000ms for resilient cloud cluster connections |
+
 
 
 
