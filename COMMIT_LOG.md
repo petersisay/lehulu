@@ -347,6 +347,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 341 | `backend/src/config/db.ts` | `2a658bd` | `fix(db): automatically default bare Atlas URIs to staging database path` | Verified pushed to `origin/main` | Automatically normalize MongoDB connection string to target lehulu-staging when path is omitted or test |
 | 342 | `COMMIT_LOG.md` | `0ebcb0c` | `docs: record db.ts atlas staging normalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 343 | `backend/src/config/env.ts` | `8f3121d` | `fix(env): accurately detect staging environment via RENDER_SERVICE_NAME and APP_ENV` | Verified pushed to `origin/main` | Enhanced environment parsing to reliably identify staging web service |
+| 344 | `COMMIT_LOG.md` | `b3624cd` | `docs: record env.ts staging detection fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 345 | `backend/src/config/db.ts` | `4d1b316` | `fix(db): enforce lehulu-staging database isolation for staging services` | Verified pushed to `origin/main` | Enforced lehulu-staging database selection when running in staging environment |
 
 
 
