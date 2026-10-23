@@ -4,6 +4,7 @@ import { env } from './config/env';
 import { connectDB, disconnectDB } from './config/db';
 import { initSockets } from './sockets';
 import { initialCategories } from './config/seed';
+import { seedProviderLeads } from './config/seedLeads';
 import { ServiceCategory } from './models/ServiceCategory';
 import { User } from './models/User';
 
@@ -19,6 +20,14 @@ const startServer = async () => {
       for (const cat of initialCategories) {
         await ServiceCategory.create(cat);
       }
+    }
+
+    // Auto-seed authentic provider research leads for Adama & Bishoftu
+    try {
+      const leadsCount = await seedProviderLeads();
+      console.log(`Verified authentic provider research leads pipeline (${leadsCount} leads cataloged).`);
+    } catch (leadSeedErr: any) {
+      console.warn('Provider leads auto-seed notice:', leadSeedErr.message);
     }
 
     const adminEmail = env.ADMIN_EMAIL.toLowerCase();
