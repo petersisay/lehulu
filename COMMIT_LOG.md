@@ -339,6 +339,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 333 | `backend/package.json` | `ce5a67f` | `build(deps): add gcp-metadata to dependencies to resolve lockfile sync on Render` | Verified pushed to `origin/main` | Added gcp-metadata explicit dependency to eliminate lockfile mismatch on npm ci |
 | 334 | `COMMIT_LOG.md` | `98c30a9` | `docs: record gcp-metadata dependency addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 335 | `backend/package-lock.json` | `ac294e9` | `build: synchronize backend package-lock.json with gcp-metadata dependency` | Verified pushed to `origin/main` | Synchronized package-lock.json with gcp-metadata dependency |
+| 336 | `COMMIT_LOG.md` | `b15e513` | `docs: record package-lock.json sync in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 337 | `render.yaml` | `525c363` | `ci(deploy): update render.yaml buildCommand to npm install && npm run build` | Verified pushed to `origin/main` | Updated buildCommand to npm install && npm run build for robust cloud builds |
+
 
 
 
