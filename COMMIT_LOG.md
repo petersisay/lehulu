@@ -331,6 +331,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 325 | `backend/src/config/db.ts` | `c9cda79` | `fix(db): load mongodb-memory-server dynamically to prevent compile-time missing module error in production` | Verified pushed to `origin/main` | Used dynamic string module import to prevent tsc error when devDependencies are omitted |
 | 326 | `COMMIT_LOG.md` | `bd64eb6` | `docs: record db.ts dynamic memory server import in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 327 | `backend/package.json` | `0b640c7` | `build: promote typescript and type declarations to dependencies in backend package.json` | Verified pushed to `origin/main` | Promoted @types and typescript to dependencies to guarantee availability during production build |
+| 328 | `COMMIT_LOG.md` | `88c6382` | `docs: record backend package.json type dependencies promotion in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 329 | `backend/package-lock.json` | `0ea1ac3` | `build: synchronize backend package-lock.json with promoted dependencies` | Verified pushed to `origin/main` | Synchronized lockfile for npm ci execution |
+
 
 
 
