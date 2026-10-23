@@ -62,7 +62,8 @@ export const connectDB = async (): Promise<void> => {
       console.warn(`To persist data locally, start a local MongoDB service or set MONGODB_URI in backend/.env.`);
       console.warn(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n`);
 
-      const { MongoMemoryServer } = await import('mongodb-memory-server');
+      const memoryModule: any = 'mongodb-memory-server';
+      const { MongoMemoryServer } = await import(memoryModule);
       memoryServer = await MongoMemoryServer.create();
       uri = memoryServer.getUri();
       isInMemoryActive = true;
