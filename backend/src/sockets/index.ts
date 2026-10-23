@@ -24,7 +24,20 @@ const parseCookies = (cookieHeader: string): Record<string, string> => {
 export const initSockets = (httpServer: HttpServer): SocketIOServer => {
   io = new SocketIOServer(httpServer, {
     cors: {
-      origin: [env.CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const normalizedClient = env.CLIENT_URL.replace(/\/+$/, '');
+        const isAllowed =
+          origin === normalizedClient ||
+          origin === 'http://localhost:5173' ||
+          origin === 'http://127.0.0.1:5173' ||
+          /\.vercel\.app$/.test(new URL(origin).hostname);
+
+        if (isAllowed) {
+          return callback(null, true);
+        }
+        return callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+      },
       credentials: true,
     },
   });
