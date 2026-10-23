@@ -341,6 +341,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 335 | `backend/package-lock.json` | `ac294e9` | `build: synchronize backend package-lock.json with gcp-metadata dependency` | Verified pushed to `origin/main` | Synchronized package-lock.json with gcp-metadata dependency |
 | 336 | `COMMIT_LOG.md` | `b15e513` | `docs: record package-lock.json sync in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 337 | `render.yaml` | `525c363` | `ci(deploy): update render.yaml buildCommand to npm install && npm run build` | Verified pushed to `origin/main` | Updated buildCommand to npm install && npm run build for robust cloud builds |
+| 338 | `COMMIT_LOG.md` | `49c9193` | `docs: record render.yaml npm install buildCommand in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 339 | `backend/src/server.ts` | `1766108` | `fix(server): repair legacy user profile fields and add update fallback in admin auto-provisioning` | Verified pushed to `origin/main` | Backfilled missing username, displayName, googleId on existing admin user and added atomic update fallback |
 
 
 
