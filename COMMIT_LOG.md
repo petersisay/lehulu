@@ -377,6 +377,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 371 | `backend/src/server.ts` | `24d3b07` | `feat(server): auto-seed authentic provider research leads on startup` | Verified pushed to `origin/main` | Added automated idempotent lead seeding during server boot |
 | 372 | `COMMIT_LOG.md` | `d313069` | `docs: record server.ts lead auto-seed in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 373 | `frontend/src/types/index.ts` | `4e8491f` | `feat(types): add ProviderLead and ProviderLeadStatus types` | Verified pushed to `origin/main` | Defined client-side types for provider research leads pipeline |
+| 374 | `COMMIT_LOG.md` | `5248c3b` | `docs: record frontend types ProviderLead addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 375 | `frontend/src/services/api.ts` | `953a596` | `feat(api): add provider lead management endpoints to adminApi` | Verified pushed to `origin/main` | Added getLeads and updateLeadStatus admin client endpoints |
 
 
 
