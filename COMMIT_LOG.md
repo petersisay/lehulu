@@ -343,6 +343,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 337 | `render.yaml` | `525c363` | `ci(deploy): update render.yaml buildCommand to npm install && npm run build` | Verified pushed to `origin/main` | Updated buildCommand to npm install && npm run build for robust cloud builds |
 | 338 | `COMMIT_LOG.md` | `49c9193` | `docs: record render.yaml npm install buildCommand in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 339 | `backend/src/server.ts` | `1766108` | `fix(server): repair legacy user profile fields and add update fallback in admin auto-provisioning` | Verified pushed to `origin/main` | Backfilled missing username, displayName, googleId on existing admin user and added atomic update fallback |
+| 340 | `COMMIT_LOG.md` | `f34d149` | `docs: record server.ts admin profile fields repair in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 341 | `backend/src/config/db.ts` | `2a658bd` | `fix(db): automatically default bare Atlas URIs to staging database path` | Verified pushed to `origin/main` | Automatically normalize MongoDB connection string to target lehulu-staging when path is omitted or test |
 
 
 
