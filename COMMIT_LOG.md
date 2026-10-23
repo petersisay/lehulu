@@ -379,6 +379,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 373 | `frontend/src/types/index.ts` | `4e8491f` | `feat(types): add ProviderLead and ProviderLeadStatus types` | Verified pushed to `origin/main` | Defined client-side types for provider research leads pipeline |
 | 374 | `COMMIT_LOG.md` | `5248c3b` | `docs: record frontend types ProviderLead addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 375 | `frontend/src/services/api.ts` | `953a596` | `feat(api): add provider lead management endpoints to adminApi` | Verified pushed to `origin/main` | Added getLeads and updateLeadStatus admin client endpoints |
+| 376 | `COMMIT_LOG.md` | `2f82f0e` | `docs: record frontend api.ts leads client endpoints in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 377 | `frontend/src/pages/AdminDashboard.tsx` | `15fb21a` | `feat(admin): add provider leads management tab in AdminDashboard` | Verified pushed to `origin/main` | Built leads management pipeline tab with status filters and outreach actions |
 
 
 
