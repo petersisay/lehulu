@@ -6,6 +6,8 @@ import {
   getDisputes,
   resolveDispute,
   getAuditLogs,
+  getProviderLeads,
+  updateProviderLeadStatus,
   auditVerificationSchema,
   resolveDisputeSchema,
 } from '../controllers/adminController';
@@ -27,6 +29,10 @@ router.patch('/verifications/:id', validateRequest(auditVerificationSchema), aud
 // Dispute moderation
 router.get('/disputes', getDisputes);
 router.patch('/disputes/:id', validateRequest(resolveDisputeSchema), resolveDispute);
+
+// Researched provider leads & pipeline management
+router.get('/leads', getProviderLeads);
+router.patch('/leads/:id', updateProviderLeadStatus);
 
 // Immutable system audit logs
 router.get('/audit-logs', getAuditLogs);
