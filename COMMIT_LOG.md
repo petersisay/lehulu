@@ -381,6 +381,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 375 | `frontend/src/services/api.ts` | `953a596` | `feat(api): add provider lead management endpoints to adminApi` | Verified pushed to `origin/main` | Added getLeads and updateLeadStatus admin client endpoints |
 | 376 | `COMMIT_LOG.md` | `2f82f0e` | `docs: record frontend api.ts leads client endpoints in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 377 | `frontend/src/pages/AdminDashboard.tsx` | `15fb21a` | `feat(admin): add provider leads management tab in AdminDashboard` | Verified pushed to `origin/main` | Built leads management pipeline tab with status filters and outreach actions |
+| 378 | `COMMIT_LOG.md` | `4ddcdcb` | `docs: record AdminDashboard leads tab addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 379 | `frontend/package.json` | `e02cd33` | `fix(test): configure vitest to use forks pool for reliable test execution` | Verified pushed to `origin/main` | Resolved thread pool worker spawn timeout on Windows |
 
 
 
