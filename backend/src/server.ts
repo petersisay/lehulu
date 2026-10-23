@@ -36,11 +36,40 @@ const startServer = async () => {
         isOnboarded: true,
       });
       console.log(`Auto-initialized administrator for: ${adminEmail}`);
-    } else if (existingAdmin.role !== 'ADMIN' || !existingAdmin.isOnboarded) {
-      existingAdmin.role = 'ADMIN';
-      existingAdmin.isOnboarded = true;
-      await existingAdmin.save();
-      console.log(`Enforced ADMIN role and full onboarded status for: ${adminEmail}`);
+    } else {
+      const needsProfileRepair =
+        !existingAdmin.username ||
+        !existingAdmin.displayName ||
+        !existingAdmin.googleId ||
+        existingAdmin.role !== 'ADMIN' ||
+        !existingAdmin.isOnboarded;
+
+      if (needsProfileRepair) {
+        existingAdmin.username = existingAdmin.username || 'petros_admin';
+        existingAdmin.displayName = existingAdmin.displayName || 'Petros Sisay (Administrator)';
+        existingAdmin.googleId = existingAdmin.googleId || 'admin-auto-init';
+        existingAdmin.role = 'ADMIN';
+        existingAdmin.isOnboarded = true;
+
+        try {
+          await existingAdmin.save();
+        } catch (saveErr: any) {
+          console.warn(`Admin save validation warning (${saveErr.message}). Performing atomic update.`);
+          await User.updateOne(
+            { _id: existingAdmin._id },
+            {
+              $set: {
+                username: existingAdmin.username,
+                displayName: existingAdmin.displayName,
+                googleId: existingAdmin.googleId,
+                role: 'ADMIN',
+                isOnboarded: true,
+              },
+            }
+          );
+        }
+        console.log(`Enforced ADMIN role and complete profile fields for: ${adminEmail}`);
+      }
     }
 
     // 2. Initialize Express application
