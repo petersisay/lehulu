@@ -27,7 +27,14 @@ export const connectDB = async (): Promise<void> => {
     mongoose.set('strictQuery', true);
 
     let uri = env.MONGODB_URI;
-    const targetDb = env.IS_PRODUCTION ? 'lehulu-production' : 'lehulu-staging';
+    const isStaging =
+      env.IS_STAGING ||
+      env.APP_ENV === 'staging' ||
+      Boolean(process.env.RENDER_SERVICE_NAME?.includes('staging'));
+
+    const targetDb = isStaging
+      ? 'lehulu-staging'
+      : (env.IS_PRODUCTION ? 'lehulu-production' : 'lehulu');
 
     // Parse URI to inspect if database name is missing or defaulted to 'test'
     const urlPattern = /^(mongodb(?:\+srv)?:\/\/[^\/?#]+)(?:\/([^?#]*))?(\?.*)?$/;
@@ -42,7 +49,7 @@ export const connectDB = async (): Promise<void> => {
       const existingDb = (match[2] || '').trim();
       const query = match[3] || '';
 
-      if (!existingDb || existingDb === 'test') {
+      if (!existingDb || existingDb === 'test' || (isStaging && existingDb === 'lehulu-production')) {
         uri = `${base}/${targetDb}${query}`;
         connectOptions.dbName = targetDb;
       }
