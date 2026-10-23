@@ -359,6 +359,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 353 | `backend/src/middleware/auth.ts` | `d2b4c8d` | `fix(auth): enable SameSite=None on secure session cookies for cross-domain Vercel frontend` | Verified pushed to `origin/main` | Configured SameSite=None for secure cookies to permit cross-domain authentication between Vercel and Render |
 | 354 | `COMMIT_LOG.md` | `fc848a0` | `docs: record auth.ts SameSite=None cookie policy in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 355 | `backend/src/app.ts` | `301f3e2` | `fix(cors): permit *.vercel.app origins and normalized client domain dynamically` | Verified pushed to `origin/main` | Permitted *.vercel.app origins and normalized client domain dynamically in Express CORS |
+| 356 | `COMMIT_LOG.md` | `d1562ce` | `docs: record app.ts vercel CORS configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 357 | `backend/src/sockets/index.ts` | `0c16734` | `fix(sockets): permit *.vercel.app origins and normalized client domain in Socket.IO CORS` | Verified pushed to `origin/main` | Permitted *.vercel.app origins and normalized client domain in Socket.IO CORS |
 
 
 
