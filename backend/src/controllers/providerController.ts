@@ -64,6 +64,7 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
       lng,
       lat,
       radiusKm,
+      maxDistance,
       verifiedOnly,
       minRating,
       availableOnly,
@@ -107,21 +108,31 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
       queryObj.$or = [{ businessName: searchRegex }, { skills: { $in: [searchRegex] } }];
     }
 
-    // Geolocation radius filter
-    if (lng && lat) {
-      const longitude = parseFloat(lng as string);
-      const latitude = parseFloat(lat as string);
-      const radiusMeters = (parseFloat(radiusKm as string) || 20) * 1000;
+    let isGeospatialActive = false;
+    let userLng = 0;
+    let userLat = 0;
 
-      queryObj.location = {
-        $nearSphere: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude],
+    // Geolocation radius filter ($geoWithin with $centerSphere to support countDocuments and custom sorting)
+    if (lng && lat) {
+      userLng = parseFloat(lng as string);
+      userLat = parseFloat(lat as string);
+
+      if (!isNaN(userLng) && !isNaN(userLat)) {
+        isGeospatialActive = true;
+        const radiusMeters =
+          parseFloat(maxDistance as string) ||
+          (parseFloat(radiusKm as string) ? parseFloat(radiusKm as string) * 1000 : 50000);
+
+        // $centerSphere takes [[longitude, latitude], radiusInRadians]
+        // Earth radius ~6,378,137 meters
+        const radiusRadians = radiusMeters / 6378137;
+
+        queryObj.location = {
+          $geoWithin: {
+            $centerSphere: [[userLng, userLat], radiusRadians],
           },
-          $maxDistance: radiusMeters,
-        },
-      };
+        };
+      }
     }
 
     const pageNum = parseInt(page as string, 10) || 1;
@@ -133,12 +144,7 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
     if (sort === 'price_asc') sortObj = { 'pricing.startingPrice': 1 };
     if (sort === 'price_desc') sortObj = { 'pricing.startingPrice': -1 };
 
-    // When $nearSphere is used, MongoDB handles distance sorting automatically
-    if (queryObj.location?.$nearSphere) {
-      sortObj = {};
-    }
-
-    const [providers, total] = await Promise.all([
+    const [rawProviders, total] = await Promise.all([
       ProviderProfile.find(queryObj)
         .populate('userId', 'displayName username avatarUrl phoneNumber')
         .populate('categoryIds', 'nameEn nameAm slug icon')
@@ -147,6 +153,30 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
         .limit(limitNum),
       ProviderProfile.countDocuments(queryObj),
     ]);
+
+    let providers = rawProviders.map((p) => {
+      const doc: any = p.toObject();
+      if (isGeospatialActive && doc.location?.coordinates && doc.location.coordinates.length === 2) {
+        const [pLng, pLat] = doc.location.coordinates;
+        // Haversine distance in km
+        const R = 6371;
+        const dLat = ((pLat - userLat) * Math.PI) / 180;
+        const dLon = ((pLng - userLng) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((userLat * Math.PI) / 180) *
+            Math.cos((pLat * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        doc.distanceKm = Math.round(R * c * 10) / 10;
+      }
+      return doc;
+    });
+
+    if (isGeospatialActive && (!sort || sort === 'distance')) {
+      providers.sort((a, b) => (a.distanceKm ?? 99999) - (b.distanceKm ?? 99999));
+    }
 
     res.status(200).json({
       success: true,
