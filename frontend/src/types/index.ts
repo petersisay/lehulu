@@ -188,3 +188,31 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
 }
+
+export type ProviderLeadStatus =
+  | 'RESEARCHED_LEAD'
+  | 'INVITED'
+  | 'PENDING_VERIFICATION'
+  | 'VERIFIED'
+  | 'REJECTED'
+  | 'SUSPENDED';
+
+export interface ProviderLead {
+  _id: string;
+  businessName: string;
+  categorySlug: string;
+  services: string[];
+  city: string;
+  serviceArea?: string;
+  publicSourceUrl: string;
+  sourceVerificationDate: string;
+  publicAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  status: ProviderLeadStatus;
+  notes?: string;
+  lastCheckedDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
