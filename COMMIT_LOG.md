@@ -349,6 +349,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 343 | `backend/src/config/env.ts` | `8f3121d` | `fix(env): accurately detect staging environment via RENDER_SERVICE_NAME and APP_ENV` | Verified pushed to `origin/main` | Enhanced environment parsing to reliably identify staging web service |
 | 344 | `COMMIT_LOG.md` | `b3624cd` | `docs: record env.ts staging detection fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 345 | `backend/src/config/db.ts` | `4d1b316` | `fix(db): enforce lehulu-staging database isolation for staging services` | Verified pushed to `origin/main` | Enforced lehulu-staging database selection when running in staging environment |
+| 346 | `COMMIT_LOG.md` | `e33b840` | `docs: record db.ts staging database isolation in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 347 | `backend/src/app.ts` | `9442c7f` | `fix(health): report staging environment accurately in health check endpoint` | Verified pushed to `origin/main` | Health check reports staging environment dynamically based on runtime context |
 
 
 
