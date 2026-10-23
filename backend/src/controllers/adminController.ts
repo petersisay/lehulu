@@ -9,6 +9,7 @@ import { Booking } from '../models/Booking';
 import { Dispute } from '../models/Dispute';
 import { AuditLog } from '../models/AuditLog';
 import { Notification } from '../models/Notification';
+import { ProviderLead } from '../models/ProviderLead';
 import { recordAuditLog } from '../middleware/audit';
 
 export const auditVerificationSchema = z.object({
@@ -319,3 +320,81 @@ export const getAuditLogs = async (
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getProviderLeads = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { category, city, status, page = 1, limit = 50 } = req.query;
+    const pageNum = parseInt(page as string, 10) || 1;
+    const limitNum = parseInt(limit as string, 10) || 50;
+    const skip = (pageNum - 1) * limitNum;
+
+    const query: any = {};
+    if (category && category !== 'ALL') query.categorySlug = category;
+    if (city && city !== 'ALL') query.city = city;
+    if (status && status !== 'ALL') query.status = status;
+
+    const [leads, total] = await Promise.all([
+      ProviderLead.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+      ProviderLead.countDocuments(query),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: leads,
+      leads,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const updateProviderLeadStatus = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { status, notes } = req.body;
+
+    const updateData: any = { lastCheckedDate: new Date() };
+    if (status) updateData.status = status;
+    if (notes !== undefined) updateData.notes = notes;
+
+    const lead = await ProviderLead.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+    if (!lead) {
+      res.status(404).json({ success: false, message: 'Provider research lead not found.' });
+      return;
+    }
+
+    if (req.user?._id) {
+      await recordAuditLog({
+        actorId: req.user._id,
+        actorEmail: req.user.email || '',
+        action: 'UPDATE_PROVIDER_LEAD_STATUS',
+        entityType: 'ProviderLead',
+        entityId: lead._id as Types.ObjectId,
+        details: { newStatus: status, notes },
+        req,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Provider research lead updated successfully.',
+      lead,
+      data: lead,
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
