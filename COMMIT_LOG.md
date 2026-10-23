@@ -369,6 +369,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 363 | `backend/src/models/ProviderLead.ts` | `cd38d17` | `feat(lead): create ProviderLead mongoose model for researched local businesses` | Verified pushed to `origin/main` | Implemented ProviderLead model to record authentic public leads and onboarding status |
 | 364 | `COMMIT_LOG.md` | `996232e` | `docs: record ProviderLead model addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 365 | `backend/src/controllers/adminController.ts` | `8ccbdba` | `feat(admin): add getProviderLeads and updateProviderLeadStatus endpoints with audit logging` | Verified pushed to `origin/main` | Added administrative endpoints to browse and update provider research leads pipeline |
+| 366 | `COMMIT_LOG.md` | `a4365b3` | `docs: record adminController.ts leads management in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 367 | `backend/src/routes/adminRoutes.ts` | `ec6f7e0` | `feat(routes): mount /api/v1/admin/leads routes for provider research management` | Verified pushed to `origin/main` | Mounted administrative routes for managing provider research leads |
 
 
 
