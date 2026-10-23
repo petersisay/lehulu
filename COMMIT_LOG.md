@@ -319,6 +319,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 313 | `backend/package.json` | `e5058b7` | `build: add verify:atlas npm script to backend package.json` | Verified pushed to `origin/main` | Added verify:atlas npm command to execute Atlas connectivity verification |
 | 314 | `COMMIT_LOG.md` | `55ea856` | `docs: record package.json verify:atlas script in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 315 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `cff45cd` | `docs: add MongoDB Atlas persistence, index verification and Render readiness to acceptance report` | Verified pushed to `origin/main` | Added Section 5 detailing Atlas env variable, credential masking, timeout, index sync and Render specs |
+| 316 | `COMMIT_LOG.md` | `7edf30e` | `docs: record acceptance report Section 5 addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 317 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `9da6dd4` | `docs: document verified Atlas persistence test results and health endpoint output` | Verified pushed to `origin/main` | Added live Atlas test execution results, synced indexes, restart persistence test, and /api/v1/health JSON evidence |
+
 
 
 
