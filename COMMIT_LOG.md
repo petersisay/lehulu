@@ -371,6 +371,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 365 | `backend/src/controllers/adminController.ts` | `8ccbdba` | `feat(admin): add getProviderLeads and updateProviderLeadStatus endpoints with audit logging` | Verified pushed to `origin/main` | Added administrative endpoints to browse and update provider research leads pipeline |
 | 366 | `COMMIT_LOG.md` | `a4365b3` | `docs: record adminController.ts leads management in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 367 | `backend/src/routes/adminRoutes.ts` | `ec6f7e0` | `feat(routes): mount /api/v1/admin/leads routes for provider research management` | Verified pushed to `origin/main` | Mounted administrative routes for managing provider research leads |
+| 368 | `COMMIT_LOG.md` | `4e955dc` | `docs: record adminRoutes.ts leads route in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 369 | `backend/src/config/seedLeads.ts` | `623063c` | `feat(leads): add authentic Adama and Bishoftu business leads dataset and seeding utility` | Verified pushed to `origin/main` | Added real public business research dataset across all 5 trades in Adama & Bishoftu |
 
 
 
