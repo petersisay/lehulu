@@ -97,12 +97,18 @@ if (!parsedEnv.success) {
 
 export const env = {
   ...parsedEnv.data,
-  IS_PRODUCTION: parsedEnv.data.NODE_ENV === 'production' || parsedEnv.data.APP_ENV === 'production',
-  IS_STAGING: parsedEnv.data.APP_ENV === 'staging',
+  IS_PRODUCTION:
+    (parsedEnv.data.NODE_ENV === 'production' || parsedEnv.data.APP_ENV === 'production') &&
+    parsedEnv.data.APP_ENV !== 'staging' &&
+    !process.env.RENDER_SERVICE_NAME?.includes('staging'),
+  IS_STAGING:
+    parsedEnv.data.APP_ENV === 'staging' ||
+    Boolean(process.env.RENDER_SERVICE_NAME?.includes('staging')),
   IS_TEST: parsedEnv.data.NODE_ENV === 'test',
   IS_DEV:
     parsedEnv.data.NODE_ENV === 'development' &&
     parsedEnv.data.APP_ENV !== 'staging' &&
-    parsedEnv.data.APP_ENV !== 'production',
+    parsedEnv.data.APP_ENV !== 'production' &&
+    !process.env.RENDER_SERVICE_NAME?.includes('staging'),
   ALLOW_TEST_AUTH: Boolean(parsedEnv.data.ALLOW_TEST_AUTH && parsedEnv.data.NODE_ENV === 'test'),
 };
