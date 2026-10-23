@@ -9,6 +9,8 @@ services:
     healthCheckPath: /api/v1/health
     autoDeploy: true
     envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
       - key: NODE_ENV
         value: production
       - key: APP_ENV
@@ -40,6 +42,8 @@ services:
     healthCheckPath: /api/v1/health
     autoDeploy: false
     envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
       - key: NODE_ENV
         value: production
       - key: APP_ENV
@@ -60,3 +64,4 @@ services:
         value: petrossisay1646@gmail.com
       - key: CLIENT_URL
         sync: false
+
