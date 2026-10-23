@@ -363,6 +363,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 357 | `backend/src/sockets/index.ts` | `0c16734` | `fix(sockets): permit *.vercel.app origins and normalized client domain in Socket.IO CORS` | Verified pushed to `origin/main` | Permitted *.vercel.app origins and normalized client domain in Socket.IO CORS |
 | 358 | `COMMIT_LOG.md` | `6f9914d` | `docs: record sockets.ts vercel CORS configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 359 | `backend/src/controllers/providerController.ts` | `033ab52` | `fix(provider): resolve MongoDB countDocuments geospatial error with $geoWithin and calculate distanceKm` | Verified pushed to `origin/main` | Replaced $nearSphere with $geoWithin $centerSphere to fix countDocuments error and compute Haversine distance |
+| 360 | `COMMIT_LOG.md` | `835a1f7` | `docs: record providerController.ts geospatial fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 361 | `frontend/src/pages/DiscoveryPage.tsx` | `31660f3` | `fix(discovery): enable location toggle-off, descriptive geolocation error feedback, and distance display` | Verified pushed to `origin/main` | Added location toggle-off, error feedback, distance forwarding, and improved empty state |
 
 
 
