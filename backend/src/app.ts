@@ -34,7 +34,20 @@ export const createApp = (): Application => {
   // CORS Configuration
   app.use(
     cors({
-      origin: [env.CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const normalizedClient = env.CLIENT_URL.replace(/\/+$/, '');
+        const isAllowed =
+          origin === normalizedClient ||
+          origin === 'http://localhost:5173' ||
+          origin === 'http://127.0.0.1:5173' ||
+          /\.vercel\.app$/.test(new URL(origin).hostname);
+
+        if (isAllowed) {
+          return callback(null, true);
+        }
+        return callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
