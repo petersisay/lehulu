@@ -361,6 +361,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 355 | `backend/src/app.ts` | `301f3e2` | `fix(cors): permit *.vercel.app origins and normalized client domain dynamically` | Verified pushed to `origin/main` | Permitted *.vercel.app origins and normalized client domain dynamically in Express CORS |
 | 356 | `COMMIT_LOG.md` | `d1562ce` | `docs: record app.ts vercel CORS configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 357 | `backend/src/sockets/index.ts` | `0c16734` | `fix(sockets): permit *.vercel.app origins and normalized client domain in Socket.IO CORS` | Verified pushed to `origin/main` | Permitted *.vercel.app origins and normalized client domain in Socket.IO CORS |
+| 358 | `COMMIT_LOG.md` | `6f9914d` | `docs: record sockets.ts vercel CORS configuration in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 359 | `backend/src/controllers/providerController.ts` | `033ab52` | `fix(provider): resolve MongoDB countDocuments geospatial error with $geoWithin and calculate distanceKm` | Verified pushed to `origin/main` | Replaced $nearSphere with $geoWithin $centerSphere to fix countDocuments error and compute Haversine distance |
 
 
 
