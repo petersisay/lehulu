@@ -309,6 +309,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 303 | `frontend/src/test/app.test.tsx` | `b76790d` | `test(frontend): expand component tests to verify unverified provider badges and hero badge accuracy` | Verified pushed to `origin/main` | Added tests verifying honest unverified badge handling and non-misleading hero badge wording |
 | 304 | `COMMIT_LOG.md` | `c66b331` | `docs: record expanded frontend tests in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 305 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `15b19b8` | `docs: finalize acceptance report with mock auth elimination, 57 backend tests and staging specs` | Verified pushed to `origin/main` | Finalized comprehensive acceptance report covering mock auth rejection, 57 backend tests, 8 frontend tests, and staging specs |
+| 306 | `COMMIT_LOG.md` | `547e836` | `docs: record acceptance report finalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 307 | `render.yaml` | `9ce3a77` | `ci(deploy): specify Node.js 20.18.0 LTS runtime in render.yaml blueprints` | Verified pushed to `origin/main` | Added NODE_VERSION: 20.18.0 to both staging and production blueprints |
+
 
 
 
