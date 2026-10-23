@@ -383,6 +383,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 377 | `frontend/src/pages/AdminDashboard.tsx` | `15fb21a` | `feat(admin): add provider leads management tab in AdminDashboard` | Verified pushed to `origin/main` | Built leads management pipeline tab with status filters and outreach actions |
 | 378 | `COMMIT_LOG.md` | `4ddcdcb` | `docs: record AdminDashboard leads tab addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 379 | `frontend/package.json` | `e02cd33` | `fix(test): configure vitest to use forks pool for reliable test execution` | Verified pushed to `origin/main` | Resolved thread pool worker spawn timeout on Windows |
+| 380 | `COMMIT_LOG.md` | `0340950` | `docs: record frontend package.json test script fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 381 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `d6caddc` | `docs: update acceptance report with location fix and provider research details` | Verified pushed to `origin/main` | Documented location fix, researched leads catalog, test results, and deployment readiness |
 
 
 
