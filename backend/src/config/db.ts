@@ -34,7 +34,7 @@ export const connectDB = async (): Promise<void> => {
       console.log(`[DATABASE]: Attempting connection to MongoDB at: ${sanitized}`);
       
       await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 4000,
+        serverSelectionTimeoutMS: 10000,
       });
 
       isInMemoryActive = false;
