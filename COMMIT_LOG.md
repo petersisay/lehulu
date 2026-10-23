@@ -375,6 +375,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 369 | `backend/src/config/seedLeads.ts` | `623063c` | `feat(leads): add authentic Adama and Bishoftu business leads dataset and seeding utility` | Verified pushed to `origin/main` | Added real public business research dataset across all 5 trades in Adama & Bishoftu |
 | 370 | `COMMIT_LOG.md` | `daa97d3` | `docs: record seedLeads.ts dataset addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 371 | `backend/src/server.ts` | `24d3b07` | `feat(server): auto-seed authentic provider research leads on startup` | Verified pushed to `origin/main` | Added automated idempotent lead seeding during server boot |
+| 372 | `COMMIT_LOG.md` | `d313069` | `docs: record server.ts lead auto-seed in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 373 | `frontend/src/types/index.ts` | `4e8491f` | `feat(types): add ProviderLead and ProviderLeadStatus types` | Verified pushed to `origin/main` | Defined client-side types for provider research leads pipeline |
 
 
 
