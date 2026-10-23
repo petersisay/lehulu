@@ -323,6 +323,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 317 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `9da6dd4` | `docs: document verified Atlas persistence test results and health endpoint output` | Verified pushed to `origin/main` | Added live Atlas test execution results, synced indexes, restart persistence test, and /api/v1/health JSON evidence |
 | 318 | `COMMIT_LOG.md` | `4796c13` | `docs: record acceptance report Atlas persistence evidence in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 319 | `package.json` | `1a2f9b1` | `build: add start and start:backend scripts to root package.json` | Verified pushed to `origin/main` | Added start and start:backend scripts delegating to backend directory |
+| 320 | `COMMIT_LOG.md` | `780d412` | `docs: record root package.json start script in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 321 | `render.yaml` | `77b5ea2` | `ci(deploy): isolate render.yaml to staging web service and disable autoDeploy` | Verified pushed to `origin/main` | Disabled autoDeploy and isolated blueprint strictly to staging service |
+
 
 
 
