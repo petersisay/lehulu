@@ -73,7 +73,7 @@ export const createApp = (): Application => {
       status: 'UP',
       service: 'Lehulu API',
       timestamp: new Date().toISOString(),
-      environment: env.NODE_ENV,
+      environment: env.IS_STAGING ? 'staging' : env.NODE_ENV,
       version: '1.0.0',
       database: getDatabaseStatus(),
     });
