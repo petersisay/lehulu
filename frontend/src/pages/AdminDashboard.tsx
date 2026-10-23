@@ -14,11 +14,19 @@ import {
   ExternalLink,
   Loader2,
   RefreshCw,
+  Building,
+  MapPin,
+  Phone,
+  Globe,
+  Send,
+  Check,
+  Info,
+  Filter,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { adminApi, categoryApi, AdminStats } from '../services/api';
-import { ServiceCategory, VerificationStatus } from '../types';
+import { ServiceCategory, VerificationStatus, ProviderLead, ProviderLeadStatus } from '../types';
 
 export const AdminDashboard: React.FC = () => {
   const { user, isAdmin, isAuthenticated, loading: authLoading } = useAuth();
@@ -29,11 +37,19 @@ export const AdminDashboard: React.FC = () => {
   const [verifications, setVerifications] = useState<any[]>([]);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [leads, setLeads] = useState<ProviderLead[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'categories' | 'audit'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'categories' | 'audit' | 'leads'>('overview');
 
   const [actionLoading, setActionLoading] = useState<boolean>(false);
+  const [leadActionLoading, setLeadActionLoading] = useState<string | null>(null);
+
+  // Leads filters
+  const [leadsCategoryFilter, setLeadsCategoryFilter] = useState<string>('all');
+  const [leadsCityFilter, setLeadsCityFilter] = useState<string>('all');
+  const [leadsStatusFilter, setLeadsStatusFilter] = useState<string>('all');
+  const [leadsSearch, setLeadsSearch] = useState<string>('');
 
   // New category modal state
   const [showAddCategory, setShowAddCategory] = useState<boolean>(false);
@@ -47,17 +63,19 @@ export const AdminDashboard: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const [statsRes, verifRes, logsRes, catRes] = await Promise.all([
+      const [statsRes, verifRes, logsRes, catRes, leadsRes] = await Promise.all([
         adminApi.getStats(),
         adminApi.getVerifications(),
         adminApi.getAuditLogs(),
         categoryApi.getAll(),
+        adminApi.getLeads(),
       ]);
 
       if (statsRes.data.success) setStats(statsRes.data.data);
       if (verifRes.data.success) setVerifications(verifRes.data.data);
       if (logsRes.data.success) setAuditLogs(logsRes.data.data);
       if (catRes.data.success) setCategories(catRes.data.data);
+      if (leadsRes.data.success) setLeads(leadsRes.data.data);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch administrator data.');
     } finally {
@@ -93,6 +111,28 @@ export const AdminDashboard: React.FC = () => {
       alert(err.response?.data?.message || 'Failed to update verification status.');
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleUpdateLeadStatus = async (id: string, newStatus: ProviderLeadStatus) => {
+    let notes: string | undefined = undefined;
+    if (newStatus === 'INVITED') {
+      notes = prompt('Optional outreach/invitation notes (e.g. Phone call date, contact person):') || undefined;
+    } else if (newStatus === 'REJECTED' || newStatus === 'SUSPENDED') {
+      notes = prompt(`Reason for setting status to ${newStatus}:`) || undefined;
+      if (!notes) return;
+    }
+
+    setLeadActionLoading(id);
+    try {
+      const res = await adminApi.updateLeadStatus(id, { status: newStatus, notes });
+      if (res.data.success) {
+        setLeads((prev) => prev.map((l) => (l._id === id ? res.data.data : l)));
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to update provider lead status.');
+    } finally {
+      setLeadActionLoading(null);
     }
   };
 
@@ -187,6 +227,19 @@ export const AdminDashboard: React.FC = () => {
           }`}
         >
           Service Categories ({categories.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('leads')}
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'leads'
+              ? 'bg-purple-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <span>Provider Leads ({leads.length})</span>
+          <span className="bg-emerald-400 text-slate-900 text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+            Adama & Bishoftu
+          </span>
         </button>
         <button
           onClick={() => setActiveTab('audit')}
@@ -442,6 +495,245 @@ export const AdminDashboard: React.FC = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+          )}
+
+          {/* TAB 5: RESEARCHED LEADS PIPELINE */}
+          {activeTab === 'leads' && (
+            <div className="space-y-6">
+              {/* Authenticity Policy Alert */}
+              <div className="bg-purple-50 border border-purple-200 rounded-2xl p-5 text-xs text-purple-900 flex items-start gap-3">
+                <Info className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p className="font-bold text-sm text-purple-950">
+                    Authentic Research Pipeline — Zero-Fabrication Guarantee
+                  </p>
+                  <p className="text-purple-800 leading-relaxed">
+                    All records below represent verified public business entities and trade specialists operating in Adama and Bishoftu across all 5 service categories. 
+                    These leads remain in this private administrative onboarding pipeline and are <strong>NEVER bookable</strong> or displayed as registered accounts until the owner officially joins Lehulu, provides identity documents, and passes administrator verification.
+                  </p>
+                </div>
+              </div>
+
+              {/* Filter controls */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1 min-w-[240px]">
+                  <div className="relative w-full max-w-sm">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      placeholder="Search business, services or notes..."
+                      value={leadsSearch}
+                      onChange={(e) => setLeadsSearch(e.target.value)}
+                      className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-hidden focus:ring-1 focus:ring-purple-600"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <select
+                    value={leadsCategoryFilter}
+                    onChange={(e) => setLeadsCategoryFilter(e.target.value)}
+                    className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-700"
+                  >
+                    <option value="all">All Categories</option>
+                    <option value="home-maintenance">Home Maintenance</option>
+                    <option value="automotive">Automotive Care</option>
+                    <option value="cleaning">Cleaning Services</option>
+                    <option value="technology">Technology & IT</option>
+                    <option value="personal-business">Personal & Business</option>
+                  </select>
+
+                  <select
+                    value={leadsCityFilter}
+                    onChange={(e) => setLeadsCityFilter(e.target.value)}
+                    className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-700"
+                  >
+                    <option value="all">All Cities</option>
+                    <option value="Adama">Adama (አዳማ)</option>
+                    <option value="Bishoftu">Bishoftu (ቢሾፍቱ)</option>
+                  </select>
+
+                  <select
+                    value={leadsStatusFilter}
+                    onChange={(e) => setLeadsStatusFilter(e.target.value)}
+                    className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white font-medium text-slate-700"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="RESEARCHED_LEAD">Researched Lead</option>
+                    <option value="INVITED">Invited</option>
+                    <option value="PENDING_VERIFICATION">Pending Verification</option>
+                    <option value="VERIFIED">Verified Onboarded</option>
+                    <option value="REJECTED">Rejected</option>
+                    <option value="SUSPENDED">Suspended</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Leads Cards Grid */}
+              {(() => {
+                const filteredLeads = leads.filter((item) => {
+                  if (leadsCategoryFilter !== 'all' && item.categorySlug !== leadsCategoryFilter) return false;
+                  if (leadsCityFilter !== 'all' && item.city !== leadsCityFilter) return false;
+                  if (leadsStatusFilter !== 'all' && item.status !== leadsStatusFilter) return false;
+                  if (leadsSearch.trim()) {
+                    const q = leadsSearch.toLowerCase();
+                    const matchName = item.businessName.toLowerCase().includes(q);
+                    const matchServ = item.services?.some((s) => s.toLowerCase().includes(q));
+                    const matchNotes = item.notes?.toLowerCase().includes(q);
+                    if (!matchName && !matchServ && !matchNotes) return false;
+                  }
+                  return true;
+                });
+
+                if (filteredLeads.length === 0) {
+                  return (
+                    <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500">
+                      <p className="text-sm font-bold text-slate-700 mb-1">No Leads Match Criteria</p>
+                      <p className="text-xs text-slate-400">
+                        Adjust category, city, or status filters to view cataloged business leads.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {filteredLeads.map((item) => {
+                      const statusColor =
+                        item.status === 'VERIFIED'
+                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                          : item.status === 'INVITED'
+                          ? 'bg-blue-100 text-blue-800 border-blue-300'
+                          : item.status === 'PENDING_VERIFICATION'
+                          ? 'bg-amber-100 text-amber-800 border-amber-300'
+                          : item.status === 'REJECTED' || item.status === 'SUSPENDED'
+                          ? 'bg-rose-100 text-rose-800 border-rose-300'
+                          : 'bg-slate-100 text-slate-700 border-slate-300';
+
+                      return (
+                        <div
+                          key={item._id}
+                          className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between gap-4 hover:border-purple-300 transition-colors"
+                        >
+                          <div className="space-y-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <h4 className="text-sm font-bold text-slate-900">{item.businessName}</h4>
+                                <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                  <span className="font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded text-[11px]">
+                                    {item.categorySlug}
+                                  </span>
+                                  <span>•</span>
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="w-3 h-3 text-slate-400" />
+                                    {item.city}
+                                  </span>
+                                </div>
+                              </div>
+                              <span
+                                className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${statusColor}`}
+                              >
+                                {item.status.replace('_', ' ')}
+                              </span>
+                            </div>
+
+                            {/* Services pills */}
+                            <div className="flex flex-wrap gap-1.5">
+                              {item.services?.map((svc, sIdx) => (
+                                <span
+                                  key={sIdx}
+                                  className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-medium"
+                                >
+                                  {svc}
+                                </span>
+                              ))}
+                            </div>
+
+                            {/* Public details */}
+                            <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50/80 p-3 rounded-xl">
+                              {item.publicAddress && (
+                                <p className="flex items-center gap-2">
+                                  <span className="font-semibold text-slate-500 w-16 shrink-0">Address:</span>
+                                  <span>{item.publicAddress}</span>
+                                </p>
+                              )}
+                              {item.contactPhone && (
+                                <p className="flex items-center gap-2">
+                                  <span className="font-semibold text-slate-500 w-16 shrink-0">Contact:</span>
+                                  <span className="font-mono text-[11px]">{item.contactPhone}</span>
+                                </p>
+                              )}
+                              <p className="flex items-center gap-2">
+                                <span className="font-semibold text-slate-500 w-16 shrink-0">Source:</span>
+                                <a
+                                  href={item.publicSourceUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-purple-700 hover:text-purple-900 font-semibold flex items-center gap-1 underline truncate max-w-[260px]"
+                                >
+                                  <span className="truncate">{item.publicSourceUrl}</span>
+                                  <ExternalLink className="w-3 h-3 shrink-0" />
+                                </a>
+                              </p>
+                              {item.notes && (
+                                <p className="text-[11px] text-slate-500 italic pt-1 border-t border-slate-200/60 mt-1">
+                                  Notes: {item.notes}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Action Bar */}
+                          <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span className="text-[10px] text-slate-400">
+                              Verified: {new Date(item.sourceVerificationDate).toLocaleDateString()}
+                            </span>
+
+                            <div className="flex items-center gap-1.5">
+                              {item.status === 'RESEARCHED_LEAD' && (
+                                <button
+                                  onClick={() => handleUpdateLeadStatus(item._id, 'INVITED')}
+                                  disabled={leadActionLoading === item._id}
+                                  className="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                                >
+                                  {leadActionLoading === item._id ? 'Saving...' : 'Mark Invited'}
+                                </button>
+                              )}
+
+                              {item.status === 'INVITED' && (
+                                <button
+                                  onClick={() => handleUpdateLeadStatus(item._id, 'PENDING_VERIFICATION')}
+                                  disabled={leadActionLoading === item._id}
+                                  className="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                                >
+                                  {leadActionLoading === item._id ? 'Saving...' : 'Mark Applied'}
+                                </button>
+                              )}
+
+                              <select
+                                value={item.status}
+                                onChange={(e) =>
+                                  handleUpdateLeadStatus(item._id, e.target.value as ProviderLeadStatus)
+                                }
+                                disabled={leadActionLoading === item._id}
+                                className="px-2 py-1 text-[11px] font-semibold text-slate-600 bg-slate-100 rounded-lg border border-slate-200 cursor-pointer"
+                              >
+                                <option value="RESEARCHED_LEAD">Status: Researched</option>
+                                <option value="INVITED">Status: Invited</option>
+                                <option value="PENDING_VERIFICATION">Status: Pending Verification</option>
+                                <option value="VERIFIED">Status: Verified</option>
+                                <option value="REJECTED">Status: Rejected</option>
+                                <option value="SUSPENDED">Status: Suspended</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
           )}
         </>
