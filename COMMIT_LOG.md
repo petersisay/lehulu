@@ -327,6 +327,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 321 | `render.yaml` | `77b5ea2` | `ci(deploy): isolate render.yaml to staging web service and disable autoDeploy` | Verified pushed to `origin/main` | Disabled autoDeploy and isolated blueprint strictly to staging service |
 | 322 | `COMMIT_LOG.md` | `faeaa29` | `docs: record render.yaml staging-only isolation in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 323 | `backend/tsconfig.json` | `1d3ebae` | `build(ts): remove deprecated moduleResolution=node from backend tsconfig.json` | Verified pushed to `origin/main` | Removed deprecated moduleResolution option preventing TS5108 error on Render build |
+| 324 | `COMMIT_LOG.md` | `08fb8ce` | `docs: record backend tsconfig moduleResolution fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 325 | `backend/src/config/db.ts` | `c9cda79` | `fix(db): load mongodb-memory-server dynamically to prevent compile-time missing module error in production` | Verified pushed to `origin/main` | Used dynamic string module import to prevent tsc error when devDependencies are omitted |
+
 
 
 
