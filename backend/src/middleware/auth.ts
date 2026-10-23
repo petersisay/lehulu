@@ -21,7 +21,7 @@ export const setSessionCookie = (res: Response, token: string): void => {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     secure: isSecure,
-    sameSite: isSecure ? 'strict' : 'lax',
+    sameSite: isSecure ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   });
@@ -32,7 +32,7 @@ export const clearSessionCookie = (res: Response): void => {
   res.clearCookie(COOKIE_NAME, {
     httpOnly: true,
     secure: isSecure,
-    sameSite: isSecure ? 'strict' : 'lax',
+    sameSite: isSecure ? 'none' : 'lax',
     path: '/',
   });
 };
