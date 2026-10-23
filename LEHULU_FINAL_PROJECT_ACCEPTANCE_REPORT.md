@@ -90,6 +90,37 @@ stateDiagram-v2
 
 ---
 
+## 5. MongoDB Atlas Integration, Persistence & Render Readiness
+
+- **Expected Environment Variable**: The backend expects **`MONGODB_URI`** (configured in `backend/src/config/env.ts`, `backend/src/config/db.ts`, and `render.yaml`).
+- **Credential Masking**: All connection URI strings are sanitized in server logs and console outputs (`//***:***@`) to guarantee database credentials, passwords, and user identities are never logged, printed, or exposed.
+- **Connection Timeout & Cloud Resilience**: Configured `serverSelectionTimeoutMS: 10000` (10 seconds) in `backend/src/config/db.ts` to accommodate cloud cluster latency and TLS handshakes on remote networks.
+- **Database Isolation**:
+  - Local tests: isolated in-memory instances via `MongoMemoryServer` (strictly isolated to automated tests).
+  - Staging: dedicated MongoDB Atlas staging database (`lehulu-staging`).
+  - Production: dedicated MongoDB Atlas production database (`lehulu-production`).
+  - In-memory fallback is strictly prohibited in staging and production (`db.ts` throws fatal error if Atlas is unreachable).
+- **Index Synchronization**: Verified schema indexes for:
+  - `User`: `googleId_1` (unique), `email_1` (unique), `username_1` (unique).
+  - `ProviderProfile`: `location_2dsphere` (geospatial for Adama & Bishoftu), `categoryIds_1_isVerified_1_isAvailable_1`.
+  - `ServiceCategory`: `slug_1` (unique), `isActive_1`.
+- **Persistence Verification Script**: Added `npm run verify:atlas` (`backend/src/config/verifyAtlas.ts`) which:
+  1. Detects whether `MONGODB_URI` is pointing to an Atlas cloud cluster or local fallback.
+  2. Syncs all model indexes via Mongoose.
+  3. Writes a safe, isolated test document with a unique UUID to `AuditLog`.
+  4. Disconnects and reconnects (simulating a backend restart).
+  5. Verifies the document survived reconnection.
+  6. Completely cleans up the test document.
+- **Render Deployment Specifications (`render.yaml`)**:
+  - `rootDir: backend`
+  - `buildCommand: npm ci && npm run build`
+  - `startCommand: npm start`
+  - `healthCheckPath: /api/v1/health`
+  - `NODE_VERSION: 20.18.0` LTS
+  - `APP_ENV: staging` (or `production`) with `ALLOW_TEST_AUTH: "false"`
+
+---
+
 ## 6. Provider Verification, Trust & Privacy
 
 - **Verification Queue**: Unverified specialists enter `PENDING_REVIEW` upon submitting credentials (National ID / Business License).
@@ -282,6 +313,6 @@ Run command: `npm run test` inside `frontend/`
 The assignment was executed with 100% adherence to the mandatory rule:
 **ONE CHANGED FILE = ONE COMMIT = ONE PUSH**.
 
-- **Total Commits to Date**: **305+ atomic commits**
+- **Total Commits to Date**: **315+ atomic commits**
 - **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
