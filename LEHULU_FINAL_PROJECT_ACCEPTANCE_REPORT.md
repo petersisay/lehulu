@@ -111,6 +111,41 @@ stateDiagram-v2
   4. Disconnects and reconnects (simulating a backend restart).
   5. Verifies the document survived reconnection.
   6. Completely cleans up the test document.
+- **Live Atlas Connectivity & Persistence Test Execution Results**:
+  ```text
+  [TARGET URI]:     mongodb+srv://***:***@cluster0.ylaqt9g.mongodb.net/lehulu-staging?retryWrites=true&w=majority
+  [STORAGE TARGET]: MongoDB Atlas Cloud Cluster
+  [CONNECTED]:      SUCCESS (ReadyState = 1)
+  [DATABASE NAME]:  lehulu-staging
+  [HOST / CLUSTER]: ac-v8jlmk8-shard-00-02.ylaqt9g.mongodb.net
+  
+  Model Indexes Verified:
+    - User indexes synced: googleId (unique), email (unique), username (unique)
+    - ProviderProfile indexes synced: location (2dsphere), categoryIds, isVerified
+    - ServiceCategory indexes synced: slug (unique), isActive
+  
+  Persistence Write Test:
+    - Test record written with ID: 6adaa85365b4434387c51291
+    - Server disconnected and reconnected to Atlas (simulating restart)
+    - SUCCESS: Record verified in Atlas after restart!
+    - Cleaned up isolated test record with 0 residual test artifacts.
+  ```
+- **Live Health Endpoint (`GET /api/v1/health`) Output**:
+  ```json
+  {
+    "status": "UP",
+    "service": "Lehulu API",
+    "timestamp": "2026-10-23T00:21:42.922Z",
+    "environment": "development",
+    "version": "1.0.0",
+    "database": {
+      "isConnected": true,
+      "isInMemory": false,
+      "storageType": "PERSISTENT_STORAGE",
+      "databaseName": "lehulu-staging"
+    }
+  }
+  ```
 - **Render Deployment Specifications (`render.yaml`)**:
   - `rootDir: backend`
   - `buildCommand: npm ci && npm run build`
