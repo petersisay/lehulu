@@ -315,6 +315,9 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 309 | `backend/src/config/db.ts` | `2b55c90` | `fix(db): increase MongoDB server selection timeout to 10s for Atlas cloud resilience` | Verified pushed to `origin/main` | Increased serverSelectionTimeoutMS to 10000ms for resilient cloud cluster connections |
 | 310 | `COMMIT_LOG.md` | `b6d99ca` | `docs: record db.ts timeout hardening in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 311 | `backend/src/config/verifyAtlas.ts` | `659400a` | `feat(db): add Atlas connectivity, index synchronization and persistence verification script` | Verified pushed to `origin/main` | Created standalone script for Atlas connectivity, index sync, persistence test and cleanup |
+| 312 | `COMMIT_LOG.md` | `fd30e20` | `docs: record verifyAtlas script in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 313 | `backend/package.json` | `e5058b7` | `build: add verify:atlas npm script to backend package.json` | Verified pushed to `origin/main` | Added verify:atlas npm command to execute Atlas connectivity verification |
+
 
 
 
