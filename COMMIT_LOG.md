@@ -365,6 +365,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 359 | `backend/src/controllers/providerController.ts` | `033ab52` | `fix(provider): resolve MongoDB countDocuments geospatial error with $geoWithin and calculate distanceKm` | Verified pushed to `origin/main` | Replaced $nearSphere with $geoWithin $centerSphere to fix countDocuments error and compute Haversine distance |
 | 360 | `COMMIT_LOG.md` | `835a1f7` | `docs: record providerController.ts geospatial fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 361 | `frontend/src/pages/DiscoveryPage.tsx` | `31660f3` | `fix(discovery): enable location toggle-off, descriptive geolocation error feedback, and distance display` | Verified pushed to `origin/main` | Added location toggle-off, error feedback, distance forwarding, and improved empty state |
+| 362 | `COMMIT_LOG.md` | `a8a0c52` | `docs: record discovery location toggle-off fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 363 | `backend/src/models/ProviderLead.ts` | `cd38d17` | `feat(lead): create ProviderLead mongoose model for researched local businesses` | Verified pushed to `origin/main` | Implemented ProviderLead model to record authentic public leads and onboarding status |
 
 
 
