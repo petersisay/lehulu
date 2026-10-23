@@ -353,6 +353,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 347 | `backend/src/app.ts` | `9442c7f` | `fix(health): report staging environment accurately in health check endpoint` | Verified pushed to `origin/main` | Health check reports staging environment dynamically based on runtime context |
 | 348 | `COMMIT_LOG.md` | `10d74a9` | `docs: record app.ts staging health check in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 349 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `54016d4` | `docs: record live Render staging and Atlas persistence verification in acceptance report` | Verified pushed to `origin/main` | Documented verified live staging deployment and persistent Atlas database status |
+| 350 | `COMMIT_LOG.md` | `9b6d1b4` | `docs: record acceptance report live staging verification in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 351 | `frontend/src/services/api.ts` | `3bb6989` | `fix(frontend): normalize API_BASE_URL to automatically append /api/v1 if omitted in VITE_API_URL` | Verified pushed to `origin/main` | Automatically normalizes base API URL to append /api/v1 for robust Vercel deployments |
 
 
 
