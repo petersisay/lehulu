@@ -345,6 +345,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 339 | `backend/src/server.ts` | `1766108` | `fix(server): repair legacy user profile fields and add update fallback in admin auto-provisioning` | Verified pushed to `origin/main` | Backfilled missing username, displayName, googleId on existing admin user and added atomic update fallback |
 | 340 | `COMMIT_LOG.md` | `f34d149` | `docs: record server.ts admin profile fields repair in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 341 | `backend/src/config/db.ts` | `2a658bd` | `fix(db): automatically default bare Atlas URIs to staging database path` | Verified pushed to `origin/main` | Automatically normalize MongoDB connection string to target lehulu-staging when path is omitted or test |
+| 342 | `COMMIT_LOG.md` | `0ebcb0c` | `docs: record db.ts atlas staging normalization in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 343 | `backend/src/config/env.ts` | `8f3121d` | `fix(env): accurately detect staging environment via RENDER_SERVICE_NAME and APP_ENV` | Verified pushed to `origin/main` | Enhanced environment parsing to reliably identify staging web service |
 
 
 
