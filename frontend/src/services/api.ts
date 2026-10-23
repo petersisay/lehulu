@@ -11,6 +11,8 @@ import {
   UserRole,
   VerificationStatus,
   BookingStatus,
+  ProviderLead,
+  ProviderLeadStatus,
 } from '../types';
 
 const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
@@ -237,4 +239,10 @@ export const adminApi = {
 
   getAuditLogs: (page = 1): Promise<AxiosResponse<ApiResponse<any[]>>> =>
     apiClient.get('/admin/audit-logs', { params: { page } }),
+
+  getLeads: (params?: { category?: string; city?: string; status?: ProviderLeadStatus; search?: string }): Promise<AxiosResponse<ApiResponse<ProviderLead[]>>> =>
+    apiClient.get('/admin/leads', { params }),
+
+  updateLeadStatus: (id: string, data: { status: ProviderLeadStatus; notes?: string }): Promise<AxiosResponse<ApiResponse<ProviderLead>>> =>
+    apiClient.patch(`/admin/leads/${id}`, data),
 };
