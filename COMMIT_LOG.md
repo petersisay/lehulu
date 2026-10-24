@@ -399,6 +399,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 393 | `frontend/src/services/api.ts` | `00d3a0c` | `feat(api): expand authApi.onboard with provider identification and verification parameters` | Verified pushed to `origin/main` | Added category, description, service area, national ID, and consent fields to authApi.onboard |
 | 394 | `COMMIT_LOG.md` | `b92942f` | `docs: record frontend api.ts onboard expansion in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 395 | `frontend/src/context/AuthContext.tsx` | `dbf0538` | `feat(context): expose expanded onboarding parameters in AuthContext` | Verified pushed to `origin/main` | Updated AuthContextType and onboard signature with provider identity and trade parameters |
+| 396 | `COMMIT_LOG.md` | `ebbdea9` | `docs: record AuthContext onboarding update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 397 | `frontend/src/pages/LoginPage.tsx` | `b66d52c` | `feat(onboarding): add Ethiopian National ID and optional ID scan upload to provider onboarding` | Verified pushed to `origin/main` | Added category, trade, Ethiopian National ID, optional scan upload/preview/replace/remove, and privacy consent |
 
 
 
