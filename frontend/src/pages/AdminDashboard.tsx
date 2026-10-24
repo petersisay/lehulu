@@ -356,31 +356,49 @@ export const AdminDashboard: React.FC = () => {
                         className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
                       >
                         <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-bold text-slate-900">
                               {prov?.businessName || u?.displayName}
                             </span>
-                            <span className="text-xs font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
-                              ID: {item.nationalIdNumber}
+                            <span className="text-xs font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold">
+                              National ID: {item.nationalIdNumber}
                             </span>
+                            {item.status && (
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                                {item.status}
+                              </span>
+                            )}
                           </div>
 
-                          <p className="text-xs text-slate-500">
-                            Email: {u?.email} • City: {u?.city || 'Adama'} • Submitted on{' '}
-                            {new Date(item.createdAt).toLocaleDateString()}
-                          </p>
+                          <div className="text-xs text-slate-600 flex flex-wrap gap-x-3 gap-y-1">
+                            <span>Email: {u?.email}</span>
+                            <span>•</span>
+                            <span>Phone: {u?.phone || prov?.contactPhone || '—'}</span>
+                            <span>•</span>
+                            <span>Area: {prov?.serviceCities?.join(', ') || u?.city || 'Adama'}</span>
+                            {prov?.trades && prov.trades.length > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>Trades: <strong className="text-slate-900">{prov.trades.join(', ')}</strong></span>
+                              </>
+                            )}
+                          </div>
 
                           {/* Document preview links */}
                           <div className="flex items-center gap-4 text-xs pt-1">
-                            <a
-                              href={item.idCardFrontUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1 underline"
-                            >
-                              <span>View National ID Photo</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
+                            {(item.idCardFrontUrl || item.idCardImageUrl) ? (
+                              <a
+                                href={item.idCardFrontUrl || item.idCardImageUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1 underline"
+                              >
+                                <span>View National ID Photo</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            ) : (
+                              <span className="text-slate-400 italic">No ID photo attached (ID number provided)</span>
+                            )}
 
                             {item.tradeLicenseUrl && (
                               <a
