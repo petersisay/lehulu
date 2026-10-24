@@ -19,8 +19,15 @@ interface AuthContextType {
     city: string;
     preferredLanguage?: string;
     businessName?: string;
+    categoryId?: string;
     categoryIds?: string[];
     skills?: string[];
+    serviceDescription?: string;
+    serviceArea?: string;
+    location?: { type: 'Point'; coordinates: [number, number] };
+    nationalIdNumber?: string;
+    idCardImageUrl?: string;
+    consentGiven?: boolean;
     experienceYears?: number;
     startingPrice?: number;
   }) => Promise<User>;
@@ -80,8 +87,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     city: string;
     preferredLanguage?: string;
     businessName?: string;
+    categoryId?: string;
     categoryIds?: string[];
     skills?: string[];
+    serviceDescription?: string;
+    serviceArea?: string;
+    location?: { type: 'Point'; coordinates: [number, number] };
+    nationalIdNumber?: string;
+    idCardImageUrl?: string;
+    consentGiven?: boolean;
     experienceYears?: number;
     startingPrice?: number;
   }): Promise<User> => {
