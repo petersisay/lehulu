@@ -5,19 +5,46 @@ import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAuth } from './context/AuthContext';
 
-// Route-level code splitting
-const LandingPage = lazy(() => import('./pages/LandingPage').then((m) => ({ default: m.LandingPage })));
-const DiscoveryPage = lazy(() => import('./pages/DiscoveryPage').then((m) => ({ default: m.DiscoveryPage })));
-const ProviderProfilePage = lazy(() => import('./pages/ProviderProfilePage').then((m) => ({ default: m.ProviderProfilePage })));
-const LoginPage = lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
-const CustomerDashboard = lazy(() => import('./pages/CustomerDashboard').then((m) => ({ default: m.CustomerDashboard })));
-const ProviderDashboard = lazy(() => import('./pages/ProviderDashboard').then((m) => ({ default: m.ProviderDashboard })));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
-const BookingDetailPage = lazy(() => import('./pages/BookingDetailPage').then((m) => ({ default: m.BookingDetailPage })));
-const ProfilePage = lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
-const TermsPage = lazy(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })));
-const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
+// Resilient route-level code splitting with automatic stale-chunk recovery
+function lazyRetry<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T }>
+) {
+  return lazy(async () => {
+    try {
+      return await factory();
+    } catch (error: any) {
+      const isChunkError =
+        error?.message?.includes('Failed to fetch dynamically imported module') ||
+        error?.message?.includes('Importing a module script failed') ||
+        error?.name === 'ChunkLoadError';
+
+      if (isChunkError) {
+        const reloadKey = 'lehulu_lazy_reload_ts';
+        const last = sessionStorage.getItem(reloadKey);
+        const now = Date.now();
+        if (!last || now - parseInt(last, 10) > 10000) {
+          sessionStorage.setItem(reloadKey, now.toString());
+          window.location.reload();
+          return new Promise<{ default: T }>(() => {});
+        }
+      }
+      throw error;
+    }
+  });
+}
+
+const LandingPage = lazyRetry(() => import('./pages/LandingPage').then((m) => ({ default: m.LandingPage })));
+const DiscoveryPage = lazyRetry(() => import('./pages/DiscoveryPage').then((m) => ({ default: m.DiscoveryPage })));
+const ProviderProfilePage = lazyRetry(() => import('./pages/ProviderProfilePage').then((m) => ({ default: m.ProviderProfilePage })));
+const LoginPage = lazyRetry(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const CustomerDashboard = lazyRetry(() => import('./pages/CustomerDashboard').then((m) => ({ default: m.CustomerDashboard })));
+const ProviderDashboard = lazyRetry(() => import('./pages/ProviderDashboard').then((m) => ({ default: m.ProviderDashboard })));
+const AdminDashboard = lazyRetry(() => import('./pages/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
+const BookingDetailPage = lazyRetry(() => import('./pages/BookingDetailPage').then((m) => ({ default: m.BookingDetailPage })));
+const ProfilePage = lazyRetry(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
+const TermsPage = lazyRetry(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })));
+const PrivacyPage = lazyRetry(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
+const NotFoundPage = lazyRetry(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 
 const RouteLoadingSpinner: React.FC = () => (
   <div className="flex items-center justify-center min-h-[60vh] text-slate-400">

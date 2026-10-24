@@ -8,6 +8,12 @@ import { SocketProvider } from './context/SocketContext';
 import App from './App';
 import './index.css';
 
+// Automatically recover from stale chunks after production deployments
+window.addEventListener('vite:preloadError', (event) => {
+  event.preventDefault();
+  window.location.reload();
+});
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
