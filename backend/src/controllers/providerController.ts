@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 import { AuthenticatedRequest } from '../types';
 import { ProviderProfile } from '../models/ProviderProfile';
 import { ProviderVerification } from '../models/ProviderVerification';
+import { ServiceCategory } from '../models/ServiceCategory';
 import { User } from '../models/User';
 
 export const updateProviderProfileSchema = z.object({
@@ -48,8 +49,9 @@ export const updateProviderProfileSchema = z.object({
 
 export const submitVerificationSchema = z.object({
   body: z.object({
-    nationalIdNumber: z.string().min(4, 'National ID number is required'),
-    idCardImageUrl: z.string().min(1, 'ID card photo is required'),
+    nationalIdNumber: z.string().trim().min(4, 'National ID number is required'),
+    idCardImageUrl: z.string().optional().default(''),
+    consentGiven: z.boolean().optional().default(true),
     tradeLicenseUrl: z.string().optional(),
     certificateUrls: z.array(z.string()).default([]),
   }),
@@ -75,21 +77,38 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
 
     const queryObj: any = {};
 
-    // Filter by category slug or ID
-    if (category) {
+    // PHASE 4 REQUIREMENT: Unverified/pending/rejected/suspended providers MUST NEVER appear in public customer search
+    const authReq = req as AuthenticatedRequest;
+    const isAdmin = authReq.user?.role === 'ADMIN';
+    if (!isAdmin || verifiedOnly === 'true' || req.query.includeUnverified !== 'true') {
+      queryObj.isVerified = true;
+      queryObj.verificationStatus = 'VERIFIED';
+    }
+
+    // Strict category filtering by ID or slug (Phase 5)
+    if (category && category !== 'all' && category !== 'All') {
       if (Types.ObjectId.isValid(category as string)) {
         queryObj.categoryIds = new Types.ObjectId(category as string);
+      } else {
+        const catDoc = await ServiceCategory.findOne({
+          $or: [
+            { slug: category },
+            { nameEn: { $regex: new RegExp(`^${category}$`, 'i') } },
+            { nameAm: category },
+          ],
+        });
+        if (catDoc) {
+          queryObj.categoryIds = catDoc._id;
+        } else {
+          // Explicit unmatched category must yield no results
+          queryObj.categoryIds = new Types.ObjectId();
+        }
       }
     }
 
     // Filter by city (Adama, Bishoftu, etc.)
     if (city && city !== 'All') {
       queryObj.serviceCities = { $regex: new RegExp(city as string, 'i') };
-    }
-
-    // Verified only filter
-    if (verifiedOnly === 'true') {
-      queryObj.isVerified = true;
     }
 
     // Availability filter
@@ -102,10 +121,45 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
       queryObj.rating = { $gte: parseFloat(minRating as string) };
     }
 
-    // Text query search on businessName and skills
-    if (q) {
-      const searchRegex = new RegExp(q as string, 'i');
-      queryObj.$or = [{ businessName: searchRegex }, { skills: { $in: [searchRegex] } }];
+    // Enhanced trade synonym dictionary covering English and Amharic (Phase 5)
+    const TRADE_SYNONYMS: Record<string, string[]> = {
+      plumber: ['plumber', 'plumbing', 'pipe', 'leak', 'drain', 'faucet', 'toilet', 'sink', 'sanitary', 'water pipe', 'ቧንቧ', 'የውሃ ቧንቧ', 'ሳኒተሪ', 'ቧንቧ ሰሪ', 'ቧንቧ ባለሙያ'],
+      electrician: ['electrician', 'electrical', 'electric', 'wiring', 'breaker', 'power', 'generator', 'socket', 'lighting', 'light', 'circuit', 'መብራት', 'ኤሌክትሪክ', 'የኤሌክትሪክ', 'ሽቦ', 'ኤሌክትሪሺያን'],
+      mechanic: ['mechanic', 'automotive', 'auto', 'car', 'vehicle', 'motor', 'engine', 'transmission', 'brake', 'garage', 'oil change', 'መካኒክ', 'መኪና', 'አውቶሞቲቭ', 'ጋራዥ', 'የመኪና ጥገና'],
+      cleaning: ['cleaner', 'cleaning', 'clean', 'janitorial', 'house cleaning', 'laundry', 'carpet', 'deep clean', 'maid', 'ጽዳት', 'የጽዳት', 'የቤት ጽዳት', 'ምንጣፍ', 'ላውንድሪ', 'እጥበት'],
+      computer: ['computer', 'pc', 'laptop', 'it', 'technology', 'software', 'hardware', 'network', 'wifi', 'printer', 'tech', 'ኮምፒውተር', 'ላፕቶፕ', 'አይቲ', 'ሶፍትዌር', 'ቴክኖሎጂ', 'የኮምፒውተር ጥገና'],
+      carpentry: ['carpenter', 'carpentry', 'wood', 'furniture', 'door', 'cabinet', 'አናጺ', 'የእንጨት', 'ፈረኒቸር', 'እንጨት'],
+      painting: ['painter', 'painting', 'paint', 'wall', 'ቀለም', 'ቀለም ቅብ', 'ቀቢ'],
+    };
+
+    if (q && typeof q === 'string') {
+      const cleanQ = q.trim();
+      if (cleanQ.length > 0) {
+        const lowerQ = cleanQ.toLowerCase();
+        const matchedKeywords = new Set<string>([cleanQ]);
+
+        for (const [trade, synonyms] of Object.entries(TRADE_SYNONYMS)) {
+          const hasMatch =
+            lowerQ.includes(trade) ||
+            synonyms.some((syn) => lowerQ.includes(syn.toLowerCase()) || syn.toLowerCase().includes(lowerQ));
+          if (hasMatch) {
+            matchedKeywords.add(trade);
+            synonyms.forEach((syn) => matchedKeywords.add(syn));
+          }
+        }
+
+        const regexPattern = Array.from(matchedKeywords)
+          .map((kw) => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+          .join('|');
+        const searchRegex = new RegExp(regexPattern, 'i');
+
+        queryObj.$or = [
+          { businessName: searchRegex },
+          { skills: { $in: [searchRegex] } },
+          { bioEn: searchRegex },
+          { bioAm: searchRegex },
+        ];
+      }
     }
 
     let isGeospatialActive = false;
@@ -205,7 +259,7 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
         .populate('categoryIds', 'nameEn nameAm slug icon');
     }
 
-    if (!profile) {
+    if (!profile && Types.ObjectId.isValid(id)) {
       // Fallback search by userId
       profile = await ProviderProfile.findOne({ userId: id })
         .populate('userId', 'displayName username avatarUrl phoneNumber city')
@@ -214,6 +268,23 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
 
     if (!profile) {
       res.status(404).json({ success: false, message: 'Provider profile not found' });
+      return;
+    }
+
+    const authReq = req as AuthenticatedRequest;
+    const isOwner =
+      authReq.user &&
+      profile.userId &&
+      ((profile.userId as any)._id?.toString() === authReq.user._id?.toString() ||
+        profile.userId.toString() === authReq.user._id?.toString());
+    const isAdmin = authReq.user?.role === 'ADMIN';
+
+    // Phase 4: Prevent public access to unapproved provider profiles
+    if (!profile.isVerified && !isOwner && !isAdmin) {
+      res.status(404).json({
+        success: false,
+        message: 'Provider profile not found or pending verification',
+      });
       return;
     }
 
@@ -320,15 +391,16 @@ export const submitVerification = async (
       return;
     }
 
-    const { nationalIdNumber, idCardImageUrl, tradeLicenseUrl, certificateUrls } = req.body;
+    const { nationalIdNumber, idCardImageUrl, tradeLicenseUrl, certificateUrls, consentGiven } = req.body;
 
     const verification = await ProviderVerification.findOneAndUpdate(
       { providerProfileId: profile._id },
       {
         providerProfileId: profile._id,
         userId: req.user._id,
-        nationalIdNumber,
-        idCardImageUrl,
+        nationalIdNumber: (nationalIdNumber || '').trim(),
+        idCardImageUrl: idCardImageUrl || '',
+        consentGiven: consentGiven ?? true,
         tradeLicenseUrl: tradeLicenseUrl || '',
         certificateUrls: certificateUrls || [],
         status: 'PENDING_REVIEW',
@@ -339,6 +411,7 @@ export const submitVerification = async (
     );
 
     profile.verificationStatus = 'PENDING_REVIEW';
+    profile.isVerified = false;
     await profile.save();
 
     res.status(200).json({
