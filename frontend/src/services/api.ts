@@ -115,7 +115,7 @@ export const providerApi = {
 
   submitVerification: (data: {
     nationalIdNumber: string;
-    idCardFrontUrl: string;
+    idCardFrontUrl?: string;
     idCardBackUrl?: string;
     tradeLicenseUrl?: string;
   }): Promise<AxiosResponse<ApiResponse<any>>> =>
