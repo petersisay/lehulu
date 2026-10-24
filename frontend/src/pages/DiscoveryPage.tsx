@@ -55,14 +55,18 @@ export const DiscoveryPage: React.FC = () => {
     setError(null);
     try {
       const params: any = {};
-      if (search.trim()) params.search = search.trim();
+      if (search.trim()) {
+        params.q = search.trim();
+        params.search = search.trim();
+      }
       if (selectedCategory) params.category = selectedCategory;
-      if (selectedCity) params.city = selectedCity;
-      if (verifiedOnly) params.verifiedOnly = true;
+      if (selectedCity && selectedCity !== 'All') params.city = selectedCity;
+      params.verifiedOnly = true;
       if (userLocation) {
         params.lat = userLocation.lat;
         params.lng = userLocation.lng;
         params.maxDistance = 50000; // 50km
+        params.radiusKm = 50;
       }
 
       const res = await providerApi.search(params);
@@ -292,12 +296,12 @@ export const DiscoveryPage: React.FC = () => {
             <Search className="w-6 h-6" />
           </div>
           <h3 className="text-base font-bold text-slate-900">
-            {userLocation ? 'No Providers Near Your Current Location' : 'No Providers Found'}
+            {userLocation ? 'No Verified Providers Near Your Location' : 'No Verified Providers Found'}
           </h3>
           <p className="text-xs text-slate-500 leading-relaxed">
             {userLocation
-              ? 'No verified specialists were found within 50 km of your current GPS position. Lehulu currently focuses on Adama and Bishoftu. Try switching to Adama or Bishoftu, or turn off location.'
-              : `No service providers matched your exact filters in ${selectedCity || 'this region'}. Try clearing category or city filters to browse all verified specialists.`}
+              ? 'No verified service providers are available near your current location within 50 km yet. Try selecting Adama or Bishoftu, or turn off location to view all providers.'
+              : 'No verified service providers are available for this category in your selected area yet. Try another category or location, or check back later.'}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             {userLocation ? (
