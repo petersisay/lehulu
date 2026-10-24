@@ -61,26 +61,76 @@ export const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links — Strict Role-Based Visibility */}
           <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/discover"
-              className="text-sm font-semibold text-slate-700 hover:text-emerald-700 transition-colors"
-            >
-              {t('nav.findServices')}
-            </Link>
-            <a
-              href="/#categories"
-              className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
-            >
-              {t('nav.categories')}
-            </a>
-            <a
-              href="/#how-it-works"
-              className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
-            >
-              {t('nav.howItWorks')}
-            </a>
+            {isAdmin ? (
+              <>
+                <Link
+                  to="/admin/dashboard"
+                  className="text-sm font-semibold text-purple-800 hover:text-purple-950 transition-colors"
+                >
+                  {t('nav.adminPanel')}
+                </Link>
+                <Link
+                  to="/admin/dashboard"
+                  className="text-sm font-medium text-slate-700 hover:text-purple-800 transition-colors"
+                >
+                  Verification Queue
+                </Link>
+                <Link
+                  to="/admin/dashboard"
+                  className="text-sm font-medium text-slate-700 hover:text-purple-800 transition-colors"
+                >
+                  Provider Leads
+                </Link>
+              </>
+            ) : isProvider ? (
+              <>
+                <Link
+                  to="/provider/dashboard"
+                  className="text-sm font-semibold text-emerald-800 hover:text-emerald-950 transition-colors"
+                >
+                  {t('nav.dashboard')}
+                </Link>
+                <Link
+                  to="/provider/dashboard"
+                  className="text-sm font-medium text-slate-700 hover:text-emerald-800 transition-colors"
+                >
+                  My Requests & Bookings
+                </Link>
+                {isVerifiedProvider ? (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full border border-emerald-300">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                    Verified Provider
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-full border border-amber-300">
+                    Verification Pending
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/discover"
+                  className="text-sm font-semibold text-slate-700 hover:text-emerald-700 transition-colors"
+                >
+                  {t('nav.findServices')}
+                </Link>
+                <a
+                  href="/#categories"
+                  className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
+                >
+                  {t('nav.categories')}
+                </a>
+                <a
+                  href="/#how-it-works"
+                  className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
+                >
+                  {t('nav.howItWorks')}
+                </a>
+              </>
+            )}
 
             {/* Language Switcher */}
             <button
@@ -231,27 +281,83 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
-          <Link
-            to="/discover"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-semibold text-slate-800 hover:text-emerald-700"
-          >
-            {t('nav.findServices')}
-          </Link>
-          <a
-            href="/#categories"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-slate-600"
-          >
-            {t('nav.categories')}
-          </a>
-          <a
-            href="/#how-it-works"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-slate-600"
-          >
-            {t('nav.howItWorks')}
-          </a>
+          {isAdmin ? (
+            <div className="space-y-1">
+              <Link
+                to="/admin/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-base font-bold text-purple-800"
+              >
+                {t('nav.adminPanel')}
+              </Link>
+              <Link
+                to="/admin/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-medium text-slate-700"
+              >
+                Verification Queue
+              </Link>
+              <Link
+                to="/admin/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-medium text-slate-700"
+              >
+                Provider Leads
+              </Link>
+            </div>
+          ) : isProvider ? (
+            <div className="space-y-1">
+              <Link
+                to="/provider/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-base font-bold text-emerald-800"
+              >
+                {t('nav.dashboard')}
+              </Link>
+              <Link
+                to="/provider/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-sm font-medium text-slate-700"
+              >
+                Incoming Bookings & Requests
+              </Link>
+              <div className="py-1">
+                {isVerifiedProvider ? (
+                  <span className="inline-block text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                    Verified Provider
+                  </span>
+                ) : (
+                  <span className="inline-block text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                    Verification Review Pending
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              <Link
+                to="/discover"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-base font-semibold text-slate-800 hover:text-emerald-700"
+              >
+                {t('nav.findServices')}
+              </Link>
+              <a
+                href="/#categories"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-base font-medium text-slate-600"
+              >
+                {t('nav.categories')}
+              </a>
+              <a
+                href="/#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 text-base font-medium text-slate-600"
+              >
+                {t('nav.howItWorks')}
+              </a>
+            </div>
+          )}
 
           {isAuthenticated && user ? (
             <div className="pt-3 border-t border-slate-100 space-y-2">
@@ -261,7 +367,7 @@ export const Navbar: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-slate-900">{user.displayName}</p>
-                  <p className="text-xs text-slate-500">{user.role}</p>
+                  <p className="text-xs text-slate-500 font-semibold uppercase">{user.role}</p>
                 </div>
               </div>
 
@@ -275,26 +381,6 @@ export const Navbar: React.FC = () => {
                 </Link>
               )}
 
-              {isProvider && (
-                <Link
-                  to="/provider/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-sm font-semibold text-emerald-700"
-                >
-                  {t('nav.dashboard')}
-                </Link>
-              )}
-
-              {isAdmin && (
-                <Link
-                  to="/admin/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-sm font-semibold text-purple-700"
-                >
-                  {t('nav.adminPanel')}
-                </Link>
-              )}
-
               <Link
                 to="/profile"
                 onClick={() => setMobileMenuOpen(false)}
@@ -305,7 +391,7 @@ export const Navbar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="w-full text-left py-2 text-sm font-bold text-red-600"
+                className="w-full text-left py-2 text-sm font-bold text-red-600 cursor-pointer"
               >
                 {t('nav.logout')}
               </button>
