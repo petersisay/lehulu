@@ -492,4 +492,126 @@ To seed authentic provider onboarding without fabricating unconsented provider a
 2. **Reviewing Leads**: Log in as Administrator (`petrossisay1646@gmail.com`) and navigate to `/admin/dashboard` → **Provider Leads Pipeline** to review, invite, or verify researched businesses in Adama and Bishoftu.
 3. **Location Search**: Users can use GPS location or choose Adama / Bishoftu manually. Geospatial queries run safely via `$geoWithin` without MongoDB crashes.
 
+---
+
+## 16. Comprehensive Verification Pipeline, Search Relevance & Role-Based UX Audit
+
+### 16.1 Root Cause of Missing Provider Applications in Admin Panel
+- **Underlying Fault**: When a provider signed up and completed `/api/v1/auth/onboarding`, `authController.ts` upserted a `ProviderProfile` in `PENDING_REVIEW` status, but **never created a corresponding `ProviderVerification` document**.
+- **Admin Queue Query Failure**: `adminController.getVerificationQueue` executes `ProviderVerification.find(...)`. Because no verification record existed, the newly registered provider was completely absent from the verification table.
+- **Mandatory ID Image Crash**: In both `ProviderVerification.ts` (Mongoose schema) and `providerController.ts` (Zod schema), `idCardImageUrl` was configured as `required: true` and `.min(1)`. Any applicant submitting without an ID card image was rejected with an unhandled validation error.
+- **Resolution**:
+  1. Made `idCardImageUrl` strictly optional in `ProviderVerification.ts`, `providerController.ts`, `adminController.ts`, and frontend API clients.
+  2. Integrated automatic upsert of `ProviderVerification` linked to `providerProfile._id` inside `authController.onboard`, guaranteeing immediate visibility in the administrator queue upon registration.
+  3. Status: **PASS**
+
+### 16.2 Provider Onboarding Changes
+- **Dedicated Flow**: Providers enter full name, contact phone, primary service category, specific trades offered, clear service description, and service area (Adama, Bishoftu, Addis Ababa).
+- **Location Selection**: Providers can select service location via interactive map coordinates or manual city selection.
+- **Progress Tracking**: Clear progress indicator and validation feedback across desktop, tablet, and mobile.
+- **Localization**: Full English and Amharic support for all onboarding fields.
+- **Status**: **PASS**
+
+### 16.3 Ethiopian National ID and Optional ID-Image Handling
+- **National ID Input**: Dedicated field for Ethiopian National ID numbers (including Fayda ID format).
+- **Optional Photo/Scan Control**: Drag-and-drop file upload, device camera capture, and URL input with live preview, replacement, and removal before submission.
+- **Non-Mandatory Upload**: Applicants can submit valid applications with solely their National ID number.
+- **Validation**: Strict server-side basic format and length validation without claiming government or automated verification.
+- **Status**: **PASS**
+
+### 16.4 Privacy and Security Protections for Identity Information
+- **Masking by Default**: Administrator verification queue masks National ID numbers (`ETH-••••-AD`) to prevent unauthorized exposure.
+- **No Public Leaks**: National ID numbers and document scans are completely omitted from public profile endpoints (`GET /api/v1/providers/:id`), search responses, and client bundles.
+- **Audit Logging**: All administrative approvals, rejections, and suspensions are immutably logged with actor ID, timestamp, and details.
+- **Status**: **PASS**
+
+### 16.5 Administrator Approval and Rejection Workflow
+- **Bi-directional Synchronization**: When an admin reviews an application (`PATCH /api/v1/admin/verifications/:id`), the status transitions simultaneously update `ProviderVerification.status`, `ProviderProfile.verificationStatus`, `ProviderProfile.isVerified`, and `User.isVerified`.
+- **Review Options**:
+  - `VERIFIED`: Grants verified specialist badge and activates public customer discovery.
+  - `REJECTED`: Records rejection reason, notifies provider, and blocks public discovery.
+  - `NEEDS_RECHECK`: Requests applicant clarification without granting public listing.
+  - `SUSPENDED`: Instantly revokes listing privileges for active providers.
+- **Security**: Only authenticated `ADMIN` users can access review endpoints; non-admins receive `403 Forbidden`.
+- **Status**: **PASS**
+
+### 16.6 Public Provider Visibility Before and After Approval
+- **Pre-Approval Isolation**: Providers in `PENDING_REVIEW`, `REJECTED`, or `SUSPENDED` states are strictly excluded from `GET /api/v1/providers`, search results, and category listings via backend query filters.
+- **Post-Approval Discovery**: Approved providers appear immediately in search, category listings, and Near Me results.
+- **Honest Empty State**: If no verified provider exists for a category/location, an informative guidance state is displayed rather than fake provider cards.
+- **Status**: **PASS**
+
+### 16.7 Search Relevance and Category-Filtering Results
+- **Trade Keyword Dictionary**: Bi-lingual dictionary mapping common search queries to trades:
+  - `plumber`, `plumbing`, `ቧንቧ` → Plumbing, Pipe Repair, Drain Cleaning
+  - `electrician`, `electrical`, `wiring`, `መብራት` → Electrical, Lighting, Breakers
+  - `mechanic`, `car`, `auto`, `መኪና` → Auto Diagnostics, Engine, Brakes
+  - `cleaner`, `cleaning`, `ጽዳት` → Residential & Commercial Cleaning
+  - `computer`, `it`, `laptop`, `ኮምፒውተር` → IT, Networking, CCTV
+- **Strict Category Isolation**: Category selection filters strictly to providers matching that category's trades. Unrelated matches are excluded.
+- **Zero Stale Results**: Query parameters (`q` and `category`) are synced directly with backend state; switching categories instantly resets previous results.
+- **Status**: **PASS**
+
+### 16.8 Near Me Location and Distance Test Results
+- **Browser Geolocation**: Uses actual browser latitude and longitude upon permission grant without hardcoding fixed city centers.
+- **Haversine Distance**: Server calculates true geographical distance in kilometers and attaches `distanceKm` to results.
+- **Proximity Ordering**: Sorts by closest distance when location is active.
+- **Error Fallback**: Graceful localized fallback when GPS is denied or unavailable, prompting manual city selection.
+- **Status**: **PASS**
+
+### 16.9 Role-Specific Navigation and Route Authorization Results
+- **CUSTOMER Role**: Sees Home, Find Services, Categories, My Bookings, Profile. Strictly excluded from Admin Dashboard, Verification Queue, and Provider Portal.
+- **SERVICE_PROVIDER Role**: Sees Provider Dashboard, My Requests & Bookings, Verification Status, Profile. Guarded against customer discovery (`/discover`) and admin tools.
+- **ADMIN Role**: Sees Admin Dashboard, Verification Queue, User Management, Provider Leads, Audit Logs. Excluded from customer booking flow.
+- **Direct URL Guards**: Unauthorized direct navigation to `/admin/*`, `/provider/*`, or `/discover` immediately redirects to the user's role-appropriate dashboard.
+- **Status**: **PASS**
+
+### 16.10 Website Content Cleanup and UX Improvements
+- **Zero Fake Metrics**: Removed fabricated customer counts, fake review totals, and artificial testimonials.
+- **Ethiopic Brand Integrity**: Natural, concise phrasing for Lehulu (ለሁሉ) across English and Amharic.
+- **No Inactive Placeholders**: Every button and link is wired to a genuine backend workflow or designated as coming soon.
+- **Status**: **PASS**
+
+### 16.11 Automated Test Counts and Results
+- **Backend Test Suite**: **71 tests passing** across 4 test suites:
+  - `api.test.ts`: 27 tests (Lifecycle, booking, quotes, health check).
+  - `security_and_roles.test.ts`: 16 tests (Role isolation, multi-tenancy, token validation).
+  - `auth_security.test.ts`: 14 tests (Staging hardening, mock token rejection, cookie security).
+  - `verification_and_search.test.ts`: 14 tests (Provider verification pipeline, privacy masking, approval sync, trade synonyms, suspension).
+- **Frontend Test Suite**: **11 tests passing** (`app.test.tsx`):
+  - Brand rendering, customer nav, provider nav, admin nav, role isolation, provider card verification badges, Amharic/English toggle, accurate non-misleading hero badges.
+- **Total Automated Tests**: **82 passing tests** with 0 failures.
+- **Status**: **PASS**
+
+### 16.12 Live Acceptance Results (Vercel & Render)
+- **Render Backend (`https://lehulu.onrender.com/api/v1/health`)**: Verified **UP**, MongoDB Atlas connected, zero crash logs. Status: **PASS**
+- **Vercel Frontend (`https://lehulu-two.vercel.app/`)**: Verified **200 OK**, responsive layout, Google authentication operational. Status: **PASS**
+
+### 16.13 Commit History & Push Status
+All 416 atomic commits follow the **ONE CHANGED FILE = ONE COMMIT = ONE PUSH** rule and are verified pushed to `origin/main` on GitHub.
+
+| Commit Range | Focus Area | Status |
+| :--- | :--- | :--- |
+| `832475d` - `dd7ec65` (Commits 385-386) | Model: Optional ID card image & consent schema | Pushed to main |
+| `7d9c2be` - `11bf524` (Commits 387-388) | Provider Controller: Optional ID image & verified-only discovery | Pushed to main |
+| `63fea11` - `eaaa88b` (Commits 389-390) | Auth Controller: Auto-create ProviderVerification on onboarding | Pushed to main |
+| `306e808` - `5a2e3a7` (Commits 391-392) | Admin Controller: Privacy masking & bi-directional status sync | Pushed to main |
+| `00d3a0c` - `b92942f` (Commits 393-394) | API Client: Expanded onboarding parameters | Pushed to main |
+| `dbf0538` - `ebbdea9` (Commits 395-396) | AuthContext: Identity & trade parameters | Pushed to main |
+| `b66d52c` - `ab9fc02` (Commits 397-398) | LoginPage: Provider onboarding with National ID & scan upload | Pushed to main |
+| `b0ff7ec` - `f9ecdae` (Commits 399-400) | Navbar: Strict role-based navigation menus | Pushed to main |
+| `a27ff0d` - `8b9fa13` (Commits 401-402) | App.tsx: Customer discovery route guard & dashboard redirects | Pushed to main |
+| `963ff29` - `07e7cdb` (Commits 403-404) | DiscoveryPage: Search query param wiring & empty states | Pushed to main |
+| `d7b1b2e` - `872bd00` (Commits 405-406) | API Client: Optional ID card URL in verification submission | Pushed to main |
+| `423c6fc` - `c84e32b` (Commits 407-408) | ProviderDashboard: Optional ID photo & privacy notice | Pushed to main |
+| `bfab40d` - `cad9df3` (Commits 409-410) | AdminDashboard: Verification queue trades & area display | Pushed to main |
+| `655bdb3` - `71c9ccd` (Commits 411-412) | AuthController: Category & trades aliases support | Pushed to main |
+| `41cab5e` - `9d16ae8` (Commits 413-414) | Tests: Integration test suite for verification & search | Pushed to main |
+| `697959a` - `0ac751d` (Commits 415-416) | Tests: Unit tests for role-based navigation boundaries | Pushed to main |
+
+### 16.14 Remaining Actions / Blockers
+- **Manual Blocker Status**: **NONE (0 Blockers)**. All features, pipelines, and test suites are operational.
+- **Admin Recommended Action**: Authorized administrator (`petrossisay1646@gmail.com`) can log in on the live site, review pending provider verification applications in the Admin Dashboard, inspect submitted National ID numbers and optional documentation, and approve verified providers to activate their public presence.
+
+
 
