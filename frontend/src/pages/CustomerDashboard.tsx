@@ -56,6 +56,19 @@ export const CustomerDashboard: React.FC = () => {
     }
   }, [isAuthenticated, authLoading]);
 
+  const handleConfirmCompletion = async (bookingId: string, providerName: string) => {
+    if (!window.confirm('Confirm that this service has been satisfactorily completed?')) return;
+    try {
+      const res = await bookingApi.confirmCompletion(bookingId);
+      if (res.data.success) {
+        await fetchBookings();
+        setReviewBooking({ id: bookingId, providerName });
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to confirm completion.');
+    }
+  };
+
   const activeBookings = bookings.filter(
     (b) => !['COMPLETED', 'CANCELLED'].includes(b.status)
   );
@@ -220,7 +233,17 @@ export const CustomerDashboard: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2 w-full md:w-auto justify-end pt-3 md:pt-0 border-t md:border-t-0 border-slate-100">
+                <div className="flex items-center gap-2 w-full md:w-auto justify-end pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 flex-wrap">
+                  {['COMPLETION_PENDING', 'IN_PROGRESS'].includes(booking.status) && (
+                    <button
+                      onClick={() => handleConfirmCompletion(booking._id, provName)}
+                      className="px-3.5 py-2 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Confirm Complete</span>
+                    </button>
+                  )}
+
                   {booking.status === 'COMPLETED' && (
                     <button
                       onClick={() => setReviewBooking({ id: booking._id, providerName: provName })}

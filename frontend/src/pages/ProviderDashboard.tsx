@@ -177,6 +177,17 @@ export const ProviderDashboard: React.FC = () => {
     }
   };
 
+  const handleConfirmCompletion = async (bookingId: string) => {
+    try {
+      const res = await bookingApi.confirmCompletion(bookingId);
+      if (res.data.success) {
+        fetchDashboardData();
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to finalize completion.');
+    }
+  };
+
   const handleStartWork = async (bookingId: string) => {
     try {
       const res = await bookingApi.updateStatus(bookingId, 'IN_PROGRESS');
@@ -488,11 +499,28 @@ export const ProviderDashboard: React.FC = () => {
                     )}
 
                     {booking.status === 'IN_PROGRESS' && (
+                      <>
+                        <button
+                          onClick={() => handleRequestCompletion(booking._id)}
+                          className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                        >
+                          Request Completion
+                        </button>
+                        <button
+                          onClick={() => handleConfirmCompletion(booking._id)}
+                          className="px-3.5 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer"
+                        >
+                          Mark Completed
+                        </button>
+                      </>
+                    )}
+
+                    {booking.status === 'COMPLETION_PENDING' && (
                       <button
-                        onClick={() => handleRequestCompletion(booking._id)}
-                        className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                        onClick={() => handleConfirmCompletion(booking._id)}
+                        className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold cursor-pointer"
                       >
-                        Request Job Completion
+                        Finalize Complete
                       </button>
                     )}
 

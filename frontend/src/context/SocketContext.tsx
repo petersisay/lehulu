@@ -60,36 +60,44 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const joinBooking = (bookingId: string) => {
     if (socket && isConnected) {
       socket.emit('join_booking', bookingId);
+      socket.emit('booking:join', bookingId);
     }
   };
 
   const leaveBooking = (bookingId: string) => {
     if (socket && isConnected) {
       socket.emit('leave_booking', bookingId);
+      socket.emit('booking:leave', bookingId);
     }
   };
 
   const onBookingUpdated = (callback: (booking: Booking) => void) => {
     if (!socket) return () => {};
     socket.on('booking_status_updated', callback);
+    socket.on('booking:status_changed', callback);
     return () => {
       socket.off('booking_status_updated', callback);
+      socket.off('booking:status_changed', callback);
     };
   };
 
   const onNewMessage = (callback: (message: Message) => void) => {
     if (!socket) return () => {};
     socket.on('new_message', callback);
+    socket.on('message:received', callback);
     return () => {
       socket.off('new_message', callback);
+      socket.off('message:received', callback);
     };
   };
 
   const onNotification = (callback: (notification: Notification) => void) => {
     if (!socket) return () => {};
     socket.on('notification', callback);
+    socket.on('notification:new', callback);
     return () => {
       socket.off('notification', callback);
+      socket.off('notification:new', callback);
     };
   };
 

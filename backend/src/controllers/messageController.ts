@@ -142,7 +142,12 @@ export const sendMessage = async (
     });
 
     emitSocketEvent(`booking:${booking._id}`, 'message:received', populatedMessage);
+    emitSocketEvent(`booking:${booking._id}`, 'new_message', populatedMessage);
     emitSocketEvent(`user:${recipientId}`, 'notification:new', {
+      type: 'NEW_MESSAGE',
+      bookingId: booking._id,
+    });
+    emitSocketEvent(`user:${recipientId}`, 'notification', {
       type: 'NEW_MESSAGE',
       bookingId: booking._id,
     });

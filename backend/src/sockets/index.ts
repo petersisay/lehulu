@@ -6,6 +6,7 @@ import { env } from '../config/env';
 import { AuthUserPayload } from '../types';
 import { COOKIE_NAME } from '../middleware/auth';
 import { Booking } from '../models/Booking';
+import { ProviderProfile } from '../models/ProviderProfile';
 
 let io: SocketIOServer | null = null;
 
@@ -93,12 +94,20 @@ export const initSockets = (httpServer: HttpServer): SocketIOServer => {
         }
 
         // Authorization check: User must be customer, assigned provider, or admin
-        const customerId = booking.customerId.toString();
-        const providerUserId = (booking.providerId as any)?.userId?.toString();
+        const customerId = (booking.customerId as any)?._id?.toString() || booking.customerId?.toString();
+        let providerUserId = (booking.providerId as any)?.userId?.toString() || (booking.providerId as any)?.userId?._id?.toString();
+        if (!providerUserId && booking.providerId) {
+          const prof = await ProviderProfile.findById((booking.providerId as any)?._id || booking.providerId);
+          providerUserId = prof?.userId?.toString();
+        }
+        const userProf = await ProviderProfile.findOne({ userId: user._id }).select('_id');
+        const bookingProviderId = (booking.providerId as any)?._id?.toString() || booking.providerId?.toString();
+
         const isAuthorized =
           user.role === 'ADMIN' ||
           customerId === user._id ||
-          providerUserId === user._id;
+          providerUserId === user._id ||
+          (userProf && userProf._id.toString() === bookingProviderId);
 
         if (!isAuthorized) {
           console.warn(`[SOCKET SECURITY ALERT]: User ${user.email} (${user._id}) attempted unauthorized access to booking:${bookingId}`);

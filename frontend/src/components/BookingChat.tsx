@@ -36,28 +36,45 @@ export const BookingChat: React.FC<BookingChatProps> = ({
   useEffect(() => {
     joinBooking(bookingId);
 
-    const fetchMessages = async () => {
+    const fetchMessages = async (silent = false) => {
       try {
-        setLoading(true);
+        if (!silent) setLoading(true);
         const res = await messageApi.getByBooking(bookingId);
         const resData = res.data as any;
         if (resData && resData.success) {
           const list = resData.data || resData.messages || [];
-          setMessages(Array.isArray(list) ? list : []);
+          if (Array.isArray(list)) {
+            setMessages((prev) => {
+              const safePrev = Array.isArray(prev) ? prev : [];
+              if (list.length !== safePrev.length || list.some((m, idx) => m._id !== safePrev[idx]?._id)) {
+                setTimeout(scrollToBottom, 50);
+                return list;
+              }
+              return safePrev;
+            });
+          }
         }
       } catch (err: any) {
-        setError(err.response?.data?.message || 'Could not load messages.');
+        if (!silent) {
+          setError(err.response?.data?.message || 'Could not load messages.');
+        }
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
         scrollToBottom();
       }
     };
 
     fetchMessages();
 
-    // Listen to real-time incoming messages
-    const unsubscribe = onNewMessage?.((msg: Message) => {
-      if (msg && msg.bookingId === bookingId) {
+    // Polling fallback to guarantee instant chat updates across tabs
+    const interval = setInterval(() => {
+      fetchMessages(true);
+    }, 3500);
+
+    // Listen to real-time incoming messages via WebSockets
+    const unsubscribe = onNewMessage?.((msg: any) => {
+      const msgBookingId = typeof msg?.bookingId === 'object' ? msg.bookingId?._id : msg?.bookingId;
+      if (msg && String(msgBookingId) === String(bookingId)) {
         setMessages((prev) => {
           const safePrev = Array.isArray(prev) ? prev : [];
           if (safePrev.some((m) => m._id === msg._id)) return safePrev;
@@ -68,6 +85,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
     });
 
     return () => {
+      clearInterval(interval);
       leaveBooking(bookingId);
       if (unsubscribe) unsubscribe();
     };

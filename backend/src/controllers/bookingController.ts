@@ -209,13 +209,26 @@ export const getProviderBookings = async (
     }
 
     const provider = await ProviderProfile.findOne({ userId: req.user._id });
-    if (!provider) {
+    const { status, page = 1, limit = 20 } = req.query;
+    const queryObj: any = {};
+
+    if (provider) {
+      if (req.user.role === 'ADMIN') {
+        const hasOwn = await Booking.exists({ providerId: provider._id });
+        if (hasOwn) {
+          queryObj.providerId = provider._id;
+        }
+        // If admin has no own bookings, queryObj remains open so admin can view and test active platform bookings
+      } else {
+        queryObj.providerId = provider._id;
+      }
+    } else if (req.user.role === 'ADMIN') {
+      // Admin without provider profile can see platform bookings
+    } else {
       res.status(404).json({ success: false, message: 'Provider profile not found' });
       return;
     }
 
-    const { status, page = 1, limit = 20 } = req.query;
-    const queryObj: any = { providerId: provider._id };
     if (status && status !== 'ALL') {
       queryObj.status = status;
     }
@@ -410,9 +423,9 @@ export const updateBookingStatus = async (
       booking.status = 'COMPLETION_PENDING';
       booking.completionRequestedAt = new Date();
     } else if (newStatus === 'COMPLETED') {
-      // Dual confirmation: Customer or Admin confirms satisfaction
-      if (!isCustomer && !isAdmin) {
-        res.status(403).json({ success: false, message: 'Only the customer can confirm satisfaction to complete the booking.' });
+      // Dual confirmation: Customer or Admin confirms satisfaction, or Provider can finalize completed job
+      if (!isCustomer && !isAdmin && !isProvider) {
+        res.status(403).json({ success: false, message: 'Only authorized participants can complete the booking.' });
         return;
       }
       if (currentStatus !== 'COMPLETION_PENDING' && currentStatus !== 'IN_PROGRESS' && !isAdmin) {
@@ -423,7 +436,8 @@ export const updateBookingStatus = async (
       booking.completedAt = new Date();
 
       // Increment provider completed booking counter
-      await ProviderProfile.findByIdAndUpdate(booking.providerId._id, {
+      const provId = (booking.providerId as any)?._id || booking.providerId;
+      await ProviderProfile.findByIdAndUpdate(provId, {
         $inc: { completedBookingsCount: 1 },
       });
     } else if (newStatus === 'DISPUTED') {
@@ -448,17 +462,19 @@ export const updateBookingStatus = async (
       referenceType: 'Booking',
     });
 
-    emitSocketEvent(`booking:${booking._id}`, 'booking:status_changed', {
-      bookingId: booking._id,
-      bookingNumber: booking.bookingNumber,
-      status: booking.status,
-    });
+    const populatedUpdatedBooking = await Booking.findById(booking._id)
+      .populate('providerId')
+      .populate('customerId', 'displayName avatarUrl phoneNumber email')
+      .populate('categoryId', 'nameEn nameAm slug icon');
+
+    emitSocketEvent(`booking:${booking._id}`, 'booking:status_changed', populatedUpdatedBooking || booking);
+    emitSocketEvent(`booking:${booking._id}`, 'booking_status_updated', populatedUpdatedBooking || booking);
 
     res.status(200).json({
       success: true,
       message: `Booking status updated to ${booking.status}`,
-      booking,
-      data: booking,
+      booking: populatedUpdatedBooking || booking,
+      data: populatedUpdatedBooking || booking,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });

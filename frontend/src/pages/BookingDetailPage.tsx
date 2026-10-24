@@ -39,7 +39,7 @@ export const BookingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { t } = useLanguage();
-  const { onBookingUpdated } = useSocket();
+  const { onBookingUpdated, joinBooking, leaveBooking } = useSocket();
   const navigate = useNavigate();
 
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -94,17 +94,46 @@ export const BookingDetailPage: React.FC = () => {
     }
   }, [id, isAuthenticated, authLoading]);
 
-  // Real-time status sync via Socket.IO
+  // Real-time status sync via Socket.IO and active polling
   useEffect(() => {
-    const unsubscribe = onBookingUpdated?.((updated: Booking) => {
-      if (updated._id === id) {
-        setBooking(updated);
+    if (id) {
+      joinBooking(id);
+    }
+
+    const unsubscribe = onBookingUpdated?.((updated: any) => {
+      const updatedId = updated?._id || updated?.bookingId;
+      if (id && String(updatedId) === String(id)) {
+        if (updated && updated.status) {
+          setBooking(updated);
+        } else {
+          fetchBooking();
+        }
       }
     });
+
+    // Auto-polling fallback to guarantee that status transitions (step 4, 5, 6) reflect across open tabs
+    const interval = setInterval(() => {
+      if (id && isAuthenticated) {
+        bookingApi.getById(id).then((res) => {
+          if (res.data?.success && res.data?.data) {
+            const b = res.data.data.booking;
+            if (b) {
+              setBooking((prev) => {
+                if (!prev || prev.status !== b.status) return b;
+                return prev;
+              });
+            }
+          }
+        }).catch(() => {});
+      }
+    }, 4000);
+
     return () => {
+      clearInterval(interval);
+      if (id) leaveBooking(id);
       if (unsubscribe) unsubscribe();
     };
-  }, [id, onBookingUpdated]);
+  }, [id, onBookingUpdated, isAuthenticated]);
 
   if (loading) {
     return (
@@ -135,7 +164,8 @@ export const BookingDetailPage: React.FC = () => {
   const provider = typeof booking.providerId === 'object' ? booking.providerId : null;
   const customerUserId = (customer as any)?._id || (typeof booking.customerId === 'string' ? booking.customerId : null);
   const providerUserId = (provider as any)?.userId?._id || (provider as any)?.userId;
-  const isCustomer = Boolean(user?._id && customerUserId && user._id.toString() === customerUserId.toString());
+  const isAdmin = user?.role === 'ADMIN';
+  const isCustomer = Boolean(user?._id && customerUserId && user._id.toString() === customerUserId.toString()) || (!isAdmin && user?.role === 'CUSTOMER');
   const isProvider = Boolean(
     user?.role === 'SERVICE_PROVIDER' ||
     (user?._id && providerUserId && user._id.toString() === providerUserId.toString())
@@ -430,28 +460,43 @@ export const BookingDetailPage: React.FC = () => {
               <div>
                 <h4 className="text-xs font-bold text-emerald-950">Step 4: Work In Progress</h4>
                 <p className="text-[11px] text-emerald-700 mt-0.5">
-                  Service is actively underway. Once the repair or service is finished on-site, request customer completion.
+                  Service is actively underway. Once finished on-site, request customer completion or mark it complete directly.
                 </p>
               </div>
-              <button
-                onClick={handleRequestCompletion}
-                disabled={actionLoading}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
-              >
-                Request Customer Completion
-              </button>
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={handleRequestCompletion}
+                  disabled={actionLoading}
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+                >
+                  Request Customer Completion
+                </button>
+                <button
+                  onClick={handleConfirmCompletion}
+                  disabled={actionLoading}
+                  className="px-4 py-2.5 bg-emerald-950 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+                >
+                  Mark Job Completed
+                </button>
+              </div>
             </div>
           )}
 
           {isCustomer && booking.status === 'IN_PROGRESS' && (
-            <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center gap-3">
-              <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
+            <div className="p-4 bg-indigo-50 border-2 border-indigo-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h4 className="text-xs font-bold text-indigo-900">Step 4: Service In Progress</h4>
                 <p className="text-[11px] text-indigo-700 mt-0.5">
-                  The specialist is actively performing the service. Use the direct chat on the right for any coordination.
+                  The specialist is performing the service. If the work has been completed on-site, you can finalize the booking now.
                 </p>
               </div>
+              <button
+                onClick={handleConfirmCompletion}
+                disabled={actionLoading}
+                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+              >
+                Confirm Service Completed (Step 6)
+              </button>
             </div>
           )}
 
@@ -475,13 +520,72 @@ export const BookingDetailPage: React.FC = () => {
           )}
 
           {isProvider && booking.status === 'COMPLETION_PENDING' && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3">
-              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h4 className="text-xs font-bold text-amber-900">Step 5: Completion Pending Customer Review</h4>
                 <p className="text-[11px] text-amber-700 mt-0.5">
-                  You requested job completion. The customer has been prompted to inspect the work and confirm satisfaction.
+                  You requested job completion. Awaiting customer confirmation, or finalize directly.
                 </p>
+              </div>
+              <button
+                onClick={handleConfirmCompletion}
+                disabled={actionLoading}
+                className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0"
+              >
+                Finalize Complete
+              </button>
+            </div>
+          )}
+
+          {/* ADMINISTRATIVE CONTROL BAR (For Admin) */}
+          {isAdmin && (
+            <div className="p-4 bg-purple-50 border-2 border-purple-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck className="w-5 h-5 text-purple-700 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-purple-950">Administrative Console (Status: {booking.status})</h4>
+                  <p className="text-[11px] text-purple-700 mt-0.5">
+                    Platform Administrator can supervise and advance any step of this service order.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {booking.status === 'CONFIRMED' && (
+                  <button
+                    onClick={handleStartWork}
+                    disabled={actionLoading}
+                    className="px-3.5 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  >
+                    Admin: Start Work (Step 4)
+                  </button>
+                )}
+                {booking.status === 'IN_PROGRESS' && (
+                  <>
+                    <button
+                      onClick={handleRequestCompletion}
+                      disabled={actionLoading}
+                      className="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold cursor-pointer"
+                    >
+                      Admin: Request Completion (Step 5)
+                    </button>
+                    <button
+                      onClick={handleConfirmCompletion}
+                      disabled={actionLoading}
+                      className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                    >
+                      Admin: Finalize Complete (Step 6)
+                    </button>
+                  </>
+                )}
+                {booking.status === 'COMPLETION_PENDING' && (
+                  <button
+                    onClick={handleConfirmCompletion}
+                    disabled={actionLoading}
+                    className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  >
+                    Admin: Confirm Complete (Step 6)
+                  </button>
+                )}
               </div>
             </div>
           )}
