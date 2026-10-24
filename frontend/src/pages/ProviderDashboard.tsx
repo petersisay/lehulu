@@ -95,8 +95,8 @@ export const ProviderDashboard: React.FC = () => {
 
   const handleVerificationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nationalIdNumber.trim() || !idCardFrontUrl.trim()) {
-      setError('National ID Number and front ID photo are required.');
+    if (!nationalIdNumber.trim()) {
+      setError('Ethiopian National ID Number is required.');
       return;
     }
     setVerifying(true);
@@ -280,21 +280,20 @@ export const ProviderDashboard: React.FC = () => {
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                ID Card Front Photo URL *
+                ID Card Front Photo URL (Optional)
               </label>
               <input
                 type="url"
                 value={idCardFrontUrl}
                 onChange={(e) => setIdCardFrontUrl(e.target.value)}
-                placeholder="https://... secure photo URL"
+                placeholder="https://... secure photo URL (optional)"
                 className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                required
               />
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Trade License / Kebele Letter URL
+                Trade License / Kebele Letter URL (Optional)
               </label>
               <input
                 type="url"
@@ -305,6 +304,10 @@ export const ProviderDashboard: React.FC = () => {
               />
             </div>
           </div>
+
+          <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <strong>Privacy & Protection:</strong> Your Ethiopian National ID and credentials are only reviewed by authorized administrators to verify your account. Documents are never exposed to customers or public endpoints.
+          </p>
 
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
