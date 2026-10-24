@@ -13,6 +13,9 @@ import {
   Loader2,
   Star,
   XCircle,
+  Plus,
+  Trash2,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -45,15 +48,34 @@ export const BookingDetailPage: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false);
+  const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
+
+  // Quote form state
+  const [quoteItems, setQuoteItems] = useState<{ description: string; quantity: number; unitPrice: number; total: number }[]>([
+    { description: 'Service Labor & Inspection', quantity: 1, unitPrice: 500, total: 500 },
+  ]);
+  const [quoteDuration, setQuoteDuration] = useState<number>(2);
+  const [quoteInspection, setQuoteInspection] = useState<boolean>(true);
+  const [quoteNotes, setQuoteNotes] = useState<string>('');
+  const [submittingQuote, setSubmittingQuote] = useState<boolean>(false);
 
   const fetchBooking = async () => {
     if (!id) return;
     try {
       setLoading(true);
+      setError(null);
       const res = await bookingApi.getById(id);
-      if (res.data.success) {
-        setBooking(res.data.data.booking);
-        setQuotes(res.data.data.quotes || []);
+      const resData = res.data as any;
+      if (resData) {
+        const payload = resData.data || resData;
+        const b = resData.booking || payload?.booking || (payload?._id ? payload : null);
+        if (b) {
+          setBooking(b);
+          const q = resData.quotes || payload?.quotes || [];
+          setQuotes(Array.isArray(q) ? q : []);
+        } else {
+          setError(resData.message || 'Booking not found');
+        }
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load booking details.');
@@ -111,11 +133,62 @@ export const BookingDetailPage: React.FC = () => {
 
   const customer = typeof booking.customerId === 'object' ? booking.customerId : null;
   const provider = typeof booking.providerId === 'object' ? booking.providerId : null;
-  const isCustomer = user?._id === customer?._id;
-  const isProvider = user?.role === 'SERVICE_PROVIDER';
+  const customerUserId = (customer as any)?._id || (typeof booking.customerId === 'string' ? booking.customerId : null);
+  const providerUserId = (provider as any)?.userId?._id || (provider as any)?.userId;
+  const isCustomer = Boolean(user?._id && customerUserId && user._id.toString() === customerUserId.toString());
+  const isProvider = Boolean(
+    user?.role === 'SERVICE_PROVIDER' ||
+    (user?._id && providerUserId && user._id.toString() === providerUserId.toString())
+  );
   const otherPartyName = isCustomer
     ? (provider?.businessName || 'Specialist')
     : (customer?.displayName || 'Customer');
+
+  const handleAddQuoteItem = () => {
+    setQuoteItems([...quoteItems, { description: '', quantity: 1, unitPrice: 0, total: 0 }]);
+  };
+
+  const handleUpdateQuoteItem = (index: number, field: string, val: any) => {
+    const updated = [...quoteItems];
+    (updated[index] as any)[field] = val;
+    updated[index].total = Number(updated[index].quantity || 0) * Number(updated[index].unitPrice || 0);
+    setQuoteItems(updated);
+  };
+
+  const handleRemoveQuoteItem = (index: number) => {
+    if (quoteItems.length <= 1) return;
+    setQuoteItems(quoteItems.filter((_, i) => i !== index));
+  };
+
+  const handleSubmitQuote = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const totalAmount = quoteItems.reduce((sum, item) => sum + item.total, 0);
+    if (totalAmount <= 0) {
+      alert('Quotation total must be greater than 0 ETB');
+      return;
+    }
+
+    setSubmittingQuote(true);
+    try {
+      const res = await quoteApi.create({
+        bookingId: booking._id,
+        items: quoteItems,
+        totalAmount,
+        estimatedDurationHours: quoteDuration,
+        inspectionIncluded: quoteInspection,
+        notes: quoteNotes,
+      });
+
+      if (res.data.success) {
+        setIsQuoteOpen(false);
+        fetchBooking();
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to submit quotation.');
+    } finally {
+      setSubmittingQuote(false);
+    }
+  };
 
   const handleConfirmCompletion = async () => {
     if (!window.confirm('Confirm that the service has been satisfactorily completed?')) return;
@@ -263,6 +336,25 @@ export const BookingDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Col: Details & Quotations */}
         <div className="lg:col-span-7 space-y-6">
+          {/* Action Callout if provider needs to issue quote */}
+          {isProvider && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
+            <div className="p-5 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-bold text-emerald-950">New Booking Request Received</h3>
+                <p className="text-xs text-emerald-700 mt-0.5">
+                  Review the customer's request and issue an itemized quotation in ETB to proceed.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsQuoteOpen(true)}
+                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0 flex items-center gap-1.5"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Issue Itemized Quotation</span>
+              </button>
+            </div>
+          )}
+
           {/* Action Callout if customer or provider needs to act */}
           {isCustomer && booking.status === 'COMPLETION_PENDING' && (
             <div className="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -370,11 +462,22 @@ export const BookingDetailPage: React.FC = () => {
             </h3>
 
             {quotes.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400 text-xs">
+              <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400 text-xs space-y-3">
                 <p className="font-semibold text-slate-600">No quotation issued yet</p>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  The provider will inspect the request and issue an itemized ETB quote here.
+                <p className="text-[11px] text-slate-400">
+                  {isProvider
+                    ? 'Inspect the service details and issue your formal ETB quote below.'
+                    : 'The provider will inspect the request and issue an itemized ETB quote here.'}
                 </p>
+                {isProvider && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
+                  <button
+                    onClick={() => setIsQuoteOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Create Quotation Now</span>
+                  </button>
+                )}
               </div>
             ) : (
               quotes.map((quote) => (
@@ -412,6 +515,148 @@ export const BookingDetailPage: React.FC = () => {
             fetchBooking();
           }}
         />
+      )}
+
+      {/* Create Quotation Modal for Provider */}
+      {isQuoteOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 space-y-4 my-8">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900">
+                Issue Itemized Quotation for Booking #{booking.bookingNumber}
+              </h3>
+              <button
+                onClick={() => setIsQuoteOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitQuote} className="space-y-4">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-slate-700 block">Itemized Cost Breakdown (ETB)</span>
+                {quoteItems.map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Item / Labor description"
+                      value={item.description}
+                      onChange={(e) => handleUpdateQuoteItem(idx, 'description', e.target.value)}
+                      className="flex-2 px-3 py-1.5 text-xs rounded-xl border border-slate-300"
+                      required
+                    />
+                    <input
+                      type="number"
+                      min={1}
+                      placeholder="Qty"
+                      value={item.quantity}
+                      onChange={(e) => handleUpdateQuoteItem(idx, 'quantity', Number(e.target.value))}
+                      className="w-16 px-2 py-1.5 text-xs rounded-xl border border-slate-300 text-center"
+                      required
+                    />
+                    <input
+                      type="number"
+                      min={0}
+                      placeholder="Price"
+                      value={item.unitPrice}
+                      onChange={(e) => handleUpdateQuoteItem(idx, 'unitPrice', Number(e.target.value))}
+                      className="w-24 px-2 py-1.5 text-xs rounded-xl border border-slate-300 text-right font-mono"
+                      required
+                    />
+                    <span className="w-20 text-xs font-mono font-bold text-right text-slate-800">
+                      {item.total.toLocaleString()} ETB
+                    </span>
+                    {quoteItems.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveQuoteItem(idx)}
+                        className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={handleAddQuoteItem}
+                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 pt-1 cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Another Item</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Est. Duration (Hours)
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={quoteDuration}
+                    onChange={(e) => setQuoteDuration(Number(e.target.value))}
+                    className="w-full px-3 py-1.5 text-xs rounded-xl border border-slate-300"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-5">
+                  <input
+                    type="checkbox"
+                    id="inspDetail"
+                    checked={quoteInspection}
+                    onChange={(e) => setQuoteInspection(e.target.checked)}
+                    className="w-4 h-4 text-emerald-600 rounded-sm cursor-pointer"
+                  />
+                  <label htmlFor="inspDetail" className="text-xs font-semibold text-slate-700 cursor-pointer">
+                    Inspection Fee Included
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Specialist Notes to Customer (Optional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={quoteNotes}
+                  onChange={(e) => setQuoteNotes(e.target.value)}
+                  placeholder="e.g. Price includes replacement breaker parts. Will arrive with all diagnostic tools."
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300"
+                />
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-600">Grand Total:</span>
+                <span className="text-lg font-black text-emerald-900 font-mono">
+                  {quoteItems.reduce((sum, item) => sum + item.total, 0).toLocaleString()} ETB
+                </span>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsQuoteOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingQuote}
+                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                >
+                  {submittingQuote && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  <span>Submit Formal Quotation</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

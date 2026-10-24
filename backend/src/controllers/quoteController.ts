@@ -51,8 +51,23 @@ export const createQuote = async (
       return;
     }
 
-    const providerUserId = (booking.providerId as any).userId.toString();
-    if (providerUserId !== req.user._id && req.user.role !== 'ADMIN') {
+    const provUserId =
+      (booking.providerId as any)?.userId?._id?.toString() ||
+      (booking.providerId as any)?.userId?.toString();
+
+    const userProviderProfile = await ProviderProfile.findOne({ userId: req.user._id }).select('_id');
+    const userProviderId = userProviderProfile?._id?.toString();
+
+    const bookingProvId =
+      (booking.providerId as any)?._id?.toString() ||
+      booking.providerId?.toString();
+
+    const isAuthorizedProvider =
+      provUserId === req.user._id ||
+      (userProviderId && userProviderId === bookingProvId) ||
+      req.user.role === 'ADMIN';
+
+    if (!isAuthorizedProvider) {
       res.status(403).json({
         success: false,
         message: 'Only the assigned service provider can submit a quotation for this booking.',

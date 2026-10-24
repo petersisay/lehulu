@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Types } from 'mongoose';
 import { AuthenticatedRequest, BookingStatus } from '../types';
 import { Booking } from '../models/Booking';
+import { Quote } from '../models/Quote';
 import { ProviderProfile } from '../models/ProviderProfile';
 import { ProviderVerification } from '../models/ProviderVerification';
 import { ServiceCategory } from '../models/ServiceCategory';
@@ -277,8 +278,25 @@ export const getBookingById = async (
     }
 
     // Room Authorization: strictly customer, assigned provider, or admin
-    const isCustomer = booking.customerId._id.toString() === req.user._id;
-    const isProvider = (booking.providerId as any)?.userId?._id?.toString() === req.user._id;
+    const customerUserId =
+      (booking.customerId as any)?._id?.toString() ||
+      booking.customerId?.toString();
+
+    const providerUserId =
+      (booking.providerId as any)?.userId?._id?.toString() ||
+      (booking.providerId as any)?.userId?.toString();
+
+    const userProviderProfile = await ProviderProfile.findOne({ userId: req.user._id }).select('_id');
+    const userProviderId = userProviderProfile?._id?.toString();
+
+    const bookingProviderId =
+      (booking.providerId as any)?._id?.toString() ||
+      booking.providerId?.toString();
+
+    const isCustomer = customerUserId === req.user._id;
+    const isProvider =
+      providerUserId === req.user._id ||
+      (userProviderId && userProviderId === bookingProviderId);
     const isAdmin = req.user.role === 'ADMIN';
 
     if (!isCustomer && !isProvider && !isAdmin) {
@@ -289,10 +307,16 @@ export const getBookingById = async (
       return;
     }
 
+    const quotes = await Quote.find({ bookingId: booking._id }).sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       booking,
-      data: booking,
+      quotes,
+      data: {
+        booking,
+        quotes,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
