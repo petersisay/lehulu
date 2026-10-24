@@ -405,6 +405,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 399 | `frontend/src/components/Navbar.tsx` | `b0ff7ec` | `feat(navigation): enforce strict role-based navigation menus for Customer, Provider, and Admin` | Verified pushed to `origin/main` | Separated desktop and mobile navigation links strictly by authenticated role |
 | 400 | `COMMIT_LOG.md` | `f9ecdae` | `docs: record Navbar role navigation in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 401 | `frontend/src/App.tsx` | `a27ff0d` | `feat(routes): guard customer discovery and enforce role-based dashboard redirects` | Verified pushed to `origin/main` | Added CustomerDiscoveryRoute and redirected unauthorized roles to respective dashboards |
+| 402 | `COMMIT_LOG.md` | `8b9fa13` | `docs: record App.tsx route guard update in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 403 | `frontend/src/pages/DiscoveryPage.tsx` | `963ff29` | `fix(discovery): connect search query parameters to backend and refine empty states` | Verified pushed to `origin/main` | Connected params.q to backend trade matching and updated honest empty state guidance |
 
 
 
