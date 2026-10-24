@@ -80,29 +80,40 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
     // PHASE 4 REQUIREMENT: Unverified/pending/rejected/suspended providers MUST NEVER appear in public customer search
     const authReq = req as AuthenticatedRequest;
     const isAdmin = authReq.user?.role === 'ADMIN';
-    if (!isAdmin || verifiedOnly === 'true' || req.query.includeUnverified !== 'true') {
+    if (!isAdmin) {
+      queryObj.isVerified = true;
+      queryObj.verificationStatus = 'VERIFIED';
+    } else if (verifiedOnly === 'true' || req.query.includeUnverified !== 'true') {
       queryObj.isVerified = true;
       queryObj.verificationStatus = 'VERIFIED';
     }
 
-    // Strict category filtering by ID or slug (Phase 5)
+    // Strict category filtering by ID, slug, name, or subcategory
+    let activeCategoryDocIds: Types.ObjectId[] = [];
     if (category && category !== 'all' && category !== 'All') {
       if (Types.ObjectId.isValid(category as string)) {
-        queryObj.categoryIds = new Types.ObjectId(category as string);
+        activeCategoryDocIds.push(new Types.ObjectId(category as string));
       } else {
-        const catDoc = await ServiceCategory.findOne({
+        const catStr = (category as string).trim().toLowerCase();
+        const normalizedSlug = catStr === 'home-repairs' ? 'home-maintenance' : catStr;
+        const catDocs = await ServiceCategory.find({
           $or: [
-            { slug: category },
-            { nameEn: { $regex: new RegExp(`^${category}$`, 'i') } },
-            { nameAm: category },
+            { slug: normalizedSlug },
+            { nameEn: { $regex: new RegExp(`^${catStr}$`, 'i') } },
+            { nameAm: category as string },
+            { 'subcategories.slug': catStr },
+            { 'subcategories.nameEn': { $regex: new RegExp(`^${catStr}$`, 'i') } },
+            { 'subcategories.nameAm': category as string },
           ],
         });
-        if (catDoc) {
-          queryObj.categoryIds = catDoc._id;
-        } else {
-          // Explicit unmatched category must yield no results
-          queryObj.categoryIds = new Types.ObjectId();
-        }
+        activeCategoryDocIds = catDocs.map((c) => c._id as Types.ObjectId);
+      }
+
+      if (activeCategoryDocIds.length > 0) {
+        queryObj.categoryIds = { $in: activeCategoryDocIds };
+      } else {
+        // Explicit unmatched category must yield no results
+        queryObj.categoryIds = new Types.ObjectId();
       }
     }
 
@@ -148,17 +159,42 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
           }
         }
 
+        // Also check if search query matches any ServiceCategory name or subcategory
+        const matchedCatsForQuery = await ServiceCategory.find({
+          $or: [
+            { slug: { $regex: new RegExp(cleanQ, 'i') } },
+            { nameEn: { $regex: new RegExp(cleanQ, 'i') } },
+            { nameAm: { $regex: new RegExp(cleanQ, 'i') } },
+            { 'subcategories.slug': { $regex: new RegExp(cleanQ, 'i') } },
+            { 'subcategories.nameEn': { $regex: new RegExp(cleanQ, 'i') } },
+            { 'subcategories.nameAm': { $regex: new RegExp(cleanQ, 'i') } },
+          ],
+        });
+        const queryCatIds = matchedCatsForQuery.map((c) => c._id as Types.ObjectId);
+
         const regexPattern = Array.from(matchedKeywords)
           .map((kw) => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
           .join('|');
         const searchRegex = new RegExp(regexPattern, 'i');
 
-        queryObj.$or = [
+        // Only show related trade, verified skills, or category
+        const searchConditions: any[] = [
           { businessName: searchRegex },
           { skills: { $in: [searchRegex] } },
-          { bioEn: searchRegex },
-          { bioAm: searchRegex },
         ];
+        if (queryCatIds.length > 0) {
+          searchConditions.push({ categoryIds: { $in: queryCatIds } });
+        }
+
+        if (queryObj.$or) {
+          queryObj.$and = [
+            { $or: queryObj.$or },
+            { $or: searchConditions },
+          ];
+          delete queryObj.$or;
+        } else {
+          queryObj.$or = searchConditions;
+        }
       }
     }
 

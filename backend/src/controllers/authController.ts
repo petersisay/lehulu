@@ -6,6 +6,7 @@ import { User } from '../models/User';
 import { CustomerProfile } from '../models/CustomerProfile';
 import { ProviderProfile } from '../models/ProviderProfile';
 import { ProviderVerification } from '../models/ProviderVerification';
+import { ServiceCategory } from '../models/ServiceCategory';
 import { Types } from 'mongoose';
 import {
   createSessionToken,
@@ -195,15 +196,43 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
     } else if (role === 'SERVICE_PROVIDER') {
       const resolvedCategoryIds: Types.ObjectId[] = [];
       const primaryCat = categoryId || category;
-      if (primaryCat && Types.ObjectId.isValid(primaryCat)) {
-        resolvedCategoryIds.push(new Types.ObjectId(primaryCat));
+      if (primaryCat) {
+        if (Types.ObjectId.isValid(primaryCat)) {
+          resolvedCategoryIds.push(new Types.ObjectId(primaryCat));
+        } else {
+          const cat = await ServiceCategory.findOne({
+            $or: [
+              { slug: primaryCat },
+              { nameEn: { $regex: new RegExp(`^${primaryCat}$`, 'i') } },
+              { nameAm: primaryCat },
+            ],
+          });
+          if (cat) resolvedCategoryIds.push(cat._id as Types.ObjectId);
+        }
       }
       if (Array.isArray(categoryIds)) {
-        categoryIds.forEach((id: string) => {
+        for (const id of categoryIds) {
           if (Types.ObjectId.isValid(id) && !resolvedCategoryIds.some((cid) => cid.equals(id))) {
             resolvedCategoryIds.push(new Types.ObjectId(id));
+          } else if (typeof id === 'string') {
+            const cat = await ServiceCategory.findOne({
+              $or: [
+                { slug: id },
+                { nameEn: { $regex: new RegExp(`^${id}$`, 'i') } },
+                { nameAm: id },
+              ],
+            });
+            if (cat && !resolvedCategoryIds.some((cid) => cid.equals(cat._id))) {
+              resolvedCategoryIds.push(cat._id as Types.ObjectId);
+            }
           }
-        });
+        }
+      }
+
+      // Default fallback if no category was selected
+      if (resolvedCategoryIds.length === 0) {
+        const defaultCat = await ServiceCategory.findOne({ isActive: true });
+        if (defaultCat) resolvedCategoryIds.push(defaultCat._id as Types.ObjectId);
       }
 
       const providerSkills = Array.isArray(skills) && skills.length > 0

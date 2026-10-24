@@ -81,12 +81,30 @@ export const DiscoveryPage: React.FC = () => {
     }
   };
 
+  // Keep URL parameters and filter state synchronized
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || searchParams.get('q') || '';
+    const urlCat = searchParams.get('category') || '';
+    const urlCity = searchParams.get('city') || '';
+    if (urlSearch !== search) setSearch(urlSearch);
+    if (urlCat !== selectedCategory) setSelectedCategory(urlCat);
+    if (urlCity !== selectedCity) setSelectedCity(urlCity);
+  }, [searchParams]);
+
   useEffect(() => {
     fetchProviders();
   }, [selectedCategory, selectedCity, verifiedOnly, userLocation]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const newParams = new URLSearchParams(searchParams);
+    if (search.trim()) newParams.set('search', search.trim());
+    else newParams.delete('search');
+    if (selectedCategory) newParams.set('category', selectedCategory);
+    else newParams.delete('category');
+    if (selectedCity && selectedCity !== 'All') newParams.set('city', selectedCity);
+    else newParams.delete('city');
+    setSearchParams(newParams);
     fetchProviders();
   };
 

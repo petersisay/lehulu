@@ -111,38 +111,6 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleDevLogin = async (mockRole: UserRole, customEmail?: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      let mockToken: string;
-      if (customEmail) {
-        mockToken = `mock-google-token-${customEmail.trim().toLowerCase()}`;
-      } else if (mockRole === 'ADMIN') {
-        mockToken = 'mock_token_admin';
-      } else if (mockRole === 'SERVICE_PROVIDER') {
-        mockToken = 'mock_token_service_provider';
-      } else {
-        mockToken = 'mock_token_customer';
-      }
-
-      const loggedUser = await loginWithGoogle(mockToken, mockRole);
-      if (!loggedUser.isOnboarded) {
-        setSelectedRole(mockRole);
-        setDisplayName(loggedUser.displayName || `Test ${mockRole}`);
-        setStep('onboarding');
-      } else {
-        if (loggedUser.role === 'ADMIN') navigate('/admin/dashboard');
-        else if (loggedUser.role === 'SERVICE_PROVIDER') navigate('/provider/dashboard');
-        else navigate('/customer/dashboard');
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Authentication failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRoleContinue = () => {
     setStep('onboarding');
   };
@@ -368,40 +336,14 @@ export const LoginPage: React.FC = () => {
               />
             </div>
 
-            {/* Local Dev Fast-Login only active in local development */}
-            {import.meta.env.DEV && (
-              <div className="space-y-2 pt-2">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-dashed border-slate-200" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-3 text-slate-400 font-semibold text-[10px]">Local Dev Fast-Login</span>
-                  </div>
-                </div>
-                <p className="text-[10px] text-slate-400 text-center">
-                  Quick mock sessions for local testing (customer and provider):
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleDevLogin('CUSTOMER')}
-                    disabled={loading}
-                    className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
-                  >
-                    Customer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDevLogin('SERVICE_PROVIDER')}
-                    disabled={loading}
-                    className="p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 text-xs font-bold transition-all text-center cursor-pointer"
-                  >
-                    Provider
-                  </button>
-                </div>
-              </div>
-            )}
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-1">
+              <span className="text-[11px] font-bold text-slate-700 block">
+                Verified Google Account Required
+              </span>
+              <p className="text-[10px] text-slate-500 leading-relaxed">
+                Only verified Google accounts are accepted. Service provider registrations undergo administrative verification of Ethiopian ID and trade details before public listing.
+              </p>
+            </div>
 
             <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-[11px]">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />

@@ -25,10 +25,12 @@ import { ServiceCategory, ProviderProfile } from '../types';
 import { ProviderCard } from '../components/ProviderCard';
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  'home-maintenance': <Wrench className="w-6 h-6 text-emerald-600" />,
   'home-repairs': <Wrench className="w-6 h-6 text-emerald-600" />,
   automotive: <Car className="w-6 h-6 text-emerald-600" />,
   cleaning: <Home className="w-6 h-6 text-emerald-600" />,
   technology: <Laptop className="w-6 h-6 text-emerald-600" />,
+  'personal-business': <Briefcase className="w-6 h-6 text-emerald-600" />,
   events: <Briefcase className="w-6 h-6 text-emerald-600" />,
 };
 

@@ -348,8 +348,10 @@ export const AdminDashboard: React.FC = () => {
               ) : (
                 <div className="space-y-4">
                   {verifications.map((item) => {
-                    const prov = item.providerId;
-                    const u = prov?.userId;
+                    const prov = item.providerProfileId || item.providerId;
+                    const u = item.userId || prov?.userId;
+                    const catNames = prov?.categoryIds?.map((c: any) => c?.nameEn || c?.nameAm || c).filter(Boolean).join(', ');
+                    const skillsList = (prov?.skills && prov.skills.length > 0) ? prov.skills : (prov?.trades || []);
                     return (
                       <div
                         key={item._id}
@@ -371,15 +373,21 @@ export const AdminDashboard: React.FC = () => {
                           </div>
 
                           <div className="text-xs text-slate-600 flex flex-wrap gap-x-3 gap-y-1">
-                            <span>Email: {u?.email}</span>
+                            <span>Email: {u?.email || '—'}</span>
                             <span>•</span>
-                            <span>Phone: {u?.phone || prov?.contactPhone || '—'}</span>
+                            <span>Phone: {u?.phoneNumber || u?.phone || prov?.contactPhone || '—'}</span>
                             <span>•</span>
-                            <span>Area: {prov?.serviceCities?.join(', ') || u?.city || 'Adama'}</span>
-                            {prov?.trades && prov.trades.length > 0 && (
+                            <span>Area: {prov?.publicAddress || prov?.serviceCities?.join(', ') || u?.city || 'Adama'}</span>
+                            {catNames && (
                               <>
                                 <span>•</span>
-                                <span>Trades: <strong className="text-slate-900">{prov.trades.join(', ')}</strong></span>
+                                <span>Category: <strong className="text-emerald-800">{catNames}</strong></span>
+                              </>
+                            )}
+                            {skillsList.length > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>Trades: <strong className="text-slate-900">{skillsList.join(', ')}</strong></span>
                               </>
                             )}
                           </div>
