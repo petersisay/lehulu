@@ -417,6 +417,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 411 | `backend/src/controllers/authController.ts` | `655bdb3` | `fix(auth): support category and trades aliases during provider onboarding` | Verified pushed to `origin/main` | Supported category and trades aliases during provider onboarding profile creation |
 | 412 | `COMMIT_LOG.md` | `71c9ccd` | `docs: record authController onboarding trade aliases fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 413 | `backend/tests/verification_and_search.test.ts` | `41cab5e` | `test(verification): add integration test suite for verification pipeline, role isolation, and search relevance` | Verified pushed to `origin/main` | Added 14 automated integration tests for verification pipeline, privacy masking, approval, search relevance, and suspension |
+| 414 | `COMMIT_LOG.md` | `9d16ae8` | `docs: record verification and search test suite addition in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 415 | `frontend/src/test/app.test.tsx` | `697959a` | `test(navigation): add unit tests for role-based navigation boundaries in Navbar` | Verified pushed to `origin/main` | Added unit tests for Customer, Provider, and Admin navigation boundaries in Navbar |
 
 
 
