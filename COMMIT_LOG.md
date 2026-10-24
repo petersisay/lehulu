@@ -393,6 +393,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 387 | `backend/src/controllers/providerController.ts` | `7d9c2be` | `fix(provider): permit optional ID card image and enforce verified-only customer discovery` | Verified pushed to `origin/main` | Permitted optional ID card image, added bilingual trade synonyms, and secured profile access |
 | 388 | `COMMIT_LOG.md` | `11bf524` | `docs: record providerController fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 389 | `backend/src/controllers/authController.ts` | `63fea11` | `fix(auth): automatically create ProviderVerification record during provider onboarding` | Verified pushed to `origin/main` | Created ProviderVerification record in PENDING_REVIEW status upon provider onboarding |
+| 390 | `COMMIT_LOG.md` | `eaaa88b` | `docs: record authController provider onboarding fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 391 | `backend/src/controllers/adminController.ts` | `306e808` | `fix(admin): mask national ID numbers and enforce bi-directional status synchronization on verification audit` | Verified pushed to `origin/main` | Masked national ID numbers in verification queue by default and synchronized User and ProviderProfile isVerified |
 
 
 
