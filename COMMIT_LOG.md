@@ -391,6 +391,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 385 | `backend/src/models/ProviderVerification.ts` | `832475d` | `fix(models): make idCardImageUrl optional in ProviderVerification schema` | Verified pushed to `origin/main` | Made idCardImageUrl optional and added consentGiven field in Mongoose schema |
 | 386 | `COMMIT_LOG.md` | `dd7ec65` | `docs: record ProviderVerification model schema fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 387 | `backend/src/controllers/providerController.ts` | `7d9c2be` | `fix(provider): permit optional ID card image and enforce verified-only customer discovery` | Verified pushed to `origin/main` | Permitted optional ID card image, added bilingual trade synonyms, and secured profile access |
+| 388 | `COMMIT_LOG.md` | `11bf524` | `docs: record providerController fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 389 | `backend/src/controllers/authController.ts` | `63fea11` | `fix(auth): automatically create ProviderVerification record during provider onboarding` | Verified pushed to `origin/main` | Created ProviderVerification record in PENDING_REVIEW status upon provider onboarding |
 
 
 
