@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 import { AuthenticatedRequest, BookingStatus } from '../types';
 import { Booking } from '../models/Booking';
 import { ProviderProfile } from '../models/ProviderProfile';
+import { ProviderVerification } from '../models/ProviderVerification';
 import { User } from '../models/User';
 import { Notification } from '../models/Notification';
 import { emitSocketEvent } from '../sockets';
@@ -64,7 +65,19 @@ export const createBooking = async (
       serviceAddress,
     } = req.body;
 
-    const provider = await ProviderProfile.findById(providerId);
+    let provider = Types.ObjectId.isValid(providerId) ? await ProviderProfile.findById(providerId) : null;
+    if (!provider && Types.ObjectId.isValid(providerId)) {
+      provider = await ProviderProfile.findOne({ userId: providerId });
+    }
+    if (!provider && Types.ObjectId.isValid(providerId)) {
+      const verDoc = await ProviderVerification.findById(providerId);
+      if (verDoc) {
+        const pId = (verDoc.providerProfileId as any)?._id || verDoc.providerProfileId;
+        if (pId) provider = await ProviderProfile.findById(pId);
+        if (!provider && verDoc.userId) provider = await ProviderProfile.findOne({ userId: verDoc.userId });
+      }
+    }
+
     if (!provider) {
       res.status(404).json({ success: false, message: 'Service provider not found' });
       return;

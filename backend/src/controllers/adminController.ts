@@ -75,6 +75,19 @@ export const getVerificationQueue = async (
       }
     }
 
+    // Self-healing: Ensure any profile with status VERIFIED in ProviderVerification is marked isVerified: true
+    const verifiedVerifications = await ProviderVerification.find({ status: 'VERIFIED' });
+    for (const v of verifiedVerifications) {
+      const pId = (v.providerProfileId as any)?._id || v.providerProfileId;
+      if (pId) {
+        await ProviderProfile.findByIdAndUpdate(pId, { isVerified: true, verificationStatus: 'VERIFIED' });
+      }
+      if (v.userId) {
+        await User.findByIdAndUpdate(v.userId, { isVerified: true });
+        await ProviderProfile.findOneAndUpdate({ userId: v.userId }, { isVerified: true, verificationStatus: 'VERIFIED' });
+      }
+    }
+
     const [rawVerifications, total] = await Promise.all([
       ProviderVerification.find(queryObj)
         .populate('userId', 'displayName email phoneNumber avatarUrl city')
@@ -152,14 +165,28 @@ export const auditProviderVerification = async (
 
     // Update the provider's official verified status and verificationStatus
     const isNowVerified = status === 'VERIFIED';
-    const provider = await ProviderProfile.findByIdAndUpdate(
-      verification.providerProfileId._id,
-      {
-        isVerified: isNowVerified,
-        verificationStatus: status,
-      },
-      { new: true }
-    );
+    const profileId = (verification.providerProfileId as any)?._id || verification.providerProfileId;
+    let provider = profileId
+      ? await ProviderProfile.findByIdAndUpdate(
+          profileId,
+          {
+            isVerified: isNowVerified,
+            verificationStatus: status,
+          },
+          { new: true }
+        )
+      : null;
+
+    if (!provider && verification.userId) {
+      provider = await ProviderProfile.findOneAndUpdate(
+        { userId: verification.userId },
+        {
+          isVerified: isNowVerified,
+          verificationStatus: status,
+        },
+        { new: true }
+      );
+    }
 
     // Keep User record in sync with verification status
     await User.findByIdAndUpdate(verification.userId, {
@@ -174,7 +201,7 @@ export const auditProviderVerification = async (
       entityType: 'ProviderVerification',
       entityId: verification._id,
       details: {
-        providerId: verification.providerProfileId._id,
+        providerId: provider?._id || profileId,
         newStatus: status,
         rejectionReason,
         adminNotes,

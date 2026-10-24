@@ -6,6 +6,7 @@ import { ProviderProfile } from '../models/ProviderProfile';
 import { ProviderVerification } from '../models/ProviderVerification';
 import { ServiceCategory } from '../models/ServiceCategory';
 import { User } from '../models/User';
+import { Review } from '../models/Review';
 
 export const updateProviderProfileSchema = z.object({
   body: z.object({
@@ -302,6 +303,24 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
         .populate('categoryIds', 'nameEn nameAm slug icon');
     }
 
+    if (!profile && Types.ObjectId.isValid(id)) {
+      // Fallback search by ProviderVerification ID
+      const verDoc = await ProviderVerification.findById(id);
+      if (verDoc) {
+        const profId = (verDoc.providerProfileId as any)?._id || verDoc.providerProfileId;
+        if (profId) {
+          profile = await ProviderProfile.findById(profId)
+            .populate('userId', 'displayName username avatarUrl phoneNumber city')
+            .populate('categoryIds', 'nameEn nameAm slug icon');
+        }
+        if (!profile && verDoc.userId) {
+          profile = await ProviderProfile.findOne({ userId: verDoc.userId })
+            .populate('userId', 'displayName username avatarUrl phoneNumber city')
+            .populate('categoryIds', 'nameEn nameAm slug icon');
+        }
+      }
+    }
+
     if (!profile) {
       res.status(404).json({ success: false, message: 'Provider profile not found' });
       return;
@@ -315,8 +334,29 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
         profile.userId.toString() === authReq.user._id?.toString());
     const isAdmin = authReq.user?.role === 'ADMIN';
 
+    // Synchronize and self-heal verification status if ProviderVerification is verified
+    if (!profile.isVerified || profile.verificationStatus !== 'VERIFIED') {
+      const activeVerification = await ProviderVerification.findOne({
+        $or: [
+          { providerProfileId: profile._id },
+          { userId: (profile.userId as any)?._id || profile.userId },
+        ],
+        status: 'VERIFIED',
+      });
+      if (activeVerification) {
+        profile.isVerified = true;
+        profile.verificationStatus = 'VERIFIED';
+        await ProviderProfile.findByIdAndUpdate(profile._id, {
+          isVerified: true,
+          verificationStatus: 'VERIFIED',
+        });
+      }
+    }
+
+    const isVerifiedProvider = profile.isVerified === true || profile.verificationStatus === 'VERIFIED';
+
     // Phase 4: Prevent public access to unapproved provider profiles
-    if (!profile.isVerified && !isOwner && !isAdmin) {
+    if (!isVerifiedProvider && !isOwner && !isAdmin) {
       res.status(404).json({
         success: false,
         message: 'Provider profile not found or pending verification',
@@ -324,10 +364,18 @@ export const getProviderProfile = async (req: Request, res: Response): Promise<v
       return;
     }
 
+    const reviews = await Review.find({ providerId: profile._id })
+      .populate('customerId', 'displayName avatarUrl')
+      .sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       provider: profile,
-      data: profile,
+      reviews,
+      data: {
+        provider: profile,
+        reviews,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });

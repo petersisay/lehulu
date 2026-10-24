@@ -35,10 +35,21 @@ export const ProviderProfilePage: React.FC = () => {
     const fetchProvider = async () => {
       try {
         setLoading(true);
+        setError(null);
         const res = await providerApi.getById(id);
-        if (res.data.success) {
-          setProvider(res.data.data.provider);
-          setReviews(res.data.data.reviews || []);
+        const resData = res.data as any;
+        if (resData) {
+          const payload = resData.data || resData;
+          const p = resData.provider || payload?.provider || (payload?._id || payload?.businessName ? payload : null);
+          if (p) {
+            setProvider(p);
+            const r = resData.reviews || payload?.reviews || [];
+            setReviews(Array.isArray(r) ? r : []);
+          } else {
+            setError(resData.message || 'Provider profile not found or inactive.');
+          }
+        } else {
+          setError('Failed to load provider profile.');
         }
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to load provider profile.');
