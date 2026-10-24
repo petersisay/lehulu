@@ -51,8 +51,15 @@ export const authApi = {
     city: string;
     preferredLanguage?: string;
     businessName?: string;
+    categoryId?: string;
     categoryIds?: string[];
     skills?: string[];
+    serviceDescription?: string;
+    serviceArea?: string;
+    location?: { type: 'Point'; coordinates: [number, number] };
+    nationalIdNumber?: string;
+    idCardImageUrl?: string;
+    consentGiven?: boolean;
     experienceYears?: number;
     startingPrice?: number;
   }): Promise<AxiosResponse<ApiResponse<{ user: User; profile?: any }>>> =>
