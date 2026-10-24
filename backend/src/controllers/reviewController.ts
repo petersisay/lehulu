@@ -9,9 +9,9 @@ import { Notification } from '../models/Notification';
 
 export const createReviewSchema = z.object({
   body: z.object({
-    bookingId: z.string().min(1, 'Booking ID is required'),
+    bookingId: z.string().min(1, 'Booking ID is required').optional(),
     rating: z.number().int().min(1).max(5, 'Rating must be an integer between 1 and 5'),
-    comment: z.string().min(5, 'Please provide constructive feedback (at least 5 characters)').max(1000),
+    comment: z.string().min(3, 'Please provide constructive feedback (at least 3 characters)').max(1000),
   }),
 });
 
@@ -31,7 +31,12 @@ export const createReview = async (
       return;
     }
 
-    const { bookingId, rating, comment } = req.body;
+    const bookingId = req.params.bookingId || req.body.bookingId;
+    if (!bookingId) {
+      res.status(400).json({ success: false, message: 'Booking ID is required' });
+      return;
+    }
+    const { rating, comment } = req.body;
 
     const booking = await Booking.findById(bookingId);
     if (!booking) {
@@ -39,8 +44,11 @@ export const createReview = async (
       return;
     }
 
-    // Eligibility Rule 1: Only the customer who booked the service can review
-    if (booking.customerId.toString() !== req.user._id) {
+    // Eligibility Rule 1: Only the customer who booked the service (or admin) can review
+    const customerUserId =
+      (booking.customerId as any)?._id?.toString() ||
+      booking.customerId?.toString();
+    if (customerUserId !== req.user._id && req.user.role !== 'ADMIN') {
       res.status(403).json({
         success: false,
         message: 'Forbidden: Only the customer of this booking can leave a review.',
@@ -48,13 +56,24 @@ export const createReview = async (
       return;
     }
 
-    // Eligibility Rule 2: Booking must be genuine COMPLETED
+    // Auto-complete booking if customer reviews completed or completion-pending work
     if (booking.status !== 'COMPLETED') {
-      res.status(400).json({
-        success: false,
-        message: 'Reviews can only be submitted for completed services.',
+      booking.status = 'COMPLETED';
+      booking.completedAt = new Date();
+      await booking.save();
+
+      // Increment provider completed jobs counter and set provider ready for another service
+      const provId = (booking.providerId as any)?._id || booking.providerId;
+      await ProviderProfile.findByIdAndUpdate(provId, {
+        $inc: { completedBookingsCount: 1 },
+        isAvailable: true,
       });
-      return;
+    } else {
+      // Ensure provider is available for next service
+      const provId = (booking.providerId as any)?._id || booking.providerId;
+      await ProviderProfile.findByIdAndUpdate(provId, {
+        isAvailable: true,
+      });
     }
 
     // Eligibility Rule 3: Only 1 review per booking
@@ -85,6 +104,7 @@ export const createReview = async (
       {
         rating: avgRating,
         reviewCount: allReviews.length,
+        isAvailable: true,
       },
       { new: true }
     );
@@ -107,6 +127,7 @@ export const createReview = async (
       success: true,
       message: 'Review submitted successfully',
       review,
+      data: review,
       updatedProviderRating: avgRating,
     });
   } catch (error: any) {

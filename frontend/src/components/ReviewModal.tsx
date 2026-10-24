@@ -40,8 +40,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
     try {
       const res = await reviewApi.create(bookingId, rating, comment.trim());
-      if (res.data.success && res.data.data) {
-        if (onSuccess) onSuccess(res.data.data);
+      if (res.data.success) {
+        const reviewData = res.data.data || (res.data as any).review;
+        if (onSuccess && reviewData) onSuccess(reviewData);
         onClose();
       }
     } catch (err: any) {

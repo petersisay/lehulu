@@ -238,7 +238,7 @@ export const messageApi = {
 
 export const reviewApi = {
   create: (bookingId: string, rating: number, comment: string): Promise<AxiosResponse<ApiResponse<Review>>> =>
-    apiClient.post(`/reviews/${bookingId}`, { rating, comment }),
+    apiClient.post(`/reviews/${bookingId}`, { bookingId, rating, comment }),
 
   getByProvider: (providerId: string, page = 1): Promise<AxiosResponse<ApiResponse<Review[]>>> =>
     apiClient.get(`/reviews/provider/${providerId}`, { params: { page } }),
@@ -265,6 +265,7 @@ export interface AdminStats {
   verifiedProviders: number;
   activeBookings: number;
   completedBookings: number;
+  completedTransactions?: number;
   openDisputes: number;
 }
 
@@ -272,8 +273,8 @@ export const adminApi = {
   getStats: (): Promise<AxiosResponse<ApiResponse<AdminStats>>> =>
     apiClient.get('/admin/stats'),
 
-  getVerifications: (): Promise<AxiosResponse<ApiResponse<any[]>>> =>
-    apiClient.get('/admin/verifications'),
+  getVerifications: (status?: string): Promise<AxiosResponse<ApiResponse<any[]>>> =>
+    apiClient.get('/admin/verifications', { params: status ? { status } : {} }),
 
   reviewVerification: (id: string, status: VerificationStatus, rejectionReason?: string): Promise<AxiosResponse<ApiResponse<any>>> =>
     apiClient.patch(`/admin/verifications/${id}`, { status, rejectionReason }),

@@ -78,13 +78,16 @@ export const AdminDashboard: React.FC = () => {
   const [newCatDescEn, setNewCatDescEn] = useState<string>('');
   const [newCatDescAm, setNewCatDescAm] = useState<string>('');
 
+  // Verification filter state
+  const [verificationFilter, setVerificationFilter] = useState<'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ALL'>('PENDING_REVIEW');
+
   const fetchAdminData = async () => {
     try {
       setLoading(true);
       setError(null);
       const [statsRes, verifRes, logsRes, catRes, leadsRes] = await Promise.allSettled([
         adminApi.getStats(),
-        adminApi.getVerifications(),
+        adminApi.getVerifications(verificationFilter),
         adminApi.getAuditLogs(),
         categoryApi.getAll(),
         adminApi.getLeads(),
@@ -121,6 +124,23 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleFilterVerifications = async (filter: 'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ALL') => {
+    setVerificationFilter(filter);
+    try {
+      setActionLoading(true);
+      const res = await adminApi.getVerifications(filter);
+      if (res.data.success) {
+        const d = res.data as any;
+        const list = d.verifications || d.data || [];
+        setVerifications(Array.isArray(list) ? list : []);
+      }
+    } catch (err: any) {
+      console.error('Failed to load verifications for filter', filter, err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!authLoading && (!isAuthenticated || !isAdmin)) {
       navigate('/login?redirect=/admin/dashboard');
@@ -134,7 +154,11 @@ export const AdminDashboard: React.FC = () => {
   const handleReviewVerification = async (id: string, status: VerificationStatus) => {
     let rejectionReason: string | undefined = undefined;
     if (status === 'REJECTED' || status === 'NEEDS_RECHECK') {
-      const reason = prompt(`Enter reason for ${status}:`);
+      const reason = prompt(
+        status === 'REJECTED'
+          ? 'Enter administrative reason for rejecting / revoking provider verification:'
+          : 'Enter details for recheck request:'
+      );
       if (!reason) return;
       rejectionReason = reason;
     }
@@ -143,7 +167,12 @@ export const AdminDashboard: React.FC = () => {
     try {
       const res = await adminApi.reviewVerification(id, status, rejectionReason);
       if (res.data.success) {
-        fetchAdminData();
+        await fetchAdminData();
+        const vRes = await adminApi.getVerifications(verificationFilter);
+        if (vRes.data.success) {
+          const d = vRes.data as any;
+          setVerifications(d.verifications || d.data || []);
+        }
       }
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to update verification status.');
@@ -330,9 +359,20 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-                  <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
-                    Verified Providers
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
+                      Verified Providers
+                    </span>
+                    <button
+                      onClick={() => {
+                        handleFilterVerifications('VERIFIED');
+                        switchTab('verifications');
+                      }}
+                      className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 underline cursor-pointer"
+                    >
+                      Manage
+                    </button>
+                  </div>
                   <span className="text-3xl font-black text-emerald-700 mt-1 block">
                     {stats.verifiedProviders}
                   </span>
@@ -354,7 +394,7 @@ export const AdminDashboard: React.FC = () => {
                     Completed Transactions
                   </span>
                   <span className="text-2xl font-black text-emerald-700 mt-1 block">
-                    {stats.completedBookings}
+                    {stats.completedTransactions ?? stats.completedBookings ?? 0}
                   </span>
                 </div>
 
@@ -373,15 +413,65 @@ export const AdminDashboard: React.FC = () => {
           {/* TAB 2: VERIFICATION QUEUE */}
           {activeTab === 'verifications' && (
             <div className="space-y-4">
-              <h2 className="text-base font-bold text-slate-900">
-                Provider Identity & License Verification Applications
-              </h2>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h2 className="text-base font-bold text-slate-900">
+                  Provider Identity & License Verification Applications
+                </h2>
+
+                {/* Sub-filter tabs */}
+                <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold overflow-x-auto">
+                  <button
+                    onClick={() => handleFilterVerifications('PENDING_REVIEW')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                      verificationFilter === 'PENDING_REVIEW'
+                        ? 'bg-white text-slate-900 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Pending Review ({stats?.pendingVerifications ?? 0})
+                  </button>
+                  <button
+                    onClick={() => handleFilterVerifications('VERIFIED')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                      verificationFilter === 'VERIFIED'
+                        ? 'bg-white text-emerald-700 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Verified Providers ({stats?.verifiedProviders ?? 0})
+                  </button>
+                  <button
+                    onClick={() => handleFilterVerifications('REJECTED')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                      verificationFilter === 'REJECTED'
+                        ? 'bg-white text-red-700 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Rejected / Revoked
+                  </button>
+                  <button
+                    onClick={() => handleFilterVerifications('ALL')}
+                    className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                      verificationFilter === 'ALL'
+                        ? 'bg-white text-purple-700 shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    All Records
+                  </button>
+                </div>
+              </div>
 
               {verifications.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400 text-xs">
                   <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-                  <p className="font-bold text-slate-700 text-sm">Queue is Clear</p>
-                  <p className="text-slate-500 mt-1">No pending provider applications awaiting verification.</p>
+                  <p className="font-bold text-slate-700 text-sm">No Records in this View</p>
+                  <p className="text-slate-500 mt-1">
+                    {verificationFilter === 'PENDING_REVIEW'
+                      ? 'Queue is clear. No pending applications.'
+                      : `No provider applications found under ${verificationFilter}.`}
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -404,7 +494,15 @@ export const AdminDashboard: React.FC = () => {
                               National ID: {item.nationalIdNumber}
                             </span>
                             {item.status && (
-                              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                              <span
+                                className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
+                                  item.status === 'VERIFIED'
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                    : item.status === 'REJECTED'
+                                    ? 'bg-red-50 text-red-800 border-red-200'
+                                    : 'bg-amber-50 text-amber-800 border-amber-200'
+                                }`}
+                              >
                                 {item.status}
                               </span>
                             )}
@@ -429,6 +527,14 @@ export const AdminDashboard: React.FC = () => {
                               </>
                             )}
                           </div>
+
+                          {/* Rejection reason banner if rejected */}
+                          {item.rejectionReason && (
+                            <div className="p-2.5 bg-red-50 text-red-800 border border-red-200 rounded-xl text-xs flex items-center gap-2">
+                              <XCircle className="w-4 h-4 text-red-600 shrink-0" />
+                              <span><strong>Administrative Rejection Reason:</strong> {item.rejectionReason}</span>
+                            </div>
+                          )}
 
                           {/* Document preview links */}
                           <div className="flex items-center gap-4 text-xs pt-1">
@@ -462,30 +568,53 @@ export const AdminDashboard: React.FC = () => {
 
                         {/* Decision Actions */}
                         <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            onClick={() => handleReviewVerification(item._id, 'VERIFIED')}
-                            disabled={actionLoading}
-                            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
-                          >
-                            <CheckCircle2 className="w-4 h-4" />
-                            <span>Approve & Verify</span>
-                          </button>
+                          {item.status === 'VERIFIED' ? (
+                            <button
+                              onClick={() => handleReviewVerification(item._id, 'REJECTED')}
+                              disabled={actionLoading}
+                              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+                              title="Reject or revoke this verified provider if any error occurs"
+                            >
+                              <XCircle className="w-4 h-4" />
+                              <span>Reject / Revoke Verification</span>
+                            </button>
+                          ) : item.status === 'REJECTED' ? (
+                            <button
+                              onClick={() => handleReviewVerification(item._id, 'VERIFIED')}
+                              disabled={actionLoading}
+                              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>Re-Approve & Verify</span>
+                            </button>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleReviewVerification(item._id, 'VERIFIED')}
+                                disabled={actionLoading}
+                                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+                              >
+                                <CheckCircle2 className="w-4 h-4" />
+                                <span>Approve & Verify</span>
+                              </button>
 
-                          <button
-                            onClick={() => handleReviewVerification(item._id, 'NEEDS_RECHECK')}
-                            disabled={actionLoading}
-                            className="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
-                          >
-                            Needs Recheck
-                          </button>
+                              <button
+                                onClick={() => handleReviewVerification(item._id, 'NEEDS_RECHECK')}
+                                disabled={actionLoading}
+                                className="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                              >
+                                Needs Recheck
+                              </button>
 
-                          <button
-                            onClick={() => handleReviewVerification(item._id, 'REJECTED')}
-                            disabled={actionLoading}
-                            className="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
-                          >
-                            Reject
-                          </button>
+                              <button
+                                onClick={() => handleReviewVerification(item._id, 'REJECTED')}
+                                disabled={actionLoading}
+                                className="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
                     );

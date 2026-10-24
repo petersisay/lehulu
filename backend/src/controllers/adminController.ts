@@ -75,6 +75,23 @@ export const getVerificationQueue = async (
       }
     }
 
+    // Self-healing: Ensure verified profiles have a corresponding VERIFIED ProviderVerification record so admins can manage and revoke them
+    const verifiedProfiles = await ProviderProfile.find({ isVerified: true });
+    for (const prof of verifiedProfiles) {
+      const exists = await ProviderVerification.findOne({ providerProfileId: prof._id });
+      if (!exists) {
+        await ProviderVerification.create({
+          providerProfileId: prof._id,
+          userId: prof.userId,
+          nationalIdNumber: 'ET-VERIFIED-SPECIALIST',
+          status: 'VERIFIED',
+          submittedAt: prof.createdAt || new Date(),
+          reviewedAt: new Date(),
+          consentGiven: true,
+        });
+      }
+    }
+
     // Self-healing: Ensure any profile with status VERIFIED in ProviderVerification is marked isVerified: true
     const verifiedVerifications = await ProviderVerification.find({ status: 'VERIFIED' });
     for (const v of verifiedVerifications) {
@@ -269,6 +286,7 @@ export const getPlatformStats = async (
       pendingVerifications,
       activeBookings,
       completedBookings,
+      completedTransactions: completedBookings,
       openDisputes,
     };
 

@@ -457,10 +457,11 @@ export const updateBookingStatus = async (
       booking.status = 'COMPLETED';
       booking.completedAt = new Date();
 
-      // Increment provider completed booking counter
+      // Increment provider completed booking counter and set ready for new services
       const provId = (booking.providerId as any)?._id || booking.providerId;
       await ProviderProfile.findByIdAndUpdate(provId, {
         $inc: { completedBookingsCount: 1 },
+        isAvailable: true,
       });
     } else if (newStatus === 'DISPUTED') {
       booking.status = 'DISPUTED';

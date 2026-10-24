@@ -146,6 +146,15 @@ export const ProviderProfilePage: React.FC = () => {
                   Verification Pending
                 </span>
               )}
+
+              {/* Blue Sign: Job Completed & Ready for Another Service */}
+              {provider.completedBookingsCount > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 bg-blue-100/90 px-3 py-1 rounded-full border border-blue-300 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Job Completed • Ready for Another Service</span>
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
@@ -187,9 +196,15 @@ export const ProviderProfilePage: React.FC = () => {
         {/* Pricing & CTA Column */}
         <div className="w-full md:w-auto bg-slate-50 p-5 rounded-2xl border border-slate-200/80 flex flex-col justify-between gap-4 shrink-0">
           <div>
-            <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
-              Indicative Starting Rate
-            </span>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                Indicative Starting Rate
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+                Ready for Service
+              </span>
+            </div>
             <div className="text-2xl font-black text-slate-900 mt-0.5">
               {provider.pricing?.startingPrice ? (
                 <>

@@ -229,20 +229,32 @@ export const ProviderDashboard: React.FC = () => {
           </p>
         </div>
 
-        {/* Availability Toggle */}
-        <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-          <span className="text-xs font-bold text-slate-700">
-            {isAvailable ? 'Available for Jobs' : 'Marked Unavailable'}
-          </span>
-          <button
-            onClick={toggleAvailability}
-            type="button"
-            className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              isAvailable ? 'bg-emerald-600 justify-end' : 'bg-slate-300 justify-start'
-            }`}
-          >
-            <div className="bg-white w-4 h-4 rounded-full shadow-md" />
-          </button>
+        {/* Blue Sign: Job Completed & Ready for Taking Another Service */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {((profile?.completedBookingsCount && profile.completedBookingsCount > 0) ||
+            bookings.some((b) => b.status === 'COMPLETED')) && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl text-xs font-bold shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+              <span>Job Completed • Ready for Taking Another Service</span>
+            </div>
+          )}
+
+          {/* Availability Toggle */}
+          <div className="flex items-center gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-xs font-bold text-slate-700">
+              {isAvailable ? 'Available for Jobs' : 'Marked Unavailable'}
+            </span>
+            <button
+              onClick={toggleAvailability}
+              type="button"
+              className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+                isAvailable ? 'bg-emerald-600 justify-end' : 'bg-slate-300 justify-start'
+              }`}
+            >
+              <div className="bg-white w-4 h-4 rounded-full shadow-md" />
+            </button>
+          </div>
         </div>
       </div>
 

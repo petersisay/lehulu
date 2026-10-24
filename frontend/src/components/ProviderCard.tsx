@@ -58,6 +58,14 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
                   {t('provider.pending')}
                 </span>
               )}
+
+              {/* Blue Sign: Job Completed & Ready for Next Service */}
+              {provider.completedBookingsCount > 0 && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+                  <span>Job Completed • Ready</span>
+                </span>
+              )}
             </div>
 
             {/* City & Distance */}
