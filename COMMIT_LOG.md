@@ -389,6 +389,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 383 | `LEHULU_FINAL_PROJECT_ACCEPTANCE_REPORT.md` | `6d69699` | `docs: enrich acceptance report with complete provider research, location matrix, and production handoff` | Verified pushed to `origin/main` | Documented full provider research catalog, location repair matrix, performance metrics, and handoff |
 | 384 | `COMMIT_LOG.md` | `6cf7c46` | `docs: record acceptance report enrichment in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 385 | `backend/src/models/ProviderVerification.ts` | `832475d` | `fix(models): make idCardImageUrl optional in ProviderVerification schema` | Verified pushed to `origin/main` | Made idCardImageUrl optional and added consentGiven field in Mongoose schema |
+| 386 | `COMMIT_LOG.md` | `dd7ec65` | `docs: record ProviderVerification model schema fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 387 | `backend/src/controllers/providerController.ts` | `7d9c2be` | `fix(provider): permit optional ID card image and enforce verified-only customer discovery` | Verified pushed to `origin/main` | Permitted optional ID card image, added bilingual trade synonyms, and secured profile access |
 
 
 
