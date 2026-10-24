@@ -266,29 +266,29 @@ export const BookingDetailPage: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-              Booking #{booking.bookingNumber}
+              Booking #{booking.bookingNumber || booking._id?.slice(-8)}
             </span>
             <span className="text-xs font-extrabold px-3 py-1 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-300">
               {booking.status}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-950">
-            {booking.problemDescription}
+            {booking.problemDescription || 'Service Booking'}
           </h1>
           <p className="text-xs text-slate-500">
-            Created on {new Date(booking.createdAt).toLocaleDateString()} • Category:{' '}
+            Created on {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString() : 'Recently'} • Category:{' '}
             {(booking.categoryId as any)?.nameEn || 'General Repair'}
           </p>
         </div>
 
         {/* Agreed Price Badge */}
-        {booking.agreedPrice ? (
+        {booking.agreedPrice && booking.agreedPrice.amount != null ? (
           <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-right">
             <span className="text-[10px] uppercase font-bold text-emerald-700 block">
               Agreed Service Total
             </span>
             <span className="text-2xl font-black text-emerald-900 font-mono">
-              {booking.agreedPrice.amount.toLocaleString()} ETB
+              {Number(booking.agreedPrice.amount).toLocaleString()} ETB
             </span>
           </div>
         ) : (
@@ -297,7 +297,7 @@ export const BookingDetailPage: React.FC = () => {
               Pricing Status
             </span>
             <span className="text-sm font-bold text-slate-700">
-              {booking.status === 'REQUESTED' ? 'Awaiting Provider Quote' : 'Pending Confirmation'}
+              {['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) ? 'Awaiting Provider Quote' : 'Pending Confirmation'}
             </span>
           </div>
         )}
@@ -409,7 +409,9 @@ export const BookingDetailPage: React.FC = () => {
                 <Calendar className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Scheduled Date</span>
-                  <span className="font-bold text-slate-900">{booking.requestedDate}</span>
+                  <span className="font-bold text-slate-900">
+                    {booking.requestedDate ? new Date(booking.requestedDate).toLocaleDateString() : 'To be confirmed'}
+                  </span>
                 </div>
               </div>
 
@@ -417,7 +419,9 @@ export const BookingDetailPage: React.FC = () => {
                 <Clock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Time Slot</span>
-                  <span className="font-bold text-slate-900 capitalize">{booking.requestedTimeSlot}</span>
+                  <span className="font-bold text-slate-900 capitalize">
+                    {booking.requestedTimeSlot || 'Flexible'}
+                  </span>
                 </div>
               </div>
 
@@ -426,7 +430,7 @@ export const BookingDetailPage: React.FC = () => {
                 <div>
                   <span className="text-slate-400 block font-medium">Private Service Location</span>
                   <span className="font-bold text-slate-900">
-                    {booking.serviceAddress.streetAddress}, {booking.serviceAddress.city}
+                    {booking.serviceAddress?.streetAddress || ''}{booking.serviceAddress?.city ? `, ${booking.serviceAddress.city}` : 'Adama, Ethiopia'}
                   </span>
                 </div>
               </div>
@@ -435,7 +439,9 @@ export const BookingDetailPage: React.FC = () => {
                 <Phone className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Contact Phone</span>
-                  <span className="font-bold text-slate-900">{booking.serviceAddress.contactPhone}</span>
+                  <span className="font-bold text-slate-900">
+                    {booking.serviceAddress?.contactPhone || 'Provided upon confirmation'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -458,10 +464,10 @@ export const BookingDetailPage: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <FileText className="w-4 h-4 text-emerald-600" />
-              <span>Itemized Quotations ({quotes.length})</span>
+              <span>Itemized Quotations ({(Array.isArray(quotes) ? quotes : []).length})</span>
             </h3>
 
-            {quotes.length === 0 ? (
+            {(!Array.isArray(quotes) || quotes.length === 0) ? (
               <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400 text-xs space-y-3">
                 <p className="font-semibold text-slate-600">No quotation issued yet</p>
                 <p className="text-[11px] text-slate-400">

@@ -66,6 +66,7 @@ export const getBookingMessages = async (
     res.status(200).json({
       success: true,
       messages,
+      data: messages,
       pagination: {
         page,
         limit,

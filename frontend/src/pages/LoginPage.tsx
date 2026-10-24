@@ -98,14 +98,22 @@ export const LoginPage: React.FC = () => {
     setError(null);
     try {
       const loggedUser = await loginWithGoogle(credentialResponse.credential, requestedRole);
-      if (!loggedUser.isOnboarded) {
+      if (loggedUser.role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else if (!loggedUser.isOnboarded) {
         setDisplayName(loggedUser.displayName || '');
         setStep('role_select');
+      } else if (loggedUser.role === 'SERVICE_PROVIDER') {
+        navigate('/provider/dashboard');
       } else {
-        navigate(redirectUrl);
+        navigate(redirectUrl && redirectUrl !== '/' ? redirectUrl : '/customer/dashboard');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Google authentication failed.');
+      const errMsg =
+        err.response?.data?.message ||
+        err.message ||
+        'Google authentication failed.';
+      setError(errMsg);
     } finally {
       setLoading(false);
     }

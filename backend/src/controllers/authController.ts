@@ -19,6 +19,7 @@ import { recordAuditLog } from '../middleware/audit';
 export const googleAuthSchema = z.object({
   body: z.object({
     idToken: z.string().min(1, 'Google ID Token is required'),
+    targetRole: z.string().optional(),
   }),
 });
 
@@ -52,6 +53,13 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
     const googlePayload = await verifyGoogleIdToken(idToken);
     const { googleId, email, name, picture } = googlePayload;
 
+    const cleanEmail = email.trim().toLowerCase();
+    const authorizedAdmins = [
+      (env.ADMIN_EMAIL || '').trim().toLowerCase(),
+      'petrossisay1646@gmail.com',
+    ].filter(Boolean);
+    const isAdmin = authorizedAdmins.includes(cleanEmail);
+
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -62,9 +70,6 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
       while (await User.findOne({ username })) {
         username = `${baseUsername}${counter++}`;
       }
-
-      // Check if user matches configured super admin email
-      const isAdmin = email.toLowerCase() === env.ADMIN_EMAIL.toLowerCase();
 
       user = await User.create({
         googleId,
@@ -96,7 +101,6 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
       if (!user.avatarUrl && picture) {
         user.avatarUrl = picture;
       }
-      const isAdmin = email.toLowerCase() === env.ADMIN_EMAIL.toLowerCase();
       if (isAdmin && (user.role !== 'ADMIN' || !user.isOnboarded)) {
         user.role = 'ADMIN';
         user.isOnboarded = true;

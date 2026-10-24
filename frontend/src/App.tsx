@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAuth } from './context/AuthContext';
 
 // Route-level code splitting
@@ -72,74 +73,76 @@ export const App: React.FC = () => {
       <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-600 selection:text-white">
         <Navbar />
         <main className="flex-1">
-          <Suspense fallback={<RouteLoadingSpinner />}>
-            <Routes>
-              {/* Public & Customer Marketplace Views */}
-              <Route path="/" element={<LandingPage />} />
-              <Route
-                path="/discover"
-                element={
-                  <CustomerDiscoveryRoute>
-                    <DiscoveryPage />
-                  </CustomerDiscoveryRoute>
-                }
-              />
-              <Route path="/providers/:id" element={<ProviderProfilePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/onboarding" element={<LoginPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
+          <ErrorBoundary>
+            <Suspense fallback={<RouteLoadingSpinner />}>
+              <Routes>
+                {/* Public & Customer Marketplace Views */}
+                <Route path="/" element={<LandingPage />} />
+                <Route
+                  path="/discover"
+                  element={
+                    <CustomerDiscoveryRoute>
+                      <DiscoveryPage />
+                    </CustomerDiscoveryRoute>
+                  }
+                />
+                <Route path="/providers/:id" element={<ProviderProfilePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/onboarding" element={<LoginPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
 
-              {/* Account & Profile Management */}
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Account & Profile Management */}
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Role-Protected Dashboards with Strict Role Isolation */}
-              <Route
-                path="/customer/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={['CUSTOMER']}>
-                    <CustomerDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/provider/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={['SERVICE_PROVIDER']}>
-                    <ProviderDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={['ADMIN']}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Role-Protected Dashboards with Strict Role Isolation */}
+                <Route
+                  path="/customer/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                      <CustomerDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/provider/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['SERVICE_PROVIDER']}>
+                      <ProviderDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Booking Details & Messaging */}
-              <Route
-                path="/bookings/:id"
-                element={
-                  <ProtectedRoute>
-                    <BookingDetailPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Booking Details & Messaging */}
+                <Route
+                  path="/bookings/:id"
+                  element={
+                    <ProtectedRoute>
+                      <BookingDetailPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* 404 Catch-All */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
+                {/* 404 Catch-All */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </main>
         <Footer />
       </div>

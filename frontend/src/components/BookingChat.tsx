@@ -40,8 +40,10 @@ export const BookingChat: React.FC<BookingChatProps> = ({
       try {
         setLoading(true);
         const res = await messageApi.getByBooking(bookingId);
-        if (res.data.success) {
-          setMessages(res.data.data);
+        const resData = res.data as any;
+        if (resData && resData.success) {
+          const list = resData.data || resData.messages || [];
+          setMessages(Array.isArray(list) ? list : []);
         }
       } catch (err: any) {
         setError(err.response?.data?.message || 'Could not load messages.');
@@ -55,10 +57,11 @@ export const BookingChat: React.FC<BookingChatProps> = ({
 
     // Listen to real-time incoming messages
     const unsubscribe = onNewMessage?.((msg: Message) => {
-      if (msg.bookingId === bookingId) {
+      if (msg && msg.bookingId === bookingId) {
         setMessages((prev) => {
-          if (prev.some((m) => m._id === msg._id)) return prev;
-          return [...prev, msg];
+          const safePrev = Array.isArray(prev) ? prev : [];
+          if (safePrev.some((m) => m._id === msg._id)) return safePrev;
+          return [...safePrev, msg];
         });
         setTimeout(scrollToBottom, 50);
       }
@@ -106,16 +109,16 @@ export const BookingChat: React.FC<BookingChatProps> = ({
           {otherPartyAvatar ? (
             <img
               src={otherPartyAvatar}
-              alt={otherPartyName}
+              alt={otherPartyName || 'Specialist'}
               className="w-9 h-9 rounded-full object-cover border border-slate-200"
             />
           ) : (
             <div className="w-9 h-9 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
-              {otherPartyName.charAt(0).toUpperCase()}
+              {(otherPartyName?.charAt(0) || 'P').toUpperCase()}
             </div>
           )}
           <div>
-            <h4 className="text-xs font-bold text-slate-900">{otherPartyName}</h4>
+            <h4 className="text-xs font-bold text-slate-900">{otherPartyName || 'Specialist'}</h4>
             <span className="text-[10px] text-emerald-600 font-medium">Direct Booking Channel</span>
           </div>
         </div>
@@ -132,7 +135,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
             <Loader2 className="w-5 h-5 animate-spin mr-2 text-emerald-600" />
             <span>Loading conversation...</span>
           </div>
-        ) : messages.length === 0 ? (
+        ) : !Array.isArray(messages) || messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-slate-400 text-center px-4">
             <MessageSquare className="w-8 h-8 mb-2 text-slate-300" />
             <p className="text-xs font-semibold text-slate-600">No messages exchanged yet</p>
@@ -142,12 +145,13 @@ export const BookingChat: React.FC<BookingChatProps> = ({
           </div>
         ) : (
           messages.map((msg) => {
+            if (!msg) return null;
             const sender = typeof msg.senderId === 'object' ? msg.senderId : null;
             const isMe = sender ? sender._id === user?._id : (msg as any).senderId === user?._id;
 
             return (
               <div
-                key={msg._id}
+                key={msg._id || Math.random().toString()}
                 className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
               >
                 <div
@@ -160,7 +164,9 @@ export const BookingChat: React.FC<BookingChatProps> = ({
                   <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                 </div>
                 <span className="text-[10px] text-slate-400 mt-1 px-1">
-                  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {msg.createdAt
+                    ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    : ''}
                 </span>
               </div>
             );

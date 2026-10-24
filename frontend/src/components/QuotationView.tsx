@@ -22,7 +22,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const handleAccept = async () => {
-    if (!window.confirm('Do you accept this itemized quotation of ' + quote.totalAmount.toLocaleString() + ' ETB?')) {
+    if (!window.confirm('Do you accept this itemized quotation of ' + Number(quote.totalAmount || 0).toLocaleString() + ' ETB?')) {
       return;
     }
     setLoading(true);
@@ -81,7 +81,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Issued on {new Date(quote.createdAt).toLocaleDateString()}
+              Issued on {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : 'Recently'}
             </p>
           </div>
         </div>
@@ -114,15 +114,15 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {quote.items.map((item, idx) => (
+              {(Array.isArray(quote.items) ? quote.items : []).map((item, idx) => (
                 <tr key={idx} className="text-slate-700">
-                  <td className="py-2.5 font-medium pr-4">{item.description}</td>
-                  <td className="py-2.5 text-center">{item.quantity}</td>
+                  <td className="py-2.5 font-medium pr-4">{item.description || 'Service item'}</td>
+                  <td className="py-2.5 text-center">{item.quantity || 1}</td>
                   <td className="py-2.5 text-right font-mono">
-                    {item.unitPrice.toLocaleString()}
+                    {Number(item.unitPrice || 0).toLocaleString()}
                   </td>
                   <td className="py-2.5 text-right font-mono font-bold text-slate-900">
-                    {item.total.toLocaleString()}
+                    {Number(item.total || (item.quantity || 1) * (item.unitPrice || 0)).toLocaleString()}
                   </td>
                 </tr>
               ))}
@@ -133,7 +133,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                   Agreed Total Amount:
                 </td>
                 <td className="pt-3 text-right font-mono text-emerald-700 text-base">
-                  {quote.totalAmount.toLocaleString()} {t('currency.etb')}
+                  {Number(quote.totalAmount || 0).toLocaleString()} {t('currency.etb')}
                 </td>
               </tr>
             </tfoot>
