@@ -5,7 +5,8 @@ export interface IProviderVerification extends Document {
   providerProfileId: Types.ObjectId;
   userId: Types.ObjectId;
   nationalIdNumber: string;
-  idCardImageUrl: string;
+  idCardImageUrl?: string;
+  consentGiven?: boolean;
   tradeLicenseUrl?: string;
   certificateUrls: string[];
   status: VerificationStatus;
@@ -40,7 +41,11 @@ const ProviderVerificationSchema = new Schema<IProviderVerification>(
     },
     idCardImageUrl: {
       type: String,
-      required: true,
+      default: '',
+    },
+    consentGiven: {
+      type: Boolean,
+      default: true,
     },
     tradeLicenseUrl: {
       type: String,
