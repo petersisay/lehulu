@@ -178,6 +178,70 @@ describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
       expect(screen.getByText('Platform Admin')).toBeInTheDocument();
       expect(screen.getByText('Admin')).toBeInTheDocument();
     });
+
+    it('customer navigation strictly excludes Admin Dashboard and Provider management', () => {
+      const mockCustomerAuth = {
+        user: { _id: 'c1', email: 'c@lehulu.et', role: 'CUSTOMER', displayName: 'Almaz Customer', username: 'almaz', city: 'Adama', isVerified: false, isOnboarded: true },
+        profile: null,
+        loading: false,
+        isAuthenticated: true,
+        isCustomer: true,
+        isProvider: false,
+        isAdmin: false,
+        isVerifiedProvider: false,
+        loginWithGoogle: vi.fn(),
+        onboard: vi.fn(),
+        updateUser: vi.fn(),
+        logout: vi.fn(),
+        refreshUser: vi.fn(),
+      };
+      renderWithProviders(<Navbar />, mockCustomerAuth);
+      expect(screen.queryByText(/Admin Portal|Admin Dashboard/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Verification Queue/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Provider Portal|Provider Dashboard/i)).not.toBeInTheDocument();
+    });
+
+    it('provider navigation strictly excludes Admin Portal and Customer Find Services', () => {
+      const mockProviderAuth = {
+        user: { _id: 'p1', email: 'p@lehulu.et', role: 'SERVICE_PROVIDER', displayName: 'Tolosa Plumber', username: 'tolosa', city: 'Bishoftu', isVerified: true, isOnboarded: true },
+        profile: mockProvider,
+        loading: false,
+        isAuthenticated: true,
+        isCustomer: false,
+        isProvider: true,
+        isAdmin: false,
+        isVerifiedProvider: true,
+        loginWithGoogle: vi.fn(),
+        onboard: vi.fn(),
+        updateUser: vi.fn(),
+        logout: vi.fn(),
+        refreshUser: vi.fn(),
+      };
+      renderWithProviders(<Navbar />, mockProviderAuth);
+      expect(screen.queryByText(/Verification Queue/i)).not.toBeInTheDocument();
+      expect(screen.getAllByText(/My Requests & Bookings/i).length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('admin navigation strictly excludes customer Find Services discovery link', () => {
+      const mockAdminAuth = {
+        user: { _id: 'a1', email: 'admin@lehulu.et', role: 'ADMIN', displayName: 'Super Admin', username: 'admin', city: 'Adama', isVerified: true, isOnboarded: true },
+        profile: null,
+        loading: false,
+        isAuthenticated: true,
+        isCustomer: false,
+        isProvider: false,
+        isAdmin: true,
+        isVerifiedProvider: false,
+        loginWithGoogle: vi.fn(),
+        onboard: vi.fn(),
+        updateUser: vi.fn(),
+        logout: vi.fn(),
+        refreshUser: vi.fn(),
+      };
+      renderWithProviders(<Navbar />, mockAdminAuth);
+      expect(screen.queryByText(/Find Services/i)).not.toBeInTheDocument();
+      expect(screen.getAllByText(/Verification Queue/i).length).toBeGreaterThanOrEqual(1);
+    });
   });
 
   describe('2. ProviderCard & Marketplace Discovery', () => {
