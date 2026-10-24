@@ -395,6 +395,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 389 | `backend/src/controllers/authController.ts` | `63fea11` | `fix(auth): automatically create ProviderVerification record during provider onboarding` | Verified pushed to `origin/main` | Created ProviderVerification record in PENDING_REVIEW status upon provider onboarding |
 | 390 | `COMMIT_LOG.md` | `eaaa88b` | `docs: record authController provider onboarding fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 391 | `backend/src/controllers/adminController.ts` | `306e808` | `fix(admin): mask national ID numbers and enforce bi-directional status synchronization on verification audit` | Verified pushed to `origin/main` | Masked national ID numbers in verification queue by default and synchronized User and ProviderProfile isVerified |
+| 392 | `COMMIT_LOG.md` | `5a2e3a7` | `docs: record adminController audit and privacy fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 393 | `frontend/src/services/api.ts` | `00d3a0c` | `feat(api): expand authApi.onboard with provider identification and verification parameters` | Verified pushed to `origin/main` | Added category, description, service area, national ID, and consent fields to authApi.onboard |
 
 
 
