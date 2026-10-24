@@ -5,6 +5,7 @@ import { AuthenticatedRequest, BookingStatus } from '../types';
 import { Booking } from '../models/Booking';
 import { ProviderProfile } from '../models/ProviderProfile';
 import { ProviderVerification } from '../models/ProviderVerification';
+import { ServiceCategory } from '../models/ServiceCategory';
 import { User } from '../models/User';
 import { Notification } from '../models/Notification';
 import { emitSocketEvent } from '../sockets';
@@ -12,17 +13,17 @@ import { emitSocketEvent } from '../sockets';
 export const createBookingSchema = z.object({
   body: z.object({
     providerId: z.string().min(1, 'Provider ID is required'),
-    categoryId: z.string().min(1, 'Category ID is required'),
+    categoryId: z.string().optional(),
     requestedDate: z.string().min(1, 'Requested date is required'),
-    requestedTimeSlot: z.string().min(1, 'Time slot is required'),
-    problemDescription: z.string().min(10, 'Please provide a detailed problem description (at least 10 characters)'),
+    requestedTimeSlot: z.string().default('morning'),
+    problemDescription: z.string().min(2, 'Please provide a description of the problem (at least 2 characters)'),
     referenceImages: z.array(z.string()).default([]),
     serviceAddress: z.object({
-      city: z.string().min(2),
+      city: z.string().min(1, 'City is required'),
       subcity: z.string().optional(),
       kebele: z.string().optional(),
-      streetAddress: z.string().min(3, 'Street address is required'),
-      contactPhone: z.string().min(9, 'Contact phone is required'),
+      streetAddress: z.string().min(1, 'Street address is required'),
+      contactPhone: z.string().min(8, 'Contact phone number must be at least 8 digits'),
       coordinates: z.tuple([z.number(), z.number()]).optional(),
     }),
   }),
@@ -89,6 +90,15 @@ export const createBooking = async (
       return;
     }
 
+    let activeCategoryId = categoryId;
+    if (!activeCategoryId && provider.categoryIds && provider.categoryIds.length > 0) {
+      activeCategoryId = (provider.categoryIds[0] as any)?._id?.toString() || provider.categoryIds[0].toString();
+    }
+    if (!activeCategoryId) {
+      const defaultCategory = await ServiceCategory.findOne();
+      if (defaultCategory) activeCategoryId = defaultCategory._id.toString();
+    }
+
     // Generate human-readable booking reference number e.g. "LHL-2026-18492"
     const randomDigits = Math.floor(10000 + Math.random() * 90000);
     const bookingNumber = `LHL-${new Date().getFullYear()}-${randomDigits}`;
@@ -97,7 +107,7 @@ export const createBooking = async (
       bookingNumber,
       customerId: req.user._id,
       providerId: provider._id,
-      categoryId,
+      categoryId: activeCategoryId,
       requestedDate: new Date(requestedDate),
       requestedTimeSlot,
       problemDescription,

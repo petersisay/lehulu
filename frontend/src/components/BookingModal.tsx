@@ -50,7 +50,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       return;
     }
 
-    if (!problemDescription.trim()) {
+    if (!problemDescription.trim() || problemDescription.trim().length < 2) {
       setError(t('booking.problemRequired') || 'Please describe the problem or requested work.');
       return;
     }
@@ -60,8 +60,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       return;
     }
 
-    if (!streetAddress.trim() || !contactPhone.trim()) {
-      setError(t('booking.addressRequired') || 'Please provide street address and contact phone number.');
+    if (!streetAddress.trim()) {
+      setError('Please provide a street address or landmark.');
+      return;
+    }
+
+    const cleanPhone = contactPhone.trim();
+    if (!cleanPhone || cleanPhone.replace(/\D/g, '').length < 8) {
+      setError('Please provide a valid contact phone number (at least 8 digits).');
       return;
     }
 
@@ -69,19 +75,30 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setError(null);
 
     try {
+      const resolvedCategoryId =
+        categoryId ||
+        (provider.categoryIds && provider.categoryIds.length > 0
+          ? (typeof provider.categoryIds[0] === 'object' ? (provider.categoryIds[0] as any)._id : provider.categoryIds[0])
+          : undefined);
+
+      const normalizedCity =
+        city && !city.startsWith('locations.')
+          ? city
+          : (provider.serviceCities && provider.serviceCities.length > 0 ? provider.serviceCities[0] : 'Adama');
+
       const response = await bookingApi.create({
         providerId: provider._id,
-        categoryId: categoryId || (provider.categoryIds[0] as any)?._id || (provider.categoryIds[0] as any),
+        categoryId: resolvedCategoryId,
         requestedDate,
         requestedTimeSlot,
-        problemDescription,
+        problemDescription: problemDescription.trim(),
         referenceImages: referenceImageUrl ? [referenceImageUrl] : [],
         serviceAddress: {
-          city,
-          subcity: subcity || undefined,
-          kebele: kebele || undefined,
-          streetAddress,
-          contactPhone,
+          city: normalizedCity,
+          subcity: subcity.trim() || undefined,
+          kebele: kebele.trim() || undefined,
+          streetAddress: streetAddress.trim(),
+          contactPhone: cleanPhone,
         },
       });
 
@@ -94,7 +111,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         }
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to submit service request. Please try again.');
+      const resp = err.response?.data;
+      if (resp?.errors && Array.isArray(resp.errors) && resp.errors.length > 0) {
+        setError(resp.errors.map((e: any) => e.message).join('. '));
+      } else {
+        setError(resp?.message || err.message || 'Failed to submit service request. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

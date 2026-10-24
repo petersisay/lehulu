@@ -12,9 +12,10 @@ export const validateRequest = (schema: AnyZodObject) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
+        const errorDetails = error.errors.map((e) => e.message).join('. ');
         res.status(400).json({
           success: false,
-          message: 'Validation failed for submitted request data.',
+          message: errorDetails ? `Validation failed: ${errorDetails}` : 'Validation failed for submitted request data.',
           errors: error.errors.map((e) => ({
             field: e.path.join('.'),
             message: e.message,
