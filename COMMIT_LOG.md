@@ -411,6 +411,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 405 | `frontend/src/services/api.ts` | `d7b1b2e` | `fix(api): permit optional ID card front URL in submitVerification` | Verified pushed to `origin/main` | Permitted optional ID card image URL in submitVerification client interface |
 | 406 | `COMMIT_LOG.md` | `872bd00` | `docs: record api.ts verification interface fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 407 | `frontend/src/pages/ProviderDashboard.tsx` | `423c6fc` | `fix(provider): permit optional ID image upload and add privacy protection in ProviderDashboard` | Verified pushed to `origin/main` | Permitted optional ID image upload and added privacy protection notice in provider dashboard |
+| 408 | `COMMIT_LOG.md` | `c84e32b` | `docs: record ProviderDashboard verification fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 409 | `frontend/src/pages/AdminDashboard.tsx` | `bfab40d` | `feat(admin): enrich verification queue item card with trades, area, and optional ID photo link` | Verified pushed to `origin/main` | Displayed trades, phone, service area, and optional ID photo fallback in admin verification queue |
 
 
 
