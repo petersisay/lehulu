@@ -230,13 +230,13 @@ export interface AdminStats {
 
 export const adminApi = {
   getStats: (): Promise<AxiosResponse<ApiResponse<AdminStats>>> =>
-    apiClient.get('/admin/overview'),
+    apiClient.get('/admin/stats'),
 
   getVerifications: (): Promise<AxiosResponse<ApiResponse<any[]>>> =>
     apiClient.get('/admin/verifications'),
 
   reviewVerification: (id: string, status: VerificationStatus, rejectionReason?: string): Promise<AxiosResponse<ApiResponse<any>>> =>
-    apiClient.put(`/admin/verifications/${id}`, { status, rejectionReason }),
+    apiClient.patch(`/admin/verifications/${id}`, { status, rejectionReason }),
 
   getUsers: (role?: UserRole): Promise<AxiosResponse<ApiResponse<User[]>>> =>
     apiClient.get('/admin/users', { params: { role } }),

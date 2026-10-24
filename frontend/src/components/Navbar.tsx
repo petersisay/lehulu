@@ -66,19 +66,19 @@ export const Navbar: React.FC = () => {
             {isAdmin ? (
               <>
                 <Link
-                  to="/admin/dashboard"
+                  to="/admin/dashboard?tab=overview"
                   className="text-sm font-semibold text-purple-800 hover:text-purple-950 transition-colors"
                 >
                   {t('nav.adminPanel')}
                 </Link>
                 <Link
-                  to="/admin/dashboard"
+                  to="/admin/dashboard?tab=verifications"
                   className="text-sm font-medium text-slate-700 hover:text-purple-800 transition-colors"
                 >
                   Verification Queue
                 </Link>
                 <Link
-                  to="/admin/dashboard"
+                  to="/admin/dashboard?tab=leads"
                   className="text-sm font-medium text-slate-700 hover:text-purple-800 transition-colors"
                 >
                   Provider Leads
@@ -284,21 +284,21 @@ export const Navbar: React.FC = () => {
           {isAdmin ? (
             <div className="space-y-1">
               <Link
-                to="/admin/dashboard"
+                to="/admin/dashboard?tab=overview"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-2 text-base font-bold text-purple-800"
               >
                 {t('nav.adminPanel')}
               </Link>
               <Link
-                to="/admin/dashboard"
+                to="/admin/dashboard?tab=verifications"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-2 text-sm font-medium text-slate-700"
               >
                 Verification Queue
               </Link>
               <Link
-                to="/admin/dashboard"
+                to="/admin/dashboard?tab=leads"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-2 text-sm font-medium text-slate-700"
               >

@@ -21,10 +21,12 @@ router.use(requireRole('ADMIN'));
 
 // Platform metrics & health
 router.get('/stats', getPlatformStats);
+router.get('/overview', getPlatformStats);
 
 // Provider verification queue & auditing
 router.get('/verifications', getVerificationQueue);
 router.patch('/verifications/:id', validateRequest(auditVerificationSchema), auditProviderVerification);
+router.put('/verifications/:id', validateRequest(auditVerificationSchema), auditProviderVerification);
 
 // Dispute moderation
 router.get('/disputes', getDisputes);

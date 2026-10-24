@@ -236,7 +236,51 @@ export const ProviderDashboard: React.FC = () => {
       </div>
 
       {/* Verification Status Banner if not verified */}
-      {verificationStatus !== 'VERIFIED' && (
+      {verificationStatus === 'PENDING_REVIEW' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-sm font-bold text-amber-900">
+                Verification Application Under Administrative Review
+              </h3>
+              <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">
+                Your credentials and Ethiopian National ID have been queued for administrative review. Once verified by the platform administrator, your profile will automatically appear in customer search results and allow customer bookings.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowVerificationForm(!showVerificationForm)}
+            className="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold shrink-0 transition-colors cursor-pointer"
+          >
+            {showVerificationForm ? 'Hide Form' : 'View / Update Credentials'}
+          </button>
+        </div>
+      )}
+
+      {verificationStatus === 'REJECTED' && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-sm font-bold text-red-900">
+                Verification Requires Correction
+              </h3>
+              <p className="text-xs text-red-700 mt-0.5 leading-relaxed">
+                The administrator requested corrections or additional documents. Please check your details and re-submit for review.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowVerificationForm(!showVerificationForm)}
+            className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-xl text-xs font-bold shrink-0 transition-colors cursor-pointer"
+          >
+            {showVerificationForm ? 'Hide Form' : 'Resubmit ID Verification'}
+          </button>
+        </div>
+      )}
+
+      {verificationStatus !== 'VERIFIED' && verificationStatus !== 'PENDING_REVIEW' && verificationStatus !== 'REJECTED' && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />

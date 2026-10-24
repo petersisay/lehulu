@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ShieldCheck,
   Users,
@@ -32,6 +32,9 @@ export const AdminDashboard: React.FC = () => {
   const { user, isAdmin, isAuthenticated, loading: authLoading } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const urlTab = (searchParams.get('tab') as 'overview' | 'verifications' | 'categories' | 'audit' | 'leads') || null;
 
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [verifications, setVerifications] = useState<any[]>([]);
@@ -40,10 +43,26 @@ export const AdminDashboard: React.FC = () => {
   const [leads, setLeads] = useState<ProviderLead[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'categories' | 'audit' | 'leads'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'categories' | 'audit' | 'leads'>(
+    urlTab || 'verifications'
+  );
 
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [leadActionLoading, setLeadActionLoading] = useState<string | null>(null);
+
+  // Sync tab with URL
+  useEffect(() => {
+    if (urlTab && urlTab !== activeTab) {
+      setActiveTab(urlTab);
+    }
+  }, [urlTab]);
+
+  const switchTab = (tab: 'overview' | 'verifications' | 'categories' | 'audit' | 'leads') => {
+    setActiveTab(tab);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', tab);
+    setSearchParams(newParams);
+  };
 
   // Leads filters
   const [leadsCategoryFilter, setLeadsCategoryFilter] = useState<string>('all');
@@ -63,7 +82,7 @@ export const AdminDashboard: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const [statsRes, verifRes, logsRes, catRes, leadsRes] = await Promise.all([
+      const [statsRes, verifRes, logsRes, catRes, leadsRes] = await Promise.allSettled([
         adminApi.getStats(),
         adminApi.getVerifications(),
         adminApi.getAuditLogs(),
@@ -71,11 +90,30 @@ export const AdminDashboard: React.FC = () => {
         adminApi.getLeads(),
       ]);
 
-      if (statsRes.data.success) setStats(statsRes.data.data);
-      if (verifRes.data.success) setVerifications(verifRes.data.data);
-      if (logsRes.data.success) setAuditLogs(logsRes.data.data);
-      if (catRes.data.success) setCategories(catRes.data.data);
-      if (leadsRes.data.success) setLeads(leadsRes.data.data);
+      if (statsRes.status === 'fulfilled' && statsRes.value?.data?.success) {
+        const d = statsRes.value.data as any;
+        setStats(d.stats || d.data || null);
+      }
+      if (verifRes.status === 'fulfilled' && verifRes.value?.data?.success) {
+        const d = verifRes.value.data as any;
+        const list = d.verifications || d.data || [];
+        setVerifications(Array.isArray(list) ? list : []);
+      }
+      if (logsRes.status === 'fulfilled' && logsRes.value?.data?.success) {
+        const d = logsRes.value.data as any;
+        const list = d.logs || d.data || [];
+        setAuditLogs(Array.isArray(list) ? list : []);
+      }
+      if (catRes.status === 'fulfilled' && catRes.value?.data?.success) {
+        const d = catRes.value.data as any;
+        const list = d.categories || d.data || [];
+        setCategories(Array.isArray(list) ? list : []);
+      }
+      if (leadsRes.status === 'fulfilled' && leadsRes.value?.data?.success) {
+        const d = leadsRes.value.data as any;
+        const list = d.leads || d.data || [];
+        setLeads(Array.isArray(list) ? list : []);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch administrator data.');
     } finally {
@@ -194,7 +232,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto">
         <button
-          onClick={() => setActiveTab('overview')}
+          onClick={() => switchTab('overview')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'overview'
               ? 'bg-purple-700 text-white shadow-xs'
@@ -204,7 +242,7 @@ export const AdminDashboard: React.FC = () => {
           System Overview
         </button>
         <button
-          onClick={() => setActiveTab('verifications')}
+          onClick={() => switchTab('verifications')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'verifications'
               ? 'bg-purple-700 text-white shadow-xs'
@@ -219,7 +257,7 @@ export const AdminDashboard: React.FC = () => {
           )}
         </button>
         <button
-          onClick={() => setActiveTab('categories')}
+          onClick={() => switchTab('categories')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'categories'
               ? 'bg-purple-700 text-white shadow-xs'
@@ -229,7 +267,7 @@ export const AdminDashboard: React.FC = () => {
           Service Categories ({categories.length})
         </button>
         <button
-          onClick={() => setActiveTab('leads')}
+          onClick={() => switchTab('leads')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'leads'
               ? 'bg-purple-700 text-white shadow-xs'
@@ -242,7 +280,7 @@ export const AdminDashboard: React.FC = () => {
           </span>
         </button>
         <button
-          onClick={() => setActiveTab('audit')}
+          onClick={() => switchTab('audit')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'audit'
               ? 'bg-purple-700 text-white shadow-xs'

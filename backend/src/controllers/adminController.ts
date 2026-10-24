@@ -59,6 +59,22 @@ export const getVerificationQueue = async (
       ];
     }
 
+    // Self-healing synchronization: Ensure all unverified providers appear in the review queue
+    const unverifiedProfiles = await ProviderProfile.find({ isVerified: false });
+    for (const prof of unverifiedProfiles) {
+      const exists = await ProviderVerification.findOne({ providerProfileId: prof._id });
+      if (!exists) {
+        await ProviderVerification.create({
+          providerProfileId: prof._id,
+          userId: prof.userId,
+          nationalIdNumber: 'ET-PENDING-REVIEW',
+          status: 'PENDING_REVIEW',
+          submittedAt: prof.createdAt || new Date(),
+          consentGiven: true,
+        });
+      }
+    }
+
     const [rawVerifications, total] = await Promise.all([
       ProviderVerification.find(queryObj)
         .populate('userId', 'displayName email phoneNumber avatarUrl city')
@@ -91,6 +107,7 @@ export const getVerificationQueue = async (
     res.status(200).json({
       success: true,
       verifications,
+      data: verifications,
       pagination: {
         page: pageNum,
         limit: limitNum,
@@ -218,17 +235,20 @@ export const getPlatformStats = async (
       Dispute.countDocuments({ status: { $in: ['OPEN', 'UNDER_REVIEW'] } }),
     ]);
 
+    const statsData = {
+      totalCustomers,
+      totalProviders,
+      verifiedProviders,
+      pendingVerifications,
+      activeBookings,
+      completedBookings,
+      openDisputes,
+    };
+
     res.status(200).json({
       success: true,
-      stats: {
-        totalCustomers,
-        totalProviders,
-        verifiedProviders,
-        pendingVerifications,
-        activeBookings,
-        completedBookings,
-        openDisputes,
-      },
+      stats: statsData,
+      data: statsData,
     });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
@@ -347,6 +367,7 @@ export const getAuditLogs = async (
     res.status(200).json({
       success: true,
       logs,
+      data: logs,
       pagination: {
         page,
         limit,
