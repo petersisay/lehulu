@@ -39,7 +39,28 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    if (user.role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+    if (user.role === 'SERVICE_PROVIDER') return <Navigate to="/provider/dashboard" replace />;
+    return <Navigate to="/customer/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const CustomerDiscoveryRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <RouteLoadingSpinner />;
+  }
+
+  if (isAuthenticated && user) {
+    if (user.role === 'SERVICE_PROVIDER') {
+      return <Navigate to="/provider/dashboard" replace />;
+    }
+    if (user.role === 'ADMIN') {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;
@@ -53,9 +74,16 @@ export const App: React.FC = () => {
         <main className="flex-1">
           <Suspense fallback={<RouteLoadingSpinner />}>
             <Routes>
-              {/* Public Marketplace Views */}
+              {/* Public & Customer Marketplace Views */}
               <Route path="/" element={<LandingPage />} />
-              <Route path="/discover" element={<DiscoveryPage />} />
+              <Route
+                path="/discover"
+                element={
+                  <CustomerDiscoveryRoute>
+                    <DiscoveryPage />
+                  </CustomerDiscoveryRoute>
+                }
+              />
               <Route path="/providers/:id" element={<ProviderProfilePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/onboarding" element={<LoginPage />} />
