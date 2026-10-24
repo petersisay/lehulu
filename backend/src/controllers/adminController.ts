@@ -32,7 +32,7 @@ export const getVerificationQueue = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { status = 'PENDING_REVIEW', page = 1, limit = 20 } = req.query;
+    const { status = 'PENDING_REVIEW', q, unmask, page = 1, limit = 20 } = req.query;
     const pageNum = parseInt(page as string, 10) || 1;
     const limitNum = parseInt(limit as string, 10) || 20;
     const skip = (pageNum - 1) * limitNum;
@@ -42,7 +42,24 @@ export const getVerificationQueue = async (
       queryObj.status = status;
     }
 
-    const [verifications, total] = await Promise.all([
+    if (q && typeof q === 'string' && q.trim().length > 0) {
+      const searchRegex = new RegExp(q.trim(), 'i');
+      const matchingUsers = await User.find({
+        $or: [
+          { displayName: searchRegex },
+          { email: searchRegex },
+          { phoneNumber: searchRegex },
+        ],
+      }).select('_id');
+      const userIds = matchingUsers.map((u) => u._id);
+
+      queryObj.$or = [
+        { userId: { $in: userIds } },
+        { nationalIdNumber: searchRegex },
+      ];
+    }
+
+    const [rawVerifications, total] = await Promise.all([
       ProviderVerification.find(queryObj)
         .populate('userId', 'displayName email phoneNumber avatarUrl city')
         .populate({
@@ -54,6 +71,22 @@ export const getVerificationQueue = async (
         .limit(limitNum),
       ProviderVerification.countDocuments(queryObj),
     ]);
+
+    // Privacy rule: Mask Ethiopian National ID number by default in admin table
+    const maskId = (idStr: string) => {
+      if (!idStr) return '••••';
+      if (idStr.length <= 4) return '••••';
+      return `${idStr.slice(0, 3)}••••${idStr.slice(-4)}`;
+    };
+
+    const verifications = rawVerifications.map((v) => {
+      const obj: any = v.toObject();
+      obj.maskedNationalId = maskId(obj.nationalIdNumber);
+      if (unmask !== 'true') {
+        obj.nationalIdNumber = maskId(obj.nationalIdNumber);
+      }
+      return obj;
+    });
 
     res.status(200).json({
       success: true,
@@ -110,6 +143,11 @@ export const auditProviderVerification = async (
       },
       { new: true }
     );
+
+    // Keep User record in sync with verification status
+    await User.findByIdAndUpdate(verification.userId, {
+      isVerified: isNowVerified,
+    });
 
     // Record immutable audit log of administrative decision
     await recordAuditLog({
