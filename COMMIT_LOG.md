@@ -415,6 +415,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 409 | `frontend/src/pages/AdminDashboard.tsx` | `bfab40d` | `feat(admin): enrich verification queue item card with trades, area, and optional ID photo link` | Verified pushed to `origin/main` | Displayed trades, phone, service area, and optional ID photo fallback in admin verification queue |
 | 410 | `COMMIT_LOG.md` | `cad9df3` | `docs: record AdminDashboard verification queue enrichment in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 411 | `backend/src/controllers/authController.ts` | `655bdb3` | `fix(auth): support category and trades aliases during provider onboarding` | Verified pushed to `origin/main` | Supported category and trades aliases during provider onboarding profile creation |
+| 412 | `COMMIT_LOG.md` | `71c9ccd` | `docs: record authController onboarding trade aliases fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 413 | `backend/tests/verification_and_search.test.ts` | `41cab5e` | `test(verification): add integration test suite for verification pipeline, role isolation, and search relevance` | Verified pushed to `origin/main` | Added 14 automated integration tests for verification pipeline, privacy masking, approval, search relevance, and suspension |
 
 
 
