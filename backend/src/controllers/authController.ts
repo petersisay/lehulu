@@ -157,7 +157,9 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
       businessName,
       categoryId,
       categoryIds,
+      category,
       skills,
+      trades,
       serviceDescription,
       serviceArea,
       location,
@@ -192,8 +194,9 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
       );
     } else if (role === 'SERVICE_PROVIDER') {
       const resolvedCategoryIds: Types.ObjectId[] = [];
-      if (categoryId && Types.ObjectId.isValid(categoryId)) {
-        resolvedCategoryIds.push(new Types.ObjectId(categoryId));
+      const primaryCat = categoryId || category;
+      if (primaryCat && Types.ObjectId.isValid(primaryCat)) {
+        resolvedCategoryIds.push(new Types.ObjectId(primaryCat));
       }
       if (Array.isArray(categoryIds)) {
         categoryIds.forEach((id: string) => {
@@ -203,6 +206,10 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
         });
       }
 
+      const providerSkills = Array.isArray(skills) && skills.length > 0
+        ? skills
+        : (Array.isArray(trades) && trades.length > 0 ? trades : ['General Services']);
+
       // Create initial provider profile in PENDING_REVIEW state
       const providerProfile = await ProviderProfile.findOneAndUpdate(
         { userId: user._id },
@@ -211,7 +218,7 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
           businessName: businessName || user.displayName,
           serviceCities: [city || 'Adama'],
           categoryIds: resolvedCategoryIds,
-          skills: Array.isArray(skills) && skills.length > 0 ? skills : ['General Services'],
+          skills: providerSkills,
           bioEn: serviceDescription || '',
           publicAddress: serviceArea || city || 'Adama',
           location: location || { type: 'Point', coordinates: [39.2683, 8.54] },
