@@ -407,6 +407,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 401 | `frontend/src/App.tsx` | `a27ff0d` | `feat(routes): guard customer discovery and enforce role-based dashboard redirects` | Verified pushed to `origin/main` | Added CustomerDiscoveryRoute and redirected unauthorized roles to respective dashboards |
 | 402 | `COMMIT_LOG.md` | `8b9fa13` | `docs: record App.tsx route guard update in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 403 | `frontend/src/pages/DiscoveryPage.tsx` | `963ff29` | `fix(discovery): connect search query parameters to backend and refine empty states` | Verified pushed to `origin/main` | Connected params.q to backend trade matching and updated honest empty state guidance |
+| 404 | `COMMIT_LOG.md` | `07e7cdb` | `docs: record DiscoveryPage search and empty state fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 405 | `frontend/src/services/api.ts` | `d7b1b2e` | `fix(api): permit optional ID card front URL in submitVerification` | Verified pushed to `origin/main` | Permitted optional ID card image URL in submitVerification client interface |
 
 
 
