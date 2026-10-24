@@ -413,6 +413,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 407 | `frontend/src/pages/ProviderDashboard.tsx` | `423c6fc` | `fix(provider): permit optional ID image upload and add privacy protection in ProviderDashboard` | Verified pushed to `origin/main` | Permitted optional ID image upload and added privacy protection notice in provider dashboard |
 | 408 | `COMMIT_LOG.md` | `c84e32b` | `docs: record ProviderDashboard verification fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 409 | `frontend/src/pages/AdminDashboard.tsx` | `bfab40d` | `feat(admin): enrich verification queue item card with trades, area, and optional ID photo link` | Verified pushed to `origin/main` | Displayed trades, phone, service area, and optional ID photo fallback in admin verification queue |
+| 410 | `COMMIT_LOG.md` | `cad9df3` | `docs: record AdminDashboard verification queue enrichment in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 411 | `backend/src/controllers/authController.ts` | `655bdb3` | `fix(auth): support category and trades aliases during provider onboarding` | Verified pushed to `origin/main` | Supported category and trades aliases during provider onboarding profile creation |
 
 
 
