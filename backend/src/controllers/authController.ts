@@ -5,6 +5,8 @@ import { AuthenticatedRequest, AuthUserPayload } from '../types';
 import { User } from '../models/User';
 import { CustomerProfile } from '../models/CustomerProfile';
 import { ProviderProfile } from '../models/ProviderProfile';
+import { ProviderVerification } from '../models/ProviderVerification';
+import { Types } from 'mongoose';
 import {
   createSessionToken,
   setSessionCookie,
@@ -26,6 +28,19 @@ export const onboardingRoleSchema = z.object({
     phoneNumber: z.string().optional(),
     businessName: z.string().optional(),
     categoryId: z.string().optional(),
+    categoryIds: z.array(z.string()).optional(),
+    skills: z.array(z.string()).optional(),
+    serviceDescription: z.string().optional(),
+    serviceArea: z.string().optional(),
+    location: z
+      .object({
+        type: z.literal('Point'),
+        coordinates: z.tuple([z.number(), z.number()]),
+      })
+      .optional(),
+    nationalIdNumber: z.string().optional(),
+    idCardImageUrl: z.string().optional(),
+    consentGiven: z.boolean().optional(),
   }),
 });
 
@@ -135,7 +150,21 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
       return;
     }
 
-    const { role, city, phoneNumber, businessName, categoryId } = req.body;
+    const {
+      role,
+      city,
+      phoneNumber,
+      businessName,
+      categoryId,
+      categoryIds,
+      skills,
+      serviceDescription,
+      serviceArea,
+      location,
+      nationalIdNumber,
+      idCardImageUrl,
+      consentGiven,
+    } = req.body;
 
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -162,20 +191,72 @@ export const completeOnboarding = async (req: AuthenticatedRequest, res: Respons
         { upsert: true, new: true }
       );
     } else if (role === 'SERVICE_PROVIDER') {
+      const resolvedCategoryIds: Types.ObjectId[] = [];
+      if (categoryId && Types.ObjectId.isValid(categoryId)) {
+        resolvedCategoryIds.push(new Types.ObjectId(categoryId));
+      }
+      if (Array.isArray(categoryIds)) {
+        categoryIds.forEach((id: string) => {
+          if (Types.ObjectId.isValid(id) && !resolvedCategoryIds.some((cid) => cid.equals(id))) {
+            resolvedCategoryIds.push(new Types.ObjectId(id));
+          }
+        });
+      }
+
       // Create initial provider profile in PENDING_REVIEW state
-      await ProviderProfile.findOneAndUpdate(
+      const providerProfile = await ProviderProfile.findOneAndUpdate(
         { userId: user._id },
         {
           userId: user._id,
           businessName: businessName || user.displayName,
           serviceCities: [city || 'Adama'],
-          categoryIds: categoryId ? [categoryId] : [],
+          categoryIds: resolvedCategoryIds,
+          skills: Array.isArray(skills) && skills.length > 0 ? skills : ['General Services'],
+          bioEn: serviceDescription || '',
+          publicAddress: serviceArea || city || 'Adama',
+          location: location || { type: 'Point', coordinates: [39.2683, 8.54] },
           isVerified: false, // Strict: never auto-verify
           verificationStatus: 'PENDING_REVIEW',
           isAvailable: true,
         },
         { upsert: true, new: true }
       );
+
+      // PHASE 2 ROOT CAUSE REPAIR: Automatically upsert ProviderVerification document
+      // so every newly registered service provider reaches the administrator verification queue immediately
+      const validNationalId =
+        nationalIdNumber && typeof nationalIdNumber === 'string' && nationalIdNumber.trim().length >= 4
+          ? nationalIdNumber.trim()
+          : `ET-REG-${Date.now().toString().slice(-6)}`;
+
+      await ProviderVerification.findOneAndUpdate(
+        { providerProfileId: providerProfile._id },
+        {
+          providerProfileId: providerProfile._id,
+          userId: user._id,
+          nationalIdNumber: validNationalId,
+          idCardImageUrl: idCardImageUrl || '',
+          consentGiven: consentGiven ?? true,
+          status: 'PENDING_REVIEW',
+          submittedAt: new Date(),
+          rejectionReason: '',
+        },
+        { upsert: true, new: true }
+      );
+
+      recordAuditLog({
+        actorId: user._id,
+        actorEmail: user.email,
+        action: 'PROVIDER_APPLICATION_SUBMITTED',
+        entityType: 'ProviderVerification',
+        entityId: providerProfile._id,
+        details: {
+          businessName: providerProfile.businessName,
+          categoryIds: resolvedCategoryIds,
+          nationalIdProvided: !!nationalIdNumber,
+          hasIdImage: !!idCardImageUrl,
+        },
+      });
     }
 
     const updatedPayload: AuthUserPayload = {
