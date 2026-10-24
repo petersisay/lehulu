@@ -23,7 +23,7 @@ const envSchema = z
     STORAGE_PROVIDER: z.enum(['local', 's3']).default('local'),
     UPLOAD_DIR: z.string().default('./uploads'),
     RATE_LIMIT_WINDOW_MS: z.string().transform((val) => parseInt(val, 10)).default('900000'),
-    RATE_LIMIT_MAX_REQUESTS: z.string().transform((val) => parseInt(val, 10)).default('100'),
+    RATE_LIMIT_MAX_REQUESTS: z.string().transform((val) => parseInt(val, 10)).default('10000'),
   })
   .superRefine((data, ctx) => {
     const isProductionOrStaging =

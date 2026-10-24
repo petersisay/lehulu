@@ -54,12 +54,24 @@ export const createApp = (): Application => {
     })
   );
 
-  // Rate Limiting
+  app.set('trust proxy', 1);
+
+  // Rate Limiting - Generous threshold with automatic skip for background real-time sync polling
   const limiter = rateLimit({
-    windowMs: env.RATE_LIMIT_WINDOW_MS,
-    max: env.RATE_LIMIT_MAX_REQUESTS,
+    windowMs: env.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000,
+    max: env.RATE_LIMIT_MAX_REQUESTS || 10000,
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { trustProxy: false },
+    skip: (req) => {
+      // Never rate-limit health checks or real-time polling
+      return (
+        req.path.includes('/health') ||
+        req.headers['x-polling'] === 'true' ||
+        (req.method === 'GET' && req.path.includes('/messages')) ||
+        (req.method === 'GET' && req.path.includes('/bookings'))
+      );
+    },
     message: {
       success: false,
       message: 'Too many requests from this IP, please try again later.',

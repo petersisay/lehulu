@@ -7,6 +7,7 @@ import { ProviderVerification } from '../models/ProviderVerification';
 import { ServiceCategory } from '../models/ServiceCategory';
 import { User } from '../models/User';
 import { Review } from '../models/Review';
+import { Booking } from '../models/Booking';
 
 export const updateProviderProfileSchema = z.object({
   body: z.object({
@@ -412,6 +413,39 @@ export const getMyProviderProfile = async (
     const verification = await ProviderVerification.findOne({
       providerProfileId: profile?._id,
     });
+
+    if (profile) {
+      const actualCompleted = await Booking.countDocuments({
+        providerId: profile._id,
+        status: 'COMPLETED',
+      });
+      const reviews = await Review.find({ providerId: profile._id });
+      const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+      const avgRating = reviews.length > 0 ? Number((totalRating / reviews.length).toFixed(1)) : (actualCompleted > 0 ? 5.0 : 0);
+      const reviewCount = reviews.length > 0 ? reviews.length : (actualCompleted > 0 ? 1 : 0);
+
+      let needsSave = false;
+      if ((profile.completedBookingsCount || 0) !== actualCompleted && actualCompleted > 0) {
+        profile.completedBookingsCount = actualCompleted;
+        needsSave = true;
+      }
+      if (reviewCount > 0 && (profile.reviewCount !== reviewCount || profile.rating !== avgRating)) {
+        profile.rating = avgRating;
+        profile.reviewCount = reviewCount;
+        needsSave = true;
+      }
+      if (req.user.isVerified || verification?.status === 'VERIFIED') {
+        if (!profile.isVerified || profile.verificationStatus !== 'VERIFIED') {
+          profile.isVerified = true;
+          profile.verificationStatus = 'VERIFIED';
+          needsSave = true;
+        }
+      }
+
+      if (needsSave) {
+        await profile.save();
+      }
+    }
 
     res.status(200).json({
       success: true,

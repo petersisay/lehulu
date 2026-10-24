@@ -158,6 +158,7 @@ export const am = {
   },
   reviews: {
     title: 'የደንበኛ አስተያየት እና ደረጃ ይስጡ',
+    leaveReview: 'የደንበኛ አስተያየት ይስጡ',
     ratingLabel: 'የእርስዎ ደረጃ',
     commentLabel: 'ዝርዝር አስተያየት',
     commentPlaceholder: 'የስራውን ጥራት፣ ሰዓት አክባሪነትና ሙያዊ ብቃትን ይግለጹ...',

@@ -113,7 +113,7 @@ export const BookingDetailPage: React.FC = () => {
 
     // Auto-polling fallback to guarantee that status transitions (step 4, 5, 6) reflect across open tabs
     const interval = setInterval(() => {
-      if (id && isAuthenticated) {
+      if (id && isAuthenticated && !document.hidden) {
         bookingApi.getById(id).then((res) => {
           if (res.data?.success && res.data?.data) {
             const b = res.data.data.booking;
@@ -126,7 +126,7 @@ export const BookingDetailPage: React.FC = () => {
           }
         }).catch(() => {});
       }
-    }, 4000);
+    }, 6000);
 
     return () => {
       clearInterval(interval);

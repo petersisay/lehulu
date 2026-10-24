@@ -68,8 +68,10 @@ export const BookingChat: React.FC<BookingChatProps> = ({
 
     // Polling fallback to guarantee instant chat updates across tabs
     const interval = setInterval(() => {
-      fetchMessages(true);
-    }, 3500);
+      if (!document.hidden) {
+        fetchMessages(true);
+      }
+    }, 5000);
 
     // Listen to real-time incoming messages via WebSockets
     const unsubscribe = onNewMessage?.((msg: any) => {

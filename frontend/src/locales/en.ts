@@ -158,6 +158,7 @@ export const en = {
   },
   reviews: {
     title: 'Leave a Customer Review',
+    leaveReview: 'Leave a Customer Review',
     ratingLabel: 'Your Rating',
     commentLabel: 'Detailed Feedback',
     commentPlaceholder: 'Describe the quality of work, punctuality, and professionalism...',
