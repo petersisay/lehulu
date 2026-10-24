@@ -149,14 +149,38 @@ export const bookingApi = {
   getById: (id: string): Promise<AxiosResponse<ApiResponse<{ booking: Booking; quotes: Quote[]; messages: Message[] }>>> =>
     apiClient.get(`/bookings/${id}`),
 
-  updateStatus: (id: string, status: BookingStatus, cancellationReason?: string): Promise<AxiosResponse<ApiResponse<Booking>>> =>
-    apiClient.put(`/bookings/${id}/status`, { status, cancellationReason }),
+  updateStatus: async (id: string, status: BookingStatus, cancellationReason?: string): Promise<AxiosResponse<ApiResponse<Booking>>> => {
+    try {
+      return await apiClient.put(`/bookings/${id}/status`, { status, cancellationReason });
+    } catch (err: any) {
+      if (err.response?.status === 404 || err.response?.status === 405) {
+        return await apiClient.patch(`/bookings/${id}/status`, { status, cancellationReason });
+      }
+      throw err;
+    }
+  },
 
-  requestCompletion: (id: string): Promise<AxiosResponse<ApiResponse<Booking>>> =>
-    apiClient.post(`/bookings/${id}/request-completion`),
+  requestCompletion: async (id: string): Promise<AxiosResponse<ApiResponse<Booking>>> => {
+    try {
+      return await apiClient.post(`/bookings/${id}/request-completion`);
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        return await apiClient.put(`/bookings/${id}/status`, { status: 'COMPLETION_PENDING' });
+      }
+      throw err;
+    }
+  },
 
-  confirmCompletion: (id: string): Promise<AxiosResponse<ApiResponse<Booking>>> =>
-    apiClient.post(`/bookings/${id}/confirm-completion`),
+  confirmCompletion: async (id: string): Promise<AxiosResponse<ApiResponse<Booking>>> => {
+    try {
+      return await apiClient.post(`/bookings/${id}/confirm-completion`);
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        return await apiClient.put(`/bookings/${id}/status`, { status: 'COMPLETED' });
+      }
+      throw err;
+    }
+  },
 };
 
 export interface CreateQuoteData {

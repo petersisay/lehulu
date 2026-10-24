@@ -345,9 +345,25 @@ export const updateBookingStatus = async (
       return;
     }
 
-    const providerUserId = (booking.providerId as any).userId.toString();
-    const isCustomer = booking.customerId.toString() === req.user._id;
-    const isProvider = providerUserId === req.user._id;
+    const customerUserId =
+      (booking.customerId as any)?._id?.toString() ||
+      booking.customerId?.toString();
+
+    const providerUserId =
+      (booking.providerId as any)?.userId?._id?.toString() ||
+      (booking.providerId as any)?.userId?.toString();
+
+    const userProviderProfile = await ProviderProfile.findOne({ userId: req.user._id }).select('_id');
+    const userProviderId = userProviderProfile?._id?.toString();
+
+    const bookingProviderId =
+      (booking.providerId as any)?._id?.toString() ||
+      booking.providerId?.toString();
+
+    const isCustomer = customerUserId === req.user._id;
+    const isProvider =
+      providerUserId === req.user._id ||
+      (userProviderId && userProviderId === bookingProviderId);
     const isAdmin = req.user.role === 'ADMIN';
 
     if (!isCustomer && !isProvider && !isAdmin) {
@@ -377,7 +393,7 @@ export const updateBookingStatus = async (
         res.status(403).json({ success: false, message: 'Only the provider can start the work.' });
         return;
       }
-      if (currentStatus !== 'CONFIRMED') {
+      if (currentStatus !== 'CONFIRMED' && currentStatus !== 'QUOTED') {
         res.status(400).json({ success: false, message: 'Booking must be confirmed before starting work.' });
         return;
       }
@@ -387,7 +403,7 @@ export const updateBookingStatus = async (
         res.status(403).json({ success: false, message: 'Only the provider can mark work complete for customer review.' });
         return;
       }
-      if (currentStatus !== 'IN_PROGRESS') {
+      if (currentStatus !== 'IN_PROGRESS' && currentStatus !== 'CONFIRMED') {
         res.status(400).json({ success: false, message: 'Booking must be in progress to request completion.' });
         return;
       }
@@ -420,7 +436,7 @@ export const updateBookingStatus = async (
     await booking.save();
 
     // Notify the other party
-    const targetUserId = isCustomer ? providerUserId : booking.customerId;
+    const targetUserId = isCustomer ? (providerUserId || booking.providerId) : booking.customerId;
     await Notification.create({
       userId: targetUserId,
       type: newStatus === 'COMPLETED' ? 'BOOKING_COMPLETED' : 'IN_PROGRESS',
@@ -447,4 +463,20 @@ export const updateBookingStatus = async (
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
+};
+
+export const requestCompletion = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  req.body = { ...req.body, status: 'COMPLETION_PENDING' };
+  return updateBookingStatus(req, res);
+};
+
+export const confirmCompletion = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  req.body = { ...req.body, status: 'COMPLETED' };
+  return updateBookingStatus(req, res);
 };

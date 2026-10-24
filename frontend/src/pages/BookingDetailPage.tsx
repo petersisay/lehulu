@@ -337,10 +337,11 @@ export const BookingDetailPage: React.FC = () => {
         {/* Left Col: Details & Quotations */}
         <div className="lg:col-span-7 space-y-6">
           {/* Action Callout if provider needs to issue quote */}
+          {/* STEP 1: REQUESTED / AWAITING_QUOTE */}
           {isProvider && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
             <div className="p-5 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-emerald-950">New Booking Request Received</h3>
+                <h3 className="text-sm font-bold text-emerald-950">Step 1: New Booking Request Received</h3>
                 <p className="text-xs text-emerald-700 mt-0.5">
                   Review the customer's request and issue an itemized quotation in ETB to proceed.
                 </p>
@@ -355,11 +356,110 @@ export const BookingDetailPage: React.FC = () => {
             </div>
           )}
 
-          {/* Action Callout if customer or provider needs to act */}
+          {isCustomer && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3">
+              <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-slate-900">Step 1: Request Submitted</h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Your specialist has received this service request and is preparing an itemized quotation in ETB.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: QUOTED */}
+          {isCustomer && booking.status === 'QUOTED' && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-amber-900">Step 2: Quotation Ready for Review</h4>
+                <p className="text-[11px] text-amber-700 mt-0.5">
+                  Inspect the itemized breakdown below. Click "Accept & Confirm Booking" to lock in the price and schedule the job.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {isProvider && booking.status === 'QUOTED' && (
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3">
+              <Clock className="w-4 h-4 text-slate-500 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-slate-900">Step 2: Quotation Sent to Customer</h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Awaiting customer acceptance of the proposed quotation. You will be notified immediately upon acceptance.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: CONFIRMED */}
+          {isProvider && booking.status === 'CONFIRMED' && (
+            <div className="p-4 bg-indigo-50 border-2 border-indigo-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h4 className="text-xs font-bold text-indigo-900">Step 3: Customer Accepted Quotation — Ready to Start</h4>
+                <p className="text-[11px] text-indigo-700 mt-0.5">
+                  The price is agreed. Arrive at the service location on schedule and click below when you begin the work.
+                </p>
+              </div>
+              <button
+                onClick={handleStartWork}
+                disabled={actionLoading}
+                className="px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+              >
+                Mark Work In Progress
+              </button>
+            </div>
+          )}
+
+          {isCustomer && booking.status === 'CONFIRMED' && (
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-emerald-900">Step 3: Booking Confirmed</h4>
+                <p className="text-[11px] text-emerald-700 mt-0.5">
+                  Quotation accepted! The specialist will arrive as scheduled and will mark the job in progress once on-site.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: IN_PROGRESS */}
+          {isProvider && booking.status === 'IN_PROGRESS' && (
+            <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h4 className="text-xs font-bold text-emerald-950">Step 4: Work In Progress</h4>
+                <p className="text-[11px] text-emerald-700 mt-0.5">
+                  Service is actively underway. Once the repair or service is finished on-site, request customer completion.
+                </p>
+              </div>
+              <button
+                onClick={handleRequestCompletion}
+                disabled={actionLoading}
+                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+              >
+                Request Customer Completion
+              </button>
+            </div>
+          )}
+
+          {isCustomer && booking.status === 'IN_PROGRESS' && (
+            <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center gap-3">
+              <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-indigo-900">Step 4: Service In Progress</h4>
+                <p className="text-[11px] text-indigo-700 mt-0.5">
+                  The specialist is actively performing the service. Use the direct chat on the right for any coordination.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: COMPLETION_PENDING */}
           {isCustomer && booking.status === 'COMPLETION_PENDING' && (
             <div className="p-5 bg-amber-50 border-2 border-amber-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-amber-900">Work Marked Done by Specialist</h3>
+                <h3 className="text-sm font-bold text-amber-900">Step 5: Work Marked Done by Specialist</h3>
                 <p className="text-xs text-amber-700 mt-0.5">
                   Inspect the repair or service. Once satisfied, click confirm to close the booking and leave a review.
                 </p>
@@ -374,29 +474,39 @@ export const BookingDetailPage: React.FC = () => {
             </div>
           )}
 
-          {isProvider && booking.status === 'CONFIRMED' && (
-            <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center justify-between gap-4">
-              <span className="text-xs font-bold text-indigo-900">Customer accepted quotation. Ready to begin work?</span>
-              <button
-                onClick={handleStartWork}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold cursor-pointer"
-              >
-                Mark Work In Progress
-              </button>
+          {isProvider && booking.status === 'COMPLETION_PENDING' && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3">
+              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-amber-900">Step 5: Completion Pending Customer Review</h4>
+                <p className="text-[11px] text-amber-700 mt-0.5">
+                  You requested job completion. The customer has been prompted to inspect the work and confirm satisfaction.
+                </p>
+              </div>
             </div>
           )}
 
-          {isProvider && booking.status === 'IN_PROGRESS' && (
+          {/* STEP 6: COMPLETED */}
+          {booking.status === 'COMPLETED' && (
             <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between gap-4">
-              <span className="text-xs font-bold text-emerald-900">Service completed on-site?</span>
-              <button
-                onClick={handleRequestCompletion}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
-              >
-                Request Customer Completion
-              </button>
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold text-emerald-950">Step 6: Service Completed Successfully</h4>
+                  <p className="text-[11px] text-emerald-700 mt-0.5">
+                    Dual confirmation finalized. Thank you for choosing Lehulu for trusted local services!
+                  </p>
+                </div>
+              </div>
+              {isCustomer && (
+                <button
+                  onClick={() => setIsReviewOpen(true)}
+                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
+                >
+                  <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                  <span>Rate & Review</span>
+                </button>
+              )}
             </div>
           )}
 

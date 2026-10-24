@@ -5,6 +5,8 @@ import {
   getProviderBookings,
   getBookingById,
   updateBookingStatus,
+  requestCompletion,
+  confirmCompletion,
   createBookingSchema,
   updateBookingStatusSchema,
 } from '../controllers/bookingController';
@@ -30,8 +32,20 @@ router.get('/', requireAuth, (req: any, res) => {
   return getCustomerBookings(req, res);
 });
 
-// Booking detail & status updates (participants checked inside controller)
+// Booking detail
 router.get('/:id', requireAuth, getBookingById);
+
+// Status updates (accepts PUT, PATCH, and POST)
+router.put('/:id/status', requireAuth, validateRequest(updateBookingStatusSchema), updateBookingStatus);
 router.patch('/:id/status', requireAuth, validateRequest(updateBookingStatusSchema), updateBookingStatus);
+router.post('/:id/status', requireAuth, validateRequest(updateBookingStatusSchema), updateBookingStatus);
+
+// Dual-confirmation completion endpoints
+router.post('/:id/request-completion', requireAuth, requestCompletion);
+router.put('/:id/request-completion', requireAuth, requestCompletion);
+
+router.post('/:id/confirm-completion', requireAuth, confirmCompletion);
+router.put('/:id/confirm-completion', requireAuth, confirmCompletion);
 
 export default router;
+
