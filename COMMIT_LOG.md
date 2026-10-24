@@ -409,6 +409,8 @@ This log records every atomic file change, conventional commit, Git hash, push v
 | 403 | `frontend/src/pages/DiscoveryPage.tsx` | `963ff29` | `fix(discovery): connect search query parameters to backend and refine empty states` | Verified pushed to `origin/main` | Connected params.q to backend trade matching and updated honest empty state guidance |
 | 404 | `COMMIT_LOG.md` | `07e7cdb` | `docs: record DiscoveryPage search and empty state fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
 | 405 | `frontend/src/services/api.ts` | `d7b1b2e` | `fix(api): permit optional ID card front URL in submitVerification` | Verified pushed to `origin/main` | Permitted optional ID card image URL in submitVerification client interface |
+| 406 | `COMMIT_LOG.md` | `872bd00` | `docs: record api.ts verification interface fix in commit log` | Verified pushed to `origin/main` | Log entry verification |
+| 407 | `frontend/src/pages/ProviderDashboard.tsx` | `423c6fc` | `fix(provider): permit optional ID image upload and add privacy protection in ProviderDashboard` | Verified pushed to `origin/main` | Permitted optional ID image upload and added privacy protection notice in provider dashboard |
 
 
 
