@@ -181,11 +181,27 @@ export const quoteApi = {
   getByBooking: (bookingId: string): Promise<AxiosResponse<ApiResponse<Quote[]>>> =>
     apiClient.get(`/quotes/booking/${bookingId}`),
 
-  accept: (id: string): Promise<AxiosResponse<ApiResponse<Quote>>> =>
-    apiClient.put(`/quotes/${id}/accept`),
+  accept: async (id: string): Promise<AxiosResponse<ApiResponse<Quote>>> => {
+    try {
+      return await apiClient.put(`/quotes/${id}/accept`);
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        return await apiClient.post(`/quotes/${id}/respond`, { action: 'ACCEPT' });
+      }
+      throw err;
+    }
+  },
 
-  reject: (id: string, reason?: string): Promise<AxiosResponse<ApiResponse<Quote>>> =>
-    apiClient.put(`/quotes/${id}/reject`, { reason }),
+  reject: async (id: string, reason?: string): Promise<AxiosResponse<ApiResponse<Quote>>> => {
+    try {
+      return await apiClient.put(`/quotes/${id}/reject`, { reason });
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        return await apiClient.post(`/quotes/${id}/respond`, { action: 'REJECT', reason });
+      }
+      throw err;
+    }
+  },
 };
 
 export const messageApi = {

@@ -261,6 +261,7 @@ export const respondToQuote = async (
         message: 'Quotation accepted and booking confirmed.',
         quote,
         booking,
+        data: quote,
       });
     } else {
       quote.status = 'REJECTED';
@@ -273,9 +274,27 @@ export const respondToQuote = async (
         success: true,
         message: 'Quotation rejected.',
         quote,
+        data: quote,
       });
     }
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const acceptQuote = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  req.body = { ...req.body, action: 'ACCEPT' };
+  return respondToQuote(req, res);
+};
+
+export const rejectQuote = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  req.body = { ...req.body, action: 'REJECT' };
+  return respondToQuote(req, res);
+};
+

@@ -221,4 +221,9 @@ export const am = {
     error: 'ስህተት ተከስቷል',
     language: 'ቋንቋ',
   },
+  currency: {
+    etb: 'ETB',
+    birr: 'ብር',
+  },
 };
+

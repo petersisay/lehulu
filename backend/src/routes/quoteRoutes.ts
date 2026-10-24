@@ -3,6 +3,8 @@ import {
   createQuote,
   getBookingQuotes,
   respondToQuote,
+  acceptQuote,
+  rejectQuote,
   createQuoteSchema,
   respondToQuoteSchema,
 } from '../controllers/quoteController';
@@ -22,7 +24,15 @@ router.post(
 // Quotes for a booking (participants checked inside controller)
 router.get('/booking/:bookingId', requireAuth, getBookingQuotes);
 
-// Only CUSTOMER can accept or reject quotation
+// Accept quotation (supports both PUT and POST)
+router.put('/:quoteId/accept', requireRole('CUSTOMER'), acceptQuote);
+router.post('/:quoteId/accept', requireRole('CUSTOMER'), acceptQuote);
+
+// Reject quotation (supports both PUT and POST)
+router.put('/:quoteId/reject', requireRole('CUSTOMER'), rejectQuote);
+router.post('/:quoteId/reject', requireRole('CUSTOMER'), rejectQuote);
+
+// Only CUSTOMER can accept or reject quotation (generic respond endpoint)
 router.post(
   '/:quoteId/respond',
   requireRole('CUSTOMER'),
@@ -31,3 +41,4 @@ router.post(
 );
 
 export default router;
+

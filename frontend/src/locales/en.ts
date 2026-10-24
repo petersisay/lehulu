@@ -221,4 +221,9 @@ export const en = {
     error: 'Error',
     language: 'Language',
   },
+  currency: {
+    etb: 'ETB',
+    birr: 'Birr',
+  },
 };
+

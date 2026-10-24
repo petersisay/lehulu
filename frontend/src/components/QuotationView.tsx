@@ -109,8 +109,8 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
               <tr className="border-b border-slate-200 text-slate-400 font-semibold uppercase tracking-wider">
                 <th className="pb-2">Description</th>
                 <th className="pb-2 text-center">Qty</th>
-                <th className="pb-2 text-right">Unit Price ({t('currency.etb')})</th>
-                <th className="pb-2 text-right">Total ({t('currency.etb')})</th>
+                <th className="pb-2 text-right">Unit Price ({t('currency.etb') === 'currency.etb' ? 'ETB' : (t('currency.etb') || 'ETB')})</th>
+                <th className="pb-2 text-right">Total ({t('currency.etb') === 'currency.etb' ? 'ETB' : (t('currency.etb') || 'ETB')})</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -133,7 +133,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                   Agreed Total Amount:
                 </td>
                 <td className="pt-3 text-right font-mono text-emerald-700 text-base">
-                  {Number(quote.totalAmount || 0).toLocaleString()} {t('currency.etb')}
+                  {Number(quote.totalAmount || 0).toLocaleString()} {t('currency.etb') === 'currency.etb' ? 'ETB' : (t('currency.etb') || 'ETB')}
                 </td>
               </tr>
             </tfoot>
