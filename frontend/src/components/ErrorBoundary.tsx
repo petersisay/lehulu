@@ -47,6 +47,8 @@ export class ErrorBoundary extends Component<Props, State> {
       this.state.error?.name === 'ChunkLoadError';
 
     if (isChunkError) {
+      sessionStorage.removeItem('lehulu_chunk_reload_ts');
+      sessionStorage.removeItem('lehulu_lazy_reload_ts');
       window.location.reload();
       return;
     }

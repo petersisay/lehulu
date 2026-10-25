@@ -34,16 +34,18 @@ export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const urlTab = (searchParams.get('tab') as 'overview' | 'verifications' | 'categories' | 'audit' | 'leads') || null;
+  const urlTab = (searchParams.get('tab') as 'overview' | 'verifications' | 'verified-providers' | 'categories' | 'audit' | 'leads') || null;
 
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [verifications, setVerifications] = useState<any[]>([]);
+  const [verifiedList, setVerifiedList] = useState<any[]>([]);
+  const [verifiedSearch, setVerifiedSearch] = useState<string>('');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [leads, setLeads] = useState<ProviderLead[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'categories' | 'audit' | 'leads'>(
+  const [activeTab, setActiveTab] = useState<'overview' | 'verifications' | 'verified-providers' | 'categories' | 'audit' | 'leads'>(
     urlTab || 'verifications'
   );
 
@@ -57,7 +59,7 @@ export const AdminDashboard: React.FC = () => {
     }
   }, [urlTab]);
 
-  const switchTab = (tab: 'overview' | 'verifications' | 'categories' | 'audit' | 'leads') => {
+  const switchTab = (tab: 'overview' | 'verifications' | 'verified-providers' | 'categories' | 'audit' | 'leads') => {
     setActiveTab(tab);
     const newParams = new URLSearchParams(searchParams);
     newParams.set('tab', tab);
@@ -81,13 +83,27 @@ export const AdminDashboard: React.FC = () => {
   // Verification filter state
   const [verificationFilter, setVerificationFilter] = useState<'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED' | 'ALL'>('PENDING_REVIEW');
 
+  const filteredVerified = verifiedList.filter((item) => {
+    if (!verifiedSearch.trim()) return true;
+    const q = verifiedSearch.trim().toLowerCase();
+    const prov = item.providerProfileId || item.providerId;
+    const u = item.userId || prov?.userId;
+    const name = (prov?.businessName || u?.displayName || '').toLowerCase();
+    const email = (u?.email || '').toLowerCase();
+    const phone = (u?.phoneNumber || u?.phone || prov?.contactPhone || '').toLowerCase();
+    const city = (prov?.publicAddress || prov?.serviceCities?.join(' ') || u?.city || '').toLowerCase();
+    const trades = (prov?.skills || prov?.trades || []).join(' ').toLowerCase();
+    return name.includes(q) || email.includes(q) || phone.includes(q) || city.includes(q) || trades.includes(q);
+  });
+
   const fetchAdminData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const [statsRes, verifRes, logsRes, catRes, leadsRes] = await Promise.allSettled([
+      const [statsRes, verifRes, verifiedRes, logsRes, catRes, leadsRes] = await Promise.allSettled([
         adminApi.getStats(),
-        adminApi.getVerifications(verificationFilter),
+        adminApi.getVerifications('PENDING_REVIEW'),
+        adminApi.getVerifications('VERIFIED'),
         adminApi.getAuditLogs(),
         categoryApi.getAll(),
         adminApi.getLeads(),
@@ -101,6 +117,11 @@ export const AdminDashboard: React.FC = () => {
         const d = verifRes.value.data as any;
         const list = d.verifications || d.data || [];
         setVerifications(Array.isArray(list) ? list : []);
+      }
+      if (verifiedRes.status === 'fulfilled' && verifiedRes.value?.data?.success) {
+        const d = verifiedRes.value.data as any;
+        const list = d.verifications || d.data || [];
+        setVerifiedList(Array.isArray(list) ? list : []);
       }
       if (logsRes.status === 'fulfilled' && logsRes.value?.data?.success) {
         const d = logsRes.value.data as any;
@@ -168,11 +189,6 @@ export const AdminDashboard: React.FC = () => {
       const res = await adminApi.reviewVerification(id, status, rejectionReason);
       if (res.data.success) {
         await fetchAdminData();
-        const vRes = await adminApi.getVerifications(verificationFilter);
-        if (vRes.data.success) {
-          const d = vRes.data as any;
-          setVerifications(d.verifications || d.data || []);
-        }
       }
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to update verification status.');
@@ -286,6 +302,22 @@ export const AdminDashboard: React.FC = () => {
           )}
         </button>
         <button
+          onClick={() => switchTab('verified-providers')}
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'verified-providers'
+              ? 'bg-emerald-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+          <span>Verified Providers</span>
+          {(stats?.verifiedProviders || verifiedList.length > 0) && (
+            <span className="bg-emerald-400 text-slate-950 text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+              {stats?.verifiedProviders ?? verifiedList.length}
+            </span>
+          )}
+        </button>
+        <button
           onClick={() => switchTab('categories')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'categories'
@@ -364,13 +396,10 @@ export const AdminDashboard: React.FC = () => {
                       Verified Providers
                     </span>
                     <button
-                      onClick={() => {
-                        handleFilterVerifications('VERIFIED');
-                        switchTab('verifications');
-                      }}
+                      onClick={() => switchTab('verified-providers')}
                       className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 underline cursor-pointer"
                     >
-                      Manage
+                      Manage & Revoke
                     </button>
                   </div>
                   <span className="text-3xl font-black text-emerald-700 mt-1 block">
@@ -624,7 +653,161 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 3: CATEGORIES */}
+          {/* TAB: VERIFIED PROVIDERS (THE DEDICATED VERIFIED PLACE) */}
+          {activeTab === 'verified-providers' && (
+            <div className="space-y-6">
+              {/* Header Card */}
+              <div className="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-extrabold text-white">
+                      Verified Providers Directory (Visible to Customers)
+                    </h2>
+                    <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                      All service specialists listed here are authenticated and active in the public customer directory for Adama and Bishoftu. 
+                      If any error, complaint, or dispute occurs, you can reject / revoke their verification status immediately below.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative w-full sm:w-64 shrink-0">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Filter verified providers..."
+                    value={verifiedSearch}
+                    onChange={(e) => setVerifiedSearch(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-slate-700 bg-slate-800/80 text-white placeholder-slate-400 focus:outline-hidden focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              {filteredVerified.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 space-y-3">
+                  <ShieldCheck className="w-10 h-10 text-slate-300 mx-auto" />
+                  <h3 className="text-sm font-bold text-slate-800">No Verified Providers Found</h3>
+                  <p className="text-xs text-slate-500 max-w-md mx-auto">
+                    {verifiedSearch
+                      ? 'No verified providers match your search filter.'
+                      : 'No providers have been verified yet. Check the Verification Queue to approve pending applications.'}
+                  </p>
+                  <button
+                    onClick={() => switchTab('verifications')}
+                    className="px-4 py-2 bg-purple-700 text-white rounded-xl text-xs font-bold hover:bg-purple-800 cursor-pointer"
+                  >
+                    Go to Verification Queue
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredVerified.map((item) => {
+                    const prov = item.providerProfileId || item.providerId;
+                    const u = item.userId || prov?.userId;
+                    const provId = prov?._id || item.providerProfileId;
+                    const catNames = prov?.categoryIds?.map((c: any) => c?.nameEn || c?.nameAm || c).filter(Boolean).join(', ');
+                    const skillsList = (prov?.skills && prov.skills.length > 0) ? prov.skills : (prov?.trades || []);
+
+                    return (
+                      <div
+                        key={item._id}
+                        className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:border-emerald-300 transition-all flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
+                      >
+                        <div className="space-y-2 flex-1">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <span className="text-base font-extrabold text-slate-900">
+                              {prov?.businessName || u?.displayName || 'Service Specialist'}
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                              100% ID Verified
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                              Visible to Customers in Directory
+                            </span>
+                            <span className="text-xs font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold">
+                              ID: {item.nationalIdNumber || 'ET-VERIFIED'}
+                            </span>
+                          </div>
+
+                          <div className="text-xs text-slate-600 flex flex-wrap gap-x-3 gap-y-1">
+                            <span>Owner: <strong className="text-slate-800">{u?.displayName || '—'}</strong></span>
+                            <span>•</span>
+                            <span>Email: {u?.email || '—'}</span>
+                            <span>•</span>
+                            <span>Phone: <strong className="text-slate-800">{u?.phoneNumber || u?.phone || prov?.contactPhone || '—'}</strong></span>
+                            <span>•</span>
+                            <span>City: {prov?.publicAddress || prov?.serviceCities?.join(', ') || u?.city || 'Adama'}</span>
+                          </div>
+
+                          <div className="text-xs text-slate-600 flex flex-wrap gap-x-3 gap-y-1">
+                            {catNames && (
+                              <span>Category: <strong className="text-emerald-800">{catNames}</strong></span>
+                            )}
+                            {skillsList.length > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>Trades: <strong className="text-slate-900">{skillsList.join(', ')}</strong></span>
+                              </>
+                            )}
+                            <span>•</span>
+                            <span>Completed Jobs: <strong className="text-emerald-700">{prov?.completedBookingsCount ?? 0}</strong></span>
+                            <span>•</span>
+                            <span>Rating: <strong className="text-amber-600">{prov?.rating ? prov.rating.toFixed(1) : '5.0'} ★ ({prov?.reviewCount ?? 0})</strong></span>
+                          </div>
+
+                          {/* Customer Profile Link & ID photo */}
+                          <div className="flex items-center gap-4 text-xs pt-1">
+                            {provId && (
+                              <a
+                                href={`/providers/${provId}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-700 hover:text-blue-900 font-bold flex items-center gap-1 underline"
+                              >
+                                <span>View Public Profile as Customer</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+
+                            {(item.idCardFrontUrl || item.idCardImageUrl) && (
+                              <a
+                                href={item.idCardFrontUrl || item.idCardImageUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1 underline"
+                              >
+                                <span>View National ID Photo</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Action: Reject / Revoke Verification */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <button
+                            onClick={() => handleReviewVerification(item._id, 'REJECTED')}
+                            disabled={actionLoading}
+                            className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
+                            title="Reject or revoke this verified provider for any reason"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            <span>Reject / Revoke Verification</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 4: CATEGORIES */}
           {activeTab === 'categories' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -676,15 +859,28 @@ export const AdminDashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {auditLogs.map((log) => (
-                      <tr key={log._id} className="hover:bg-slate-50">
-                        <td className="py-2.5 px-4 font-bold text-slate-900">{log.action}</td>
-                        <td className="py-2.5 px-4 text-slate-600 font-mono text-[11px]">{log.adminId}</td>
-                        <td className="py-2.5 px-4 text-slate-600">{log.targetModel} #{log.targetId?.slice(-6)}</td>
-                        <td className="py-2.5 px-4 text-slate-400 font-mono text-[11px]">{log.ipAddress || '—'}</td>
-                        <td className="py-2.5 px-4 text-slate-500">{new Date(log.createdAt).toLocaleString()}</td>
-                      </tr>
-                    ))}
+                    {auditLogs.map((log) => {
+                      const adminLabel =
+                        (typeof log.actorId === 'object' && log.actorId)
+                          ? (log.actorId.displayName || log.actorId.email)
+                          : log.actorEmail || (typeof log.actorId === 'string' ? log.actorId : 'Administrator');
+                      const targetLabel = log.entityType || log.targetModel || 'Record';
+                      const targetIdStr = log.entityId || log.targetId || '';
+                      const dateVal = log.timestamp || log.createdAt;
+                      const formattedDate = dateVal ? new Date(dateVal).toLocaleString() : 'Just now';
+
+                      return (
+                        <tr key={log._id} className="hover:bg-slate-50">
+                          <td className="py-2.5 px-4 font-bold text-slate-900">{log.action}</td>
+                          <td className="py-2.5 px-4 text-slate-700 font-medium text-[11px]">{adminLabel}</td>
+                          <td className="py-2.5 px-4 text-slate-600 font-mono text-[11px]">
+                            {targetLabel} #{targetIdStr ? String(targetIdStr).slice(-6) : '—'}
+                          </td>
+                          <td className="py-2.5 px-4 text-slate-400 font-mono text-[11px]">{log.ipAddress || '—'}</td>
+                          <td className="py-2.5 px-4 text-slate-500">{formattedDate}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

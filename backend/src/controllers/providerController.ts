@@ -84,10 +84,10 @@ export const searchProviders = async (req: Request, res: Response): Promise<void
     const isAdmin = authReq.user?.role === 'ADMIN';
     if (!isAdmin) {
       queryObj.isVerified = true;
-      queryObj.verificationStatus = 'VERIFIED';
+      queryObj.verificationStatus = { $ne: 'REJECTED' };
     } else if (verifiedOnly === 'true' || req.query.includeUnverified !== 'true') {
       queryObj.isVerified = true;
-      queryObj.verificationStatus = 'VERIFIED';
+      queryObj.verificationStatus = { $ne: 'REJECTED' };
     }
 
     // Strict category filtering by ID, slug, name, or subcategory

@@ -167,7 +167,13 @@ export const auditProviderVerification = async (
       adminNotes?: string;
     };
 
-    const verification = await ProviderVerification.findById(id).populate('providerProfileId');
+    let verification = await ProviderVerification.findById(id).populate('providerProfileId');
+    if (!verification) {
+      verification = await ProviderVerification.findOne({ providerProfileId: id }).populate('providerProfileId');
+    }
+    if (!verification) {
+      verification = await ProviderVerification.findOne({ userId: id }).populate('providerProfileId');
+    }
     if (!verification) {
       res.status(404).json({ success: false, message: 'Verification application not found' });
       return;
