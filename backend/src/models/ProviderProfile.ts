@@ -178,5 +178,7 @@ const ProviderProfileSchema = new Schema<IProviderProfile>(
 // 2dsphere index for location queries
 ProviderProfileSchema.index({ location: '2dsphere' });
 ProviderProfileSchema.index({ categoryIds: 1, isVerified: 1, isAvailable: 1 });
+ProviderProfileSchema.index({ isVerified: 1, verificationStatus: 1, isAvailable: 1 });
+ProviderProfileSchema.index({ serviceCities: 1, isVerified: 1, rating: -1 });
 
 export const ProviderProfile = mongoose.model<IProviderProfile>('ProviderProfile', ProviderProfileSchema);

@@ -26,9 +26,37 @@ export const createCategorySchema = z.object({
   }),
 });
 
+// High-performance in-memory cache for categories (5-minute TTL, instantly invalidated on writes)
+let cachedCategories: any = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000;
+
+export const invalidateCategoryCache = (): void => {
+  cachedCategories = null;
+  cacheTimestamp = 0;
+};
+
 export const getCategories = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await ServiceCategory.find({ isActive: true }).sort({ displayOrder: 1 });
+    const now = Date.now();
+    if (cachedCategories && now - cacheTimestamp < CACHE_TTL_MS) {
+      res.setHeader('X-Cache', 'HIT');
+      res.status(200).json({
+        success: true,
+        categories: cachedCategories,
+        data: cachedCategories,
+      });
+      return;
+    }
+
+    const categories = await ServiceCategory.find({ isActive: true })
+      .sort({ displayOrder: 1 })
+      .lean();
+
+    cachedCategories = categories;
+    cacheTimestamp = now;
+
+    res.setHeader('X-Cache', 'MISS');
     res.status(200).json({
       success: true,
       categories,
@@ -41,7 +69,7 @@ export const getCategories = async (req: Request, res: Response): Promise<void> 
 
 export const getAllCategoriesAdmin = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await ServiceCategory.find().sort({ displayOrder: 1 });
+    const categories = await ServiceCategory.find().sort({ displayOrder: 1 }).lean();
     res.status(200).json({
       success: true,
       categories,
@@ -55,7 +83,7 @@ export const getAllCategoriesAdmin = async (req: Request, res: Response): Promis
 export const getCategoryBySlug = async (req: Request, res: Response): Promise<void> => {
   try {
     const { slug } = req.params;
-    const category = await ServiceCategory.findOne({ slug, isActive: true });
+    const category = await ServiceCategory.findOne({ slug, isActive: true }).lean();
     if (!category) {
       res.status(404).json({ success: false, message: 'Category not found' });
       return;
@@ -72,6 +100,7 @@ export const getCategoryBySlug = async (req: Request, res: Response): Promise<vo
 export const createCategory = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const category = await ServiceCategory.create(req.body);
+    invalidateCategoryCache();
 
     if (req.user) {
       await recordAuditLog({
@@ -103,6 +132,7 @@ export const updateCategory = async (req: AuthenticatedRequest, res: Response): 
       res.status(404).json({ success: false, message: 'Category not found' });
       return;
     }
+    invalidateCategoryCache();
 
     if (req.user) {
       await recordAuditLog({
@@ -134,6 +164,7 @@ export const deleteCategory = async (req: AuthenticatedRequest, res: Response): 
       res.status(404).json({ success: false, message: 'Category not found' });
       return;
     }
+    invalidateCategoryCache();
 
     if (req.user) {
       await recordAuditLog({

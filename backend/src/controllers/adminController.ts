@@ -59,50 +59,42 @@ export const getVerificationQueue = async (
       ];
     }
 
-    // Self-healing synchronization: Ensure all unverified providers appear in the review queue
-    const unverifiedProfiles = await ProviderProfile.find({ isVerified: false });
-    for (const prof of unverifiedProfiles) {
-      const exists = await ProviderVerification.findOne({ providerProfileId: prof._id });
-      if (!exists) {
-        await ProviderVerification.create({
+    // High-performance self-healing synchronization in bulk
+    const [allProfiles, allVerifs] = await Promise.all([
+      ProviderProfile.find({}, '_id userId isVerified createdAt').lean(),
+      ProviderVerification.find({}, 'providerProfileId userId status').lean(),
+    ]);
+
+    const existingProfileIds = new Set(allVerifs.map((v) => String(v.providerProfileId)));
+    const missingVerifications: any[] = [];
+
+    for (const prof of allProfiles) {
+      if (!existingProfileIds.has(String(prof._id))) {
+        missingVerifications.push({
           providerProfileId: prof._id,
           userId: prof.userId,
-          nationalIdNumber: 'ET-PENDING-REVIEW',
-          status: 'PENDING_REVIEW',
+          nationalIdNumber: prof.isVerified ? 'ET-VERIFIED-SPECIALIST' : 'ET-PENDING-REVIEW',
+          status: prof.isVerified ? 'VERIFIED' : 'PENDING_REVIEW',
           submittedAt: prof.createdAt || new Date(),
+          reviewedAt: prof.isVerified ? new Date() : undefined,
           consentGiven: true,
         });
       }
     }
 
-    // Self-healing: Ensure verified profiles have a corresponding VERIFIED ProviderVerification record so admins can manage and revoke them
-    const verifiedProfiles = await ProviderProfile.find({ isVerified: true });
-    for (const prof of verifiedProfiles) {
-      const exists = await ProviderVerification.findOne({ providerProfileId: prof._id });
-      if (!exists) {
-        await ProviderVerification.create({
-          providerProfileId: prof._id,
-          userId: prof.userId,
-          nationalIdNumber: 'ET-VERIFIED-SPECIALIST',
-          status: 'VERIFIED',
-          submittedAt: prof.createdAt || new Date(),
-          reviewedAt: new Date(),
-          consentGiven: true,
-        });
-      }
+    if (missingVerifications.length > 0) {
+      await ProviderVerification.insertMany(missingVerifications, { ordered: false });
     }
 
-    // Self-healing: Ensure any profile with status VERIFIED in ProviderVerification is marked isVerified: true
-    const verifiedVerifications = await ProviderVerification.find({ status: 'VERIFIED' });
-    for (const v of verifiedVerifications) {
-      const pId = (v.providerProfileId as any)?._id || v.providerProfileId;
-      if (pId) {
-        await ProviderProfile.findByIdAndUpdate(pId, { isVerified: true, verificationStatus: 'VERIFIED' });
-      }
-      if (v.userId) {
-        await User.findByIdAndUpdate(v.userId, { isVerified: true });
-        await ProviderProfile.findOneAndUpdate({ userId: v.userId }, { isVerified: true, verificationStatus: 'VERIFIED' });
-      }
+    const verifiedVerifProfileIds = allVerifs
+      .filter((v) => v.status === 'VERIFIED')
+      .map((v) => v.providerProfileId);
+
+    if (verifiedVerifProfileIds.length > 0) {
+      await ProviderProfile.updateMany(
+        { _id: { $in: verifiedVerifProfileIds }, isVerified: { $ne: true } },
+        { isVerified: true, verificationStatus: 'VERIFIED' }
+      );
     }
 
     const [rawVerifications, total] = await Promise.all([

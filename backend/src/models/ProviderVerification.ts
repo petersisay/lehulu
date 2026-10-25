@@ -83,6 +83,8 @@ const ProviderVerificationSchema = new Schema<IProviderVerification>(
   }
 );
 
+ProviderVerificationSchema.index({ status: 1, submittedAt: -1 });
+
 export const ProviderVerification = mongoose.model<IProviderVerification>(
   'ProviderVerification',
   ProviderVerificationSchema

@@ -81,4 +81,6 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
   }
 );
 
+ServiceCategorySchema.index({ isActive: 1, displayOrder: 1 });
+
 export const ServiceCategory = mongoose.model<IServiceCategory>('ServiceCategory', ServiceCategorySchema);
