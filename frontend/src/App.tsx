@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ScrollToTop } from './components/ScrollToTop';
 import { useAuth } from './context/AuthContext';
 
 // Resilient route-level code splitting with automatic stale-chunk recovery
@@ -97,7 +98,8 @@ const CustomerDiscoveryRoute: React.FC<{ children: React.ReactNode }> = ({ child
 export const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-600 selection:text-white">
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
         <Navbar />
         <main className="flex-1">
           <ErrorBoundary>

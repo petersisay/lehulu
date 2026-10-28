@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import {
@@ -55,6 +55,27 @@ export const LoginPage: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const topRef = useRef<HTMLDivElement>(null);
+
+  // Ensure login view ALWAYS starts at the very top (never scrolled down or offset)
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+
+    // Fallback checks for asynchronous rendering of third-party Google iframe
+    const t1 = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, 80);
+    const t2 = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, 350);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [step, searchParams]);
 
   // Fetch categories on mount for provider category dropdown
   useEffect(() => {
@@ -222,9 +243,13 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-start justify-center pt-8 sm:pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-50/70">
+    <div
+      ref={topRef}
+      tabIndex={-1}
+      className="min-h-[calc(100vh-5rem)] flex items-start justify-center pt-3 sm:pt-5 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-50/70 focus:outline-hidden"
+    >
       <div
-        className={`w-full bg-white rounded-xl border border-slate-200/90 p-6 sm:p-8 shadow-xl space-y-6 transition-all ${
+        className={`w-full bg-white rounded-xl border border-slate-200/90 p-5 sm:p-7 shadow-xl space-y-5 transition-all ${
           step === 'onboarding' && selectedRole === 'SERVICE_PROVIDER' ? 'max-w-2xl' : 'max-w-md'
         }`}
       >
@@ -234,8 +259,8 @@ export const LoginPage: React.FC = () => {
             <span
               className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
                 step === 'auth'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-blue-100 text-blue-800'
               }`}
             >
               1
@@ -247,9 +272,9 @@ export const LoginPage: React.FC = () => {
             <span
               className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
                 step === 'role_select'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-blue-600 text-white'
                   : step === 'onboarding'
-                  ? 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-blue-100 text-blue-800'
                   : 'bg-slate-100 text-slate-400'
               }`}
             >
@@ -262,7 +287,7 @@ export const LoginPage: React.FC = () => {
             <span
               className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
                 step === 'onboarding'
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-slate-100 text-slate-400'
               }`}
             >
@@ -273,8 +298,8 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="w-16 h-16 rounded-lg overflow-hidden shadow-md border-2 border-emerald-600/30 mx-auto">
+        <div className="text-center space-y-1.5">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden shadow-md border-2 border-blue-600/20 mx-auto">
             <img src="/lehulu-logo.jpg" alt="Lehulu" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -306,36 +331,54 @@ export const LoginPage: React.FC = () => {
 
         {/* Step 1: Authentication */}
         {step === 'auth' && (
-          <div className="space-y-5">
-            <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-md bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
-                  ADM
+          <div className="space-y-4">
+            {requestedRole === 'SERVICE_PROVIDER' ? (
+              <div className="p-3.5 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 shadow-xs space-y-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-md bg-blue-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+                    <Briefcase className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-black text-blue-950 uppercase tracking-wider">Service Provider Portal</h4>
+                    <p className="text-[11px] text-blue-700 font-medium">Authorized Ethiopian service providers and technicians</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Platform Administration</h4>
-                  <p className="text-[11px] text-purple-700 font-medium">Authorized operators and marketplace administrators</p>
-                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Sign in with Google to access your provider dashboard, manage bookings, and submit trade verification.
+                </p>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                Platform administrators must authenticate using their authorized Google workspace credentials below.
-              </p>
-            </div>
+            ) : (
+              <div className="p-3.5 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-md bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+                    ADM
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-black text-purple-950 uppercase tracking-wider">Platform Administration</h4>
+                    <p className="text-[11px] text-purple-700 font-medium">Authorized operators and marketplace administrators</p>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Platform administrators must authenticate using their authorized Google workspace credentials below.
+                </p>
+              </div>
+            )}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-3 text-slate-400 font-semibold">Sign in with Google Cloud ID</span>
+                <span className="bg-white px-3 text-slate-400 font-semibold text-[11px]">Sign in with Google Cloud ID</span>
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center pt-1">
+            <div className="flex flex-col items-center justify-center pt-0.5">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setError('Google Sign-In failed or was cancelled.')}
                 useOneTap={false}
+                auto_select={false}
                 shape="pill"
                 theme="outline"
                 size="large"
