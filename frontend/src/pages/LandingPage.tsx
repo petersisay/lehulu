@@ -361,13 +361,13 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="bg-slate-900 text-white py-16 scroll-mt-24 sm:scroll-mt-28">
+      <section id="how-it-works" className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white py-16 scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden border-y border-blue-900/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               {t('howItWorks.title')}
             </h2>
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-sm text-blue-200/90 mt-2">
               {t('howItWorks.subtitle')}
             </p>
           </div>

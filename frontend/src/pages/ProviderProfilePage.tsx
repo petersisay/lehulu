@@ -381,7 +381,7 @@ export const ProviderProfilePage: React.FC = () => {
           </div>
 
           {/* Trust Guarantees Box */}
-          <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xs space-y-4 border border-slate-800">
+          <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white rounded-xl p-6 shadow-md space-y-4 border border-blue-800/40">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-blue-400" />
               <span>Lehulu Trust Standard</span>

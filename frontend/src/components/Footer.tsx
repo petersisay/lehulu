@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800">
+    <footer className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-slate-300 border-t border-blue-900/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Column */}
@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
               {t('brand.subtagline')}
             </p>
             <div className="flex items-center gap-2 text-xs font-medium text-blue-300 bg-blue-950/40 p-2.5 rounded-lg border border-blue-800/40 w-fit">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
               <span>{t('trustBadges.verifiedBadge')}</span>
             </div>
           </div>

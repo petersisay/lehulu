@@ -657,10 +657,10 @@ export const AdminDashboard: React.FC = () => {
           {activeTab === 'verified-providers' && (
             <div className="space-y-6">
               {/* Header Card */}
-              <div className="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 rounded-xl p-6 sm:p-7 text-white border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+              <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 rounded-xl p-6 sm:p-7 text-white border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
-                    <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                  <div className="w-12 h-12 rounded-lg bg-blue-600/30 border border-blue-500/40 flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
                     <h2 className="text-xl font-extrabold text-white">
