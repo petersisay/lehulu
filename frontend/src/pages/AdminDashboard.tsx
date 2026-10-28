@@ -267,7 +267,7 @@ export const AdminDashboard: React.FC = () => {
         <button
           onClick={fetchAdminData}
           disabled={loading}
-          className="px-4 py-2 bg-purple-700/60 hover:bg-purple-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 border border-purple-500/40 transition-colors cursor-pointer"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 border border-blue-500/40 transition-colors cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh Data</span>
@@ -280,7 +280,7 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('overview')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'overview'
-              ? 'bg-purple-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -290,7 +290,7 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('verifications')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'verifications'
-              ? 'bg-purple-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -305,14 +305,14 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('verified-providers')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'verified-providers'
-              ? 'bg-emerald-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+          <ShieldCheck className="w-3.5 h-3.5 text-blue-200" />
           <span>Verified Providers</span>
           {(stats?.verifiedProviders || verifiedList.length > 0) && (
-            <span className="bg-emerald-400 text-slate-950 text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+            <span className="bg-blue-200 text-blue-950 text-[10px] px-1.5 py-0.2 rounded-full font-bold">
               {stats?.verifiedProviders ?? verifiedList.length}
             </span>
           )}
@@ -321,7 +321,7 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('categories')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'categories'
-              ? 'bg-purple-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -331,12 +331,12 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('leads')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'leads'
-              ? 'bg-purple-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
           <span>Provider Leads ({leads.length})</span>
-          <span className="bg-emerald-400 text-slate-900 text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+          <span className="bg-amber-100 text-amber-900 text-[10px] px-1.5 py-0.2 rounded-full font-bold border border-amber-300">
             Adama & Bishoftu
           </span>
         </button>
@@ -344,7 +344,7 @@ export const AdminDashboard: React.FC = () => {
           onClick={() => switchTab('audit')}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'audit'
-              ? 'bg-purple-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >

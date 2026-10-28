@@ -353,8 +353,8 @@ export const LoginPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-[11px]">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-lg flex items-center gap-2 text-blue-900 text-[11px]">
+              <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
               <span>We use secure HttpOnly session cookies. Real passwords are never stored.</span>
             </div>
           </div>
@@ -367,11 +367,11 @@ export const LoginPage: React.FC = () => {
               onClick={() => setSelectedRole('CUSTOMER')}
               className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
                 selectedRole === 'CUSTOMER'
-                  ? 'border-emerald-600 bg-emerald-50/60 shadow-xs'
+                  ? 'border-blue-600 bg-blue-50/60 shadow-xs'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-md mt-0.5">
+              <div className="p-2 bg-blue-100 text-blue-700 rounded-md mt-0.5">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div className="flex-1">
@@ -386,11 +386,11 @@ export const LoginPage: React.FC = () => {
               onClick={() => setSelectedRole('SERVICE_PROVIDER')}
               className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
                 selectedRole === 'SERVICE_PROVIDER'
-                  ? 'border-emerald-600 bg-emerald-50/60 shadow-xs'
+                  ? 'border-blue-600 bg-blue-50/60 shadow-xs'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-md mt-0.5">
+              <div className="p-2 bg-blue-100 text-blue-700 rounded-md mt-0.5">
                 <Briefcase className="w-5 h-5" />
               </div>
               <div className="flex-1">
@@ -407,7 +407,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={handleRoleContinue}
-              className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-md transition-all cursor-pointer"
             >
               Continue to Onboarding
             </button>
@@ -428,14 +428,14 @@ export const LoginPage: React.FC = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="e.g. Abebe Sisay"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                  <Phone className="w-3.5 h-3.5 text-blue-600" />
                   Phone Number / ስልክ ቁጥር *
                 </label>
                 <input
@@ -443,7 +443,7 @@ export const LoginPage: React.FC = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="+251 91 123 4567"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 />
               </div>
@@ -452,13 +452,13 @@ export const LoginPage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  <MapPin className="w-3.5 h-3.5 text-blue-600" />
                   Primary City / ከተማ *
                 </label>
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                 >
                   <option value="Adama">Adama (አዳማ)</option>
                   <option value="Bishoftu">Bishoftu (ቢሾፍቱ)</option>
@@ -476,7 +476,7 @@ export const LoginPage: React.FC = () => {
                     value={serviceArea}
                     onChange={(e) => setServiceArea(e.target.value)}
                     placeholder="e.g. Kebele 04, Bole, Posta Bet, Bus Station"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                     required
                   />
                 </div>
@@ -487,7 +487,7 @@ export const LoginPage: React.FC = () => {
             {selectedRole === 'SERVICE_PROVIDER' && (
               <div className="space-y-4 pt-3 border-t border-slate-200">
                 <h4 className="text-xs font-black uppercase text-slate-900 tracking-wider flex items-center gap-1.5">
-                  <Briefcase className="w-4 h-4 text-emerald-600" />
+                  <Briefcase className="w-4 h-4 text-blue-600" />
                   Professional Service & Trade Information
                 </h4>
 
@@ -501,7 +501,7 @@ export const LoginPage: React.FC = () => {
                       value={businessName}
                       onChange={(e) => setBusinessName(e.target.value)}
                       placeholder="e.g. Abebe Expert Plumbing"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                       required
                     />
                   </div>
@@ -513,7 +513,7 @@ export const LoginPage: React.FC = () => {
                     <select
                       value={selectedCategoryId}
                       onChange={(e) => setSelectedCategoryId(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       required
                     >
                       {categories.map((c) => (
@@ -534,7 +534,7 @@ export const LoginPage: React.FC = () => {
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
                     placeholder="e.g. Pipe Fitting, Drain Cleaning, Water Heater Repair"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                     required
                   />
                   <span className="text-[10px] text-slate-400 mt-0.5 block">
@@ -551,7 +551,7 @@ export const LoginPage: React.FC = () => {
                     value={serviceDescription}
                     onChange={(e) => setServiceDescription(e.target.value)}
                     placeholder="Briefly describe your experience, tools, and service quality..."
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                     required
                   />
                 </div>
@@ -566,7 +566,7 @@ export const LoginPage: React.FC = () => {
                       min={0}
                       value={experienceYears}
                       onChange={(e) => setExperienceYears(Number(e.target.value))}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
 
@@ -579,7 +579,7 @@ export const LoginPage: React.FC = () => {
                       min={100}
                       value={startingPrice}
                       onChange={(e) => setStartingPrice(Number(e.target.value))}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
@@ -588,14 +588,14 @@ export const LoginPage: React.FC = () => {
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                      <MapPin className="w-3.5 h-3.5 text-blue-600" />
                       Base Service Coordinates
                     </span>
                     <button
                       type="button"
                       onClick={handleDetectGps}
                       disabled={detectingGps}
-                      className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
+                      className="text-[11px] font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
                     >
                       {detectingGps ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
                       Use Current GPS
@@ -607,7 +607,7 @@ export const LoginPage: React.FC = () => {
                       onClick={() => setProviderCoordinates([39.2683, 8.54])}
                       className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
                         Math.abs(providerCoordinates[0] - 39.2683) < 0.01
-                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          ? 'bg-blue-600 text-white border-blue-600'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
@@ -618,7 +618,7 @@ export const LoginPage: React.FC = () => {
                       onClick={() => setProviderCoordinates([38.9785, 8.7523])}
                       className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
                         Math.abs(providerCoordinates[0] - 38.9785) < 0.01
-                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          ? 'bg-blue-600 text-white border-blue-600'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
@@ -629,7 +629,7 @@ export const LoginPage: React.FC = () => {
                       onClick={() => setProviderCoordinates([38.7578, 9.0108])}
                       className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
                         Math.abs(providerCoordinates[0] - 38.7578) < 0.01
-                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          ? 'bg-blue-600 text-white border-blue-600'
                           : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
@@ -642,14 +642,14 @@ export const LoginPage: React.FC = () => {
                 </div>
 
                 {/* Identity Verification Section */}
-                <div className="p-4 bg-emerald-50/50 border border-emerald-200/80 rounded-lg space-y-3">
+                <div className="p-4 bg-blue-50/40 border border-blue-200/80 rounded-lg space-y-3">
                   <div className="flex items-start gap-2">
-                    <Lock className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                    <Lock className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-black text-emerald-950 uppercase tracking-wider">
+                      <h4 className="text-xs font-black text-blue-950 uppercase tracking-wider">
                         Ethiopian Identity Verification (የብሔራዊ መታወቂያ ማረጋገጫ)
                       </h4>
-                      <p className="text-[11px] text-emerald-800 leading-relaxed mt-0.5">
+                      <p className="text-[11px] text-blue-800 leading-relaxed mt-0.5">
                         To maintain marketplace trust and protect Ethiopian households, all service providers undergo administrative verification.
                       </p>
                     </div>
@@ -664,7 +664,7 @@ export const LoginPage: React.FC = () => {
                       value={nationalIdNumber}
                       onChange={(e) => setNationalIdNumber(e.target.value)}
                       placeholder="e.g. FAN-7892-4102 or Kebele ID / 16-digit Fayda number"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       required
                     />
                     <span className="text-[10px] text-slate-500 mt-0.5 block">
@@ -686,8 +686,8 @@ export const LoginPage: React.FC = () => {
                     )}
 
                     {!idCardPreview ? (
-                      <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-xl bg-white hover:bg-emerald-50/40 transition-all cursor-pointer">
-                        <Upload className="w-6 h-6 text-emerald-600 mb-1" />
+                      <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-blue-300 hover:border-blue-500 rounded-lg bg-white hover:bg-blue-50/40 transition-all cursor-pointer">
+                        <Upload className="w-6 h-6 text-blue-600 mb-1" />
                         <span className="text-xs font-bold text-slate-700">Choose ID Card Photo or Scan</span>
                         <span className="text-[10px] text-slate-400">JPEG, PNG, or WebP up to 5MB</span>
                         <input
@@ -698,7 +698,7 @@ export const LoginPage: React.FC = () => {
                         />
                       </label>
                     ) : (
-                      <div className="p-3 bg-white border border-emerald-300 rounded-xl flex items-center justify-between gap-3">
+                      <div className="p-3 bg-white border border-blue-300 rounded-lg flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <img
                             src={idCardPreview}
@@ -706,8 +706,8 @@ export const LoginPage: React.FC = () => {
                             className="w-16 h-12 object-cover rounded-lg border border-slate-200"
                           />
                           <div>
-                            <span className="text-xs font-bold text-emerald-900 block flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-xs font-bold text-blue-900 block flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
                               ID Image Attached
                             </span>
                             <span className="text-[10px] text-slate-500">Preview ready for submission</span>
@@ -715,7 +715,7 @@ export const LoginPage: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <label className="px-2.5 py-1 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg cursor-pointer">
+                          <label className="px-2.5 py-1 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg cursor-pointer">
                             Replace
                             <input
                               type="file"
@@ -738,9 +738,9 @@ export const LoginPage: React.FC = () => {
                   </div>
 
                   {/* Privacy Notice Box */}
-                  <div className="p-3 bg-white/80 border border-emerald-200 rounded-xl text-[11px] text-slate-600 space-y-1">
-                    <p className="font-bold text-emerald-950 flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                  <div className="p-3 bg-white/80 border border-blue-200 rounded-lg text-[11px] text-slate-600 space-y-1">
+                    <p className="font-bold text-blue-950 flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
                       Privacy & Data Protection Notice:
                     </p>
                     <p className="leading-relaxed">
@@ -754,7 +754,7 @@ export const LoginPage: React.FC = () => {
                       type="checkbox"
                       checked={consentGiven}
                       onChange={(e) => setConsentGiven(e.target.checked)}
-                      className="mt-0.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                      className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                       required
                     />
                     <span className="text-[11px] text-slate-700 font-medium leading-snug">
@@ -768,7 +768,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 mt-4"
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 mt-4"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
               <span>

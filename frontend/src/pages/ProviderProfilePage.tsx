@@ -64,7 +64,7 @@ export const ProviderProfilePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-400">
-        <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mb-2" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
         <p className="text-xs font-semibold">Loading specialist profile...</p>
       </div>
     );
@@ -80,7 +80,7 @@ export const ProviderProfilePage: React.FC = () => {
         <p className="text-xs text-slate-500">{error || 'This service profile is unavailable or inactive.'}</p>
         <Link
           to="/discover"
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-800"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Service Directory</span>
@@ -99,7 +99,7 @@ export const ProviderProfilePage: React.FC = () => {
       <div>
         <Link
           to="/discover"
-          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-emerald-700 transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Specialists</span>
@@ -114,10 +114,10 @@ export const ProviderProfilePage: React.FC = () => {
               <img
                 src={user.avatarUrl}
                 alt={displayName}
-                className="w-24 h-24 rounded-lg object-cover border-2 border-emerald-500/20 shadow-md"
+                className="w-24 h-24 rounded-lg object-cover border-2 border-slate-200 shadow-md"
               />
             ) : (
-              <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-extrabold text-3xl shadow-md">
+              <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-blue-700 to-indigo-900 text-white flex items-center justify-center font-extrabold text-3xl shadow-md">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -159,12 +159,12 @@ export const ProviderProfilePage: React.FC = () => {
 
             <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
               <span className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                <MapPin className="w-3.5 h-3.5 text-blue-600" />
                 {provider.serviceCities?.join(', ') || provider.publicAddress || 'Adama, Ethiopia'}
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                <Clock className="w-3.5 h-3.5 text-blue-600" />
                 {provider.experienceYears} Years Experience
               </span>
             </div>
@@ -185,8 +185,8 @@ export const ProviderProfilePage: React.FC = () => {
                 )}
               </div>
               <span className="text-slate-300">•</span>
-              <div className="flex items-center gap-1 font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-1 font-semibold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-lg">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
                 <span>{provider.completedBookingsCount} Verified Completed Jobs</span>
               </div>
             </div>
@@ -208,7 +208,7 @@ export const ProviderProfilePage: React.FC = () => {
             <div className="text-2xl font-black text-slate-900 mt-0.5">
               {provider.pricing?.startingPrice ? (
                 <>
-                  {provider.pricing.startingPrice.toLocaleString()} <span className="text-sm font-bold text-emerald-700">ETB</span>
+                  {provider.pricing.startingPrice.toLocaleString()} <span className="text-sm font-bold text-blue-700">ETB</span>
                 </>
               ) : (
                 'Custom Quote'
@@ -228,7 +228,7 @@ export const ProviderProfilePage: React.FC = () => {
 
           <button
             onClick={() => setIsBookingOpen(true)}
-            className="w-full px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
           >
             <Calendar className="w-4 h-4" />
             <span>Request Service Booking</span>
@@ -310,7 +310,7 @@ export const ProviderProfilePage: React.FC = () => {
                     <div key={rev._id} className="pt-4 first:pt-0 space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                          <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
                             {(reviewer?.displayName || 'C').charAt(0).toUpperCase()}
                           </div>
                           <span className="text-xs font-bold text-slate-800">
@@ -338,7 +338,7 @@ export const ProviderProfilePage: React.FC = () => {
                       </span>
 
                       {rev.providerResponse && (
-                        <div className="mt-2 ml-4 p-3 bg-slate-50 border-l-2 border-emerald-600 rounded-r-xl text-xs space-y-1">
+                        <div className="mt-2 ml-4 p-3 bg-slate-50 border-l-2 border-blue-600 rounded-r-xl text-xs space-y-1">
                           <span className="font-bold text-slate-700 block text-[11px]">
                             Response from Specialist:
                           </span>
@@ -360,7 +360,7 @@ export const ProviderProfilePage: React.FC = () => {
           {/* Working Hours */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-emerald-600" />
+              <Clock className="w-4 h-4 text-blue-600" />
               <span>Working Hours</span>
             </h3>
 
@@ -381,26 +381,26 @@ export const ProviderProfilePage: React.FC = () => {
           </div>
 
           {/* Trust Guarantees Box */}
-          <div className="bg-emerald-950 text-white rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xs space-y-4 border border-slate-800">
             <h3 className="text-sm font-bold flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <ShieldCheck className="w-5 h-5 text-blue-400" />
               <span>Lehulu Trust Standard</span>
             </h3>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span>Verified Ethiopian National Identity & Trade Registry.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span>Private address & phone protection until job confirmation.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span>Detailed itemized quotations in ETB prior to work start.</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span>Dual completion confirmation before marking jobs done.</span>
               </li>
             </ul>

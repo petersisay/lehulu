@@ -207,7 +207,7 @@ export const ProviderDashboard: React.FC = () => {
       <div className="bg-white rounded-xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
               Provider Portal
             </span>
             {verificationStatus === 'VERIFIED' ? (
@@ -340,7 +340,7 @@ export const ProviderDashboard: React.FC = () => {
                 value={nationalIdNumber}
                 onChange={(e) => setNationalIdNumber(e.target.value)}
                 placeholder="e.g. ETH-918234-AD"
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
             </div>
@@ -354,7 +354,7 @@ export const ProviderDashboard: React.FC = () => {
                 value={idCardFrontUrl}
                 onChange={(e) => setIdCardFrontUrl(e.target.value)}
                 placeholder="https://... secure photo URL (optional)"
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
 
@@ -367,7 +367,7 @@ export const ProviderDashboard: React.FC = () => {
                 value={tradeLicenseUrl}
                 onChange={(e) => setTradeLicenseUrl(e.target.value)}
                 placeholder="https://... trade document URL"
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
             </div>
           </div>
@@ -387,7 +387,7 @@ export const ProviderDashboard: React.FC = () => {
             <button
               type="submit"
               disabled={verifying}
-              className="px-5 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-800 disabled:opacity-50"
+              className="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-50"
             >
               {verifying ? 'Submitting...' : 'Submit for Administrator Review'}
             </button>
@@ -414,7 +414,7 @@ export const ProviderDashboard: React.FC = () => {
 
             <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
               <span className="text-xs text-slate-500 font-medium block">Completed Jobs</span>
-              <span className="text-2xl font-black text-emerald-700 mt-1 block">
+              <span className="text-2xl font-black text-blue-700 mt-1 block">
                 {completedJobsCount}
               </span>
             </div>
@@ -443,13 +443,13 @@ export const ProviderDashboard: React.FC = () => {
       {/* Bookings Queue */}
       <div className="space-y-4">
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-emerald-600" />
+          <Calendar className="w-5 h-5 text-blue-600" />
           <span>Active Service Orders & Inquiries</span>
         </h2>
 
         {loading ? (
           <div className="flex items-center justify-center py-16 text-slate-400">
-            <Loader2 className="w-6 h-6 animate-spin text-emerald-600 mr-2" />
+            <Loader2 className="w-6 h-6 animate-spin text-blue-600 mr-2" />
             <span className="text-xs font-semibold">Loading job inquiries...</span>
           </div>
         ) : bookings.length === 0 ? (
@@ -494,7 +494,7 @@ export const ProviderDashboard: React.FC = () => {
                     </div>
 
                     {booking.agreedPrice && (
-                      <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded w-fit">
+                      <div className="text-xs font-semibold text-blue-800 bg-blue-50 px-2 py-0.5 rounded w-fit">
                         Agreed Price: {booking.agreedPrice.amount.toLocaleString()} ETB
                       </div>
                     )}
@@ -505,7 +505,7 @@ export const ProviderDashboard: React.FC = () => {
                     {['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
                       <button
                         onClick={() => setQuoteBooking(booking)}
-                        className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-2xs transition-all cursor-pointer"
+                        className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-2xs transition-all cursor-pointer"
                       >
                         Create Quotation
                       </button>
@@ -524,7 +524,7 @@ export const ProviderDashboard: React.FC = () => {
                       <>
                         <button
                           onClick={() => handleRequestCompletion(booking._id)}
-                          className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                          className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer"
                         >
                           Request Completion
                         </button>
@@ -540,7 +540,7 @@ export const ProviderDashboard: React.FC = () => {
                     {booking.status === 'COMPLETION_PENDING' && (
                       <button
                         onClick={() => handleConfirmCompletion(booking._id)}
-                        className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold cursor-pointer"
+                        className="px-3.5 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer"
                       >
                         Finalize Complete
                       </button>
@@ -618,7 +618,7 @@ export const ProviderDashboard: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleAddQuoteItem}
-                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 pt-1"
+                  className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 pt-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Another Item</span>
@@ -645,7 +645,7 @@ export const ProviderDashboard: React.FC = () => {
                     id="insp"
                     checked={quoteInspection}
                     onChange={(e) => setQuoteInspection(e.target.checked)}
-                    className="w-4 h-4 text-emerald-600 rounded-sm"
+                    className="w-4 h-4 text-blue-600 rounded-sm"
                   />
                   <label htmlFor="insp" className="text-xs font-semibold text-slate-700 cursor-pointer">
                     Inspection Fee Included
@@ -669,7 +669,7 @@ export const ProviderDashboard: React.FC = () => {
               <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                 <div className="text-xs">
                   <span className="text-slate-500">Total Quotation:</span>{' '}
-                  <span className="font-mono font-bold text-emerald-700 text-base">
+                  <span className="font-mono font-bold text-blue-700 text-base">
                     {totalQuoteAmount.toLocaleString()} ETB
                   </span>
                 </div>
@@ -685,7 +685,7 @@ export const ProviderDashboard: React.FC = () => {
                   <button
                     type="submit"
                     disabled={submittingQuote}
-                    className="px-5 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-800 disabled:opacity-50"
+                    className="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-50"
                   >
                     {submittingQuote ? 'Sending...' : 'Send Quotation'}
                   </button>

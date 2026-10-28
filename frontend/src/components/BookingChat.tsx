@@ -133,17 +133,17 @@ export const BookingChat: React.FC<BookingChatProps> = ({
               className="w-9 h-9 rounded-full object-cover border border-slate-200"
             />
           ) : (
-            <div className="w-9 h-9 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
               {(otherPartyName?.charAt(0) || 'P').toUpperCase()}
             </div>
           )}
           <div>
             <h4 className="text-xs font-bold text-slate-900">{otherPartyName || 'Specialist'}</h4>
-            <span className="text-[10px] text-emerald-600 font-medium">Direct Booking Channel</span>
+            <span className="text-[10px] text-blue-600 font-medium">Direct Booking Channel</span>
           </div>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-slate-500">
-          <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+          <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
           <span>Encrypted</span>
         </div>
       </div>
@@ -152,7 +152,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
       <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/50">
         {loading ? (
           <div className="flex items-center justify-center h-full text-slate-400 text-xs">
-            <Loader2 className="w-5 h-5 animate-spin mr-2 text-emerald-600" />
+            <Loader2 className="w-5 h-5 animate-spin mr-2 text-blue-600" />
             <span>Loading conversation...</span>
           </div>
         ) : !Array.isArray(messages) || messages.length === 0 ? (
@@ -177,7 +177,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
                 <div
                   className={`max-w-[78%] px-4 py-2.5 rounded-xl text-xs ${
                     isMe
-                      ? 'bg-emerald-700 text-white rounded-br-xs'
+                      ? 'bg-blue-600 text-white rounded-br-xs'
                       : 'bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs'
                   }`}
                 >
@@ -209,13 +209,13 @@ export const BookingChat: React.FC<BookingChatProps> = ({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Type a message to discuss your service..."
-          className="flex-1 px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+          className="flex-1 px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
           disabled={sending}
         />
         <button
           type="submit"
           disabled={!content.trim() || sending}
-          className="p-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg disabled:opacity-40 transition-colors cursor-pointer"
+          className="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-40 transition-colors cursor-pointer"
         >
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         </button>

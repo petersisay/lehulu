@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
         <div className="flex justify-between h-20 items-center">
           {/* Logo & Identity */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md border-2 border-emerald-600/20 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md border-2 border-blue-600/20 group-hover:scale-105 transition-transform duration-200">
               <img
                 src="/lehulu-logo.jpg"
                 alt="Lehulu ለሁሉ"
@@ -50,10 +50,10 @@ export const Navbar: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-2xl tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors">
+                <span className="font-extrabold text-2xl tracking-tight text-slate-900 group-hover:text-blue-700 transition-colors">
                   {t('brand.name')}
                 </span>
-                <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-sm font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                   {t('brand.amharicName')}
                 </span>
               </div>
@@ -90,13 +90,13 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/provider/dashboard"
-                  className="text-sm font-semibold text-emerald-800 hover:text-emerald-950 transition-colors"
+                  className="text-sm font-semibold text-blue-800 hover:text-blue-950 transition-colors"
                 >
                   {t('nav.dashboard')}
                 </Link>
                 <Link
                   to="/provider/dashboard"
-                  className="text-sm font-medium text-slate-700 hover:text-emerald-800 transition-colors"
+                  className="text-sm font-medium text-slate-700 hover:text-blue-800 transition-colors"
                 >
                   My Requests & Bookings
                 </Link>
@@ -115,19 +115,19 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/discover"
-                  className="text-sm font-semibold text-slate-700 hover:text-emerald-700 transition-colors"
+                  className="text-sm font-semibold text-slate-700 hover:text-blue-700 transition-colors"
                 >
                   {t('nav.findServices')}
                 </Link>
                 <a
                   href="/#categories"
-                  className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
+                  className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors"
                 >
                   {t('nav.categories')}
                 </a>
                 <a
                   href="/#how-it-works"
-                  className="text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
+                  className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors"
                 >
                   {t('nav.howItWorks')}
                 </a>
@@ -141,7 +141,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 transition-all cursor-pointer"
               title="Switch Language / ቋንቋ ይቀይሩ"
             >
-              <Globe className="w-4 h-4 text-emerald-600" />
+              <Globe className="w-4 h-4 text-blue-600" />
               <span>{language === 'en' ? 'አማርኛ (AM)' : 'English (EN)'}</span>
             </button>
 
@@ -156,10 +156,10 @@ export const Navbar: React.FC = () => {
                     <img
                       src={user.avatarUrl}
                       alt={user.displayName}
-                      className="w-8 h-8 rounded-full object-cover border border-emerald-500"
+                      className="w-8 h-8 rounded-full object-cover border border-blue-500"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-sm">
                       {user.displayName.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -167,7 +167,7 @@ export const Navbar: React.FC = () => {
                     <span className="text-xs font-bold text-slate-900 leading-tight">
                       {user.displayName}
                     </span>
-                    <span className="text-[10px] text-emerald-600 font-semibold uppercase">
+                    <span className="text-[10px] text-blue-600 font-semibold uppercase">
                       {user.role === 'ADMIN'
                         ? 'Admin'
                         : user.role === 'SERVICE_PROVIDER'
@@ -193,9 +193,9 @@ export const Navbar: React.FC = () => {
                       <Link
                         to="/customer/dashboard"
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700"
                       >
-                        <Calendar className="w-4 h-4 text-emerald-600" />
+                        <Calendar className="w-4 h-4 text-blue-600" />
                         <span>{t('nav.bookings')}</span>
                       </Link>
                     )}
@@ -204,9 +204,9 @@ export const Navbar: React.FC = () => {
                       <Link
                         to="/provider/dashboard"
                         onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700"
                       >
-                        <Briefcase className="w-4 h-4 text-emerald-600" />
+                        <Briefcase className="w-4 h-4 text-blue-600" />
                         <span>{t('nav.dashboard')}</span>
                       </Link>
                     )}
@@ -249,13 +249,13 @@ export const Navbar: React.FC = () => {
                   <>
                     <Link
                       to="/login?role=SERVICE_PROVIDER"
-                      className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors"
+                      className="text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3.5 py-2 rounded-lg transition-colors"
                     >
                       {t('nav.becomeProvider')}
                     </Link>
                     <Link
                       to="/login"
-                      className="text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm px-4 py-2 rounded-lg transition-all"
+                      className="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm px-4 py-2 rounded-lg transition-all"
                     >
                       {t('nav.signIn')}
                     </Link>
@@ -277,7 +277,7 @@ export const Navbar: React.FC = () => {
             <button
               onClick={toggleLanguage}
               type="button"
-              className="p-2 text-xs font-bold text-emerald-700 bg-emerald-50 rounded-lg border border-emerald-200"
+              className="p-2 text-xs font-bold text-blue-700 bg-blue-50 rounded-lg border border-blue-200"
             >
               {language === 'en' ? 'አማ' : 'EN'}
             </button>
@@ -323,7 +323,7 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/provider/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-bold text-emerald-800"
+                className="block py-2 text-base font-bold text-blue-800"
               >
                 {t('nav.dashboard')}
               </Link>
@@ -351,7 +351,7 @@ export const Navbar: React.FC = () => {
               <Link
                 to="/discover"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 text-base font-semibold text-slate-800 hover:text-emerald-700"
+                className="block py-2 text-base font-semibold text-slate-800 hover:text-blue-700"
               >
                 {t('nav.findServices')}
               </Link>
@@ -375,7 +375,7 @@ export const Navbar: React.FC = () => {
           {isAuthenticated && user ? (
             <div className="pt-3 border-t border-slate-100 space-y-2">
               <div className="flex items-center gap-3 py-2">
-                <div className="w-10 h-10 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold">
                   {user.displayName.charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -388,7 +388,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   to="/customer/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-sm font-semibold text-emerald-700"
+                  className="block py-2 text-sm font-semibold text-blue-700"
                 >
                   {t('nav.bookings')}
                 </Link>
@@ -416,14 +416,14 @@ export const Navbar: React.FC = () => {
                   <Link
                     to="/login?role=SERVICE_PROVIDER"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-center py-2.5 rounded-lg border border-emerald-300 text-emerald-700 font-semibold bg-emerald-50 text-sm"
+                    className="block text-center py-2.5 rounded-lg border border-blue-300 text-blue-700 font-semibold bg-blue-50 text-sm"
                   >
                     {t('nav.becomeProvider')}
                   </Link>
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-center py-2.5 rounded-lg bg-emerald-700 text-white font-bold text-sm shadow-sm"
+                    className="block text-center py-2.5 rounded-lg bg-blue-600 text-white font-bold text-sm shadow-sm"
                   >
                     {t('nav.signIn')}
                   </Link>

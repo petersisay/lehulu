@@ -11,7 +11,7 @@ export const TermsPage: React.FC = () => {
       <div>
         <Link
           to="/"
-          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-emerald-700"
+          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Home</span>
@@ -20,7 +20,7 @@ export const TermsPage: React.FC = () => {
 
       <div className="bg-white rounded-xl border border-slate-200 p-8 sm:p-12 shadow-xs space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
             <Shield className="w-6 h-6" />
           </div>
           <div>

@@ -25,13 +25,13 @@ import { ServiceCategory, ProviderProfile } from '../types';
 import { ProviderCard } from '../components/ProviderCard';
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  'home-maintenance': <Wrench className="w-6 h-6 text-emerald-600" />,
-  'home-repairs': <Wrench className="w-6 h-6 text-emerald-600" />,
-  automotive: <Car className="w-6 h-6 text-emerald-600" />,
-  cleaning: <Home className="w-6 h-6 text-emerald-600" />,
-  technology: <Laptop className="w-6 h-6 text-emerald-600" />,
-  'personal-business': <Briefcase className="w-6 h-6 text-emerald-600" />,
-  events: <Briefcase className="w-6 h-6 text-emerald-600" />,
+  'home-maintenance': <Wrench className="w-6 h-6 text-blue-600" />,
+  'home-repairs': <Wrench className="w-6 h-6 text-blue-600" />,
+  automotive: <Car className="w-6 h-6 text-blue-600" />,
+  cleaning: <Home className="w-6 h-6 text-blue-600" />,
+  technology: <Laptop className="w-6 h-6 text-blue-600" />,
+  'personal-business': <Briefcase className="w-6 h-6 text-blue-600" />,
+  events: <Briefcase className="w-6 h-6 text-blue-600" />,
 };
 
 export const LandingPage: React.FC = () => {
@@ -92,11 +92,11 @@ export const LandingPage: React.FC = () => {
             loading="eager"
           />
           {/* Subtle Ambient Vignettes & Contrast Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/20 via-transparent to-emerald-950/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/20 via-transparent to-blue-950/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white" />
         </div>
 
-        {/* Subtle Animated Emerald & Gold Connection Arcs */}
+        {/* Subtle Animated Blue & Gold Connection Arcs */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-70"
           viewBox="0 0 1440 700"
@@ -106,7 +106,7 @@ export const LandingPage: React.FC = () => {
         >
           <path
             d="M-50 480 C 300 420, 500 560, 850 460 C 1100 390, 1300 480, 1500 420"
-            stroke="url(#emeraldTrail)"
+            stroke="url(#blueTrail)"
             strokeWidth="3.5"
             strokeLinecap="round"
             className="animate-flow-dash"
@@ -120,11 +120,11 @@ export const LandingPage: React.FC = () => {
             className="animate-flow-dash"
           />
           <defs>
-            <linearGradient id="emeraldTrail" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.1" />
-              <stop offset="30%" stopColor="#059669" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="#34d399" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#059669" stopOpacity="0.2" />
+            <linearGradient id="blueTrail" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#2563eb" stopOpacity="0.1" />
+              <stop offset="30%" stopColor="#1d4ed8" stopOpacity="0.9" />
+              <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.2" />
             </linearGradient>
             <linearGradient id="goldTrail" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
@@ -135,33 +135,33 @@ export const LandingPage: React.FC = () => {
         </svg>
 
         {/* Floating Service Badges (Desktop/Tablet) */}
-        <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
-          <div className="w-8 h-8 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Zap className="w-4 h-4 text-emerald-100" />
+        <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Zap className="w-4 h-4 text-blue-100" />
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Electrical & Wiring</p>
-            <p className="text-[9px] text-emerald-700 font-semibold">Verified Specialists</p>
+            <p className="text-[9px] text-blue-700 font-semibold">Verified Specialists</p>
           </div>
         </div>
 
-        <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-reverse">
-          <div className="w-8 h-8 rounded-md bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Car className="w-4 h-4 text-emerald-100" />
+        <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-reverse">
+          <div className="w-8 h-8 rounded-md bg-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Car className="w-4 h-4 text-blue-100" />
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Auto Diagnostics</p>
-            <p className="text-[9px] text-emerald-700 font-semibold">On-Demand Mechanics</p>
+            <p className="text-[9px] text-blue-700 font-semibold">On-Demand Mechanics</p>
           </div>
         </div>
 
-        <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
-          <div className="w-8 h-8 rounded-md bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Home className="w-4 h-4 text-teal-100" />
+        <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <Home className="w-4 h-4 text-indigo-100" />
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Home & Office Cleaning</p>
-            <p className="text-[9px] text-teal-700 font-semibold">Vetted Housekeepers</p>
+            <p className="text-[9px] text-indigo-700 font-semibold">Vetted Housekeepers</p>
           </div>
         </div>
 
@@ -179,8 +179,8 @@ export const LandingPage: React.FC = () => {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white/90 backdrop-blur-md border border-emerald-400/60 text-emerald-900 text-xs font-black shadow-sm">
-              <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse-glow" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white/90 backdrop-blur-md border border-blue-400/60 text-blue-950 text-xs font-black shadow-sm">
+              <Sparkles className="w-4 h-4 text-blue-600 animate-pulse-glow" />
               <span>{t('hero.badge')}</span>
             </div>
 
@@ -211,7 +211,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2 px-3 w-full sm:w-auto py-2 sm:py-0">
-                <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
@@ -226,7 +226,7 @@ export const LandingPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all shrink-0 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all shrink-0 cursor-pointer"
               >
                 {t('hero.searchButton')}
               </button>
@@ -246,7 +246,7 @@ export const LandingPage: React.FC = () => {
                     if (selectedCity) params.set('city', selectedCity);
                     navigate(`/discover?${params.toString()}`);
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white text-slate-700 hover:text-emerald-700 font-medium border border-slate-200/60 shadow-2xs transition-all cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white text-slate-700 hover:text-blue-700 font-medium border border-slate-200/60 shadow-2xs transition-all cursor-pointer"
                 >
                   {term}
                 </button>
@@ -259,8 +259,8 @@ export const LandingPage: React.FC = () => {
       {/* Trust & Safety Highlights */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -271,8 +271,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-amber-100/70 text-amber-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-4">
               <Award className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -283,8 +283,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-blue-100/70 text-blue-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -295,8 +295,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-lg bg-purple-100/70 text-purple-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-4">
               <Star className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -322,7 +322,7 @@ export const LandingPage: React.FC = () => {
           </div>
           <Link
             to="/discover"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800"
           >
             <span>{t('categories.viewAll')}</span>
             <ChevronRight className="w-4 h-4" />
@@ -337,20 +337,20 @@ export const LandingPage: React.FC = () => {
               <Link
                 key={cat._id}
                 to={`/discover?category=${cat.slug}`}
-                className="group p-5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all flex flex-col justify-between"
+                className="group p-5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-blue-400 transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                    {CATEGORY_ICONS[cat.slug] || <Wrench className="w-6 h-6 text-emerald-600" />}
+                  <div className="w-12 h-12 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                    {CATEGORY_ICONS[cat.slug] || <Wrench className="w-6 h-6 text-blue-600" />}
                   </div>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                     {name}
                   </h3>
                   <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
                     {desc}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-emerald-700 font-semibold">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-700 font-semibold">
                   <span>Browse Trades</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -374,7 +374,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
+              <div className="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 1
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step1Title')}</h3>
@@ -384,7 +384,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
+              <div className="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 2
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step2Title')}</h3>
@@ -394,7 +394,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
+              <div className="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 3
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step3Title')}</h3>
@@ -404,7 +404,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
+              <div className="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 4
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step4Title')}</h3>
@@ -430,7 +430,7 @@ export const LandingPage: React.FC = () => {
             </div>
             <Link
               to="/discover"
-              className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1"
+              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1"
             >
               <span>Explore All</span>
               <ChevronRight className="w-4 h-4" />
@@ -447,9 +447,9 @@ export const LandingPage: React.FC = () => {
 
       {/* Become a Provider CTA Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-xl bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-950 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="rounded-xl bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-950 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-xl space-y-4">
-            <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider bg-emerald-900/50 px-3 py-1 rounded-md border border-emerald-600/40">
+            <span className="text-xs font-bold text-blue-200 uppercase tracking-wider bg-blue-950/60 px-3 py-1 rounded-md border border-blue-500/40">
               For Professional Trades & Technicians
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
@@ -462,7 +462,7 @@ export const LandingPage: React.FC = () => {
 
           <Link
             to="/login?role=SERVICE_PROVIDER"
-            className="px-8 py-3.5 bg-white text-emerald-900 hover:bg-emerald-50 text-sm font-extrabold rounded-lg shadow-lg transition-transform hover:scale-105 shrink-0"
+            className="px-8 py-3.5 bg-white text-blue-950 hover:bg-blue-50 text-sm font-extrabold rounded-lg shadow-lg transition-transform hover:scale-105 shrink-0"
           >
             {t('nav.becomeProvider')}
           </Link>

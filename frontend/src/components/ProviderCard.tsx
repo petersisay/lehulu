@@ -29,7 +29,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
                 className="w-16 h-16 rounded-lg object-cover border-2 border-slate-100 shadow-xs"
               />
             ) : (
-              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-bold text-xl shadow-xs">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-700 to-indigo-900 text-white flex items-center justify-center font-bold text-xl shadow-xs">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -45,7 +45,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors truncate">
+              <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">
                 {displayName}
               </h3>
               {provider.isVerified ? (
@@ -152,7 +152,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
 
         <Link
           to={`/providers/${provider._id}`}
-          className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-xs hover:shadow-sm transition-all"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-xs hover:shadow-sm transition-all"
         >
           {t('provider.viewProfile')}
         </Link>

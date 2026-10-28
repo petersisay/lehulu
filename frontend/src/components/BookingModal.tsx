@@ -157,8 +157,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           )}
 
           {/* Privacy Notice */}
-          <div className="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-lg flex items-center gap-2.5 text-emerald-800 text-xs">
-            <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600" />
+          <div className="p-3 bg-blue-50/70 border border-blue-200/60 rounded-lg flex items-center gap-2.5 text-blue-900 text-xs">
+            <ShieldCheck className="w-4 h-4 shrink-0 text-blue-600" />
             <span>
               Your exact address and contact phone are kept strictly private and shared only with this verified professional once you confirm.
             </span>
@@ -174,7 +174,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               value={problemDescription}
               onChange={(e) => setProblemDescription(e.target.value)}
               placeholder="e.g. Living room socket sparking, kitchen pipe leaking under sink, car brakes squeaking..."
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
               required
             />
           </div>
@@ -183,7 +183,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+                <Calendar className="w-3.5 h-3.5 text-blue-600" />
                 {t('booking.preferredDate')} *
               </label>
               <input
@@ -191,20 +191,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 min={minDate}
                 value={requestedDate}
                 onChange={(e) => setRequestedDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 required
               />
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                <Clock className="w-3.5 h-3.5 text-blue-600" />
                 {t('booking.timeSlot')} *
               </label>
               <select
                 value={requestedTimeSlot}
                 onChange={(e) => setRequestedTimeSlot(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
               >
                 <option value="morning">Morning (8:00 AM – 12:00 PM)</option>
                 <option value="afternoon">Afternoon (12:00 PM – 4:00 PM)</option>
@@ -217,7 +217,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {/* Service Location */}
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-t border-slate-100 pt-3">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+              <MapPin className="w-3.5 h-3.5 text-blue-600" />
               {t('booking.serviceLocation')}
             </h3>
 
@@ -229,7 +229,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                 >
                   <option value="Adama">{t('locations.adama')}</option>
                   <option value="Bishoftu">{t('locations.bishoftu')}</option>
@@ -246,7 +246,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={subcity}
                   onChange={(e) => setSubcity(e.target.value)}
                   placeholder="e.g. Boku, Bole"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
 
@@ -259,7 +259,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={kebele}
                   onChange={(e) => setKebele(e.target.value)}
                   placeholder="e.g. Kebele 04"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
             </div>
@@ -274,14 +274,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={streetAddress}
                   onChange={(e) => setStreetAddress(e.target.value)}
                   placeholder="e.g. Near Posta Bet, House #412"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1 flex items-center gap-1">
-                  <Phone className="w-3 h-3 text-emerald-600" />
+                  <Phone className="w-3 h-3 text-blue-600" />
                   Contact Phone *
                 </label>
                 <input
@@ -289,7 +289,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="e.g. +251 91 123 4567"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
                   required
                 />
               </div>
@@ -306,7 +306,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               value={referenceImageUrl}
               onChange={(e) => setReferenceImageUrl(e.target.value)}
               placeholder="https://... photo of damaged item or room"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -323,7 +323,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 rounded-lg shadow-xs transition-all cursor-pointer"
+              className="px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-lg shadow-xs transition-all cursor-pointer"
             >
               {loading ? 'Submitting Request...' : t('booking.submitRequest')}
             </button>

@@ -99,23 +99,23 @@ export const CustomerDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 rounded-xl p-6 sm:p-8 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-300">
             Customer Dashboard
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
             Welcome back, {user?.displayName}
           </h1>
           <p className="text-xs text-slate-300 mt-1 flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+            <MapPin className="w-3.5 h-3.5 text-blue-400" />
             <span>Serving your home in {user?.city || 'Adama, Ethiopia'}</span>
           </p>
         </div>
 
         <Link
           to="/discover"
-          className="px-5 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 text-xs font-bold rounded-lg shadow-md transition-all shrink-0"
+          className="px-5 py-2.5 bg-white text-blue-950 hover:bg-blue-50 text-xs font-bold rounded-lg shadow-md transition-all shrink-0"
         >
           Book Another Service
         </Link>
@@ -127,7 +127,7 @@ export const CustomerDashboard: React.FC = () => {
           onClick={() => setActiveTab('active')}
           className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === 'active'
-              ? 'bg-emerald-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -135,9 +135,9 @@ export const CustomerDashboard: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('completed')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === 'completed'
-              ? 'bg-emerald-700 text-white shadow-xs'
+              ? 'bg-blue-600 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -154,7 +154,7 @@ export const CustomerDashboard: React.FC = () => {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
           <p className="text-xs font-semibold">Loading your bookings...</p>
         </div>
       ) : (activeTab === 'active' ? activeBookings : completedBookings).length === 0 ? (
@@ -173,7 +173,7 @@ export const CustomerDashboard: React.FC = () => {
           {activeTab === 'active' && (
             <Link
               to="/discover"
-              className="inline-block px-5 py-2.5 bg-emerald-700 text-white rounded-lg text-xs font-bold hover:bg-emerald-800"
+              className="inline-block px-5 py-2.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700"
             >
               Explore Services
             </Link>
@@ -189,7 +189,7 @@ export const CustomerDashboard: React.FC = () => {
             return (
               <div
                 key={booking._id}
-                className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-emerald-300 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-blue-300 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -210,7 +210,7 @@ export const CustomerDashboard: React.FC = () => {
 
                   <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
                     <span className="flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
                       {provName}
                     </span>
                     <span>•</span>
@@ -226,7 +226,7 @@ export const CustomerDashboard: React.FC = () => {
                   </div>
 
                   {booking.agreedPrice && (
-                    <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg w-fit">
+                    <div className="text-xs font-semibold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-lg w-fit">
                       Agreed Price: {booking.agreedPrice.amount.toLocaleString()} ETB
                     </div>
                   )}
@@ -237,7 +237,7 @@ export const CustomerDashboard: React.FC = () => {
                   {['COMPLETION_PENDING', 'IN_PROGRESS'].includes(booking.status) && (
                     <button
                       onClick={() => handleConfirmCompletion(booking._id, provName)}
-                      className="px-3.5 py-2 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                      className="px-3.5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Confirm Complete</span>
@@ -247,7 +247,7 @@ export const CustomerDashboard: React.FC = () => {
                   {booking.status === 'COMPLETED' && (
                     <button
                       onClick={() => setReviewBooking({ id: booking._id, providerName: provName })}
-                      className="px-3.5 py-2 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-3.5 py-2 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
                       <span>Leave Review</span>
@@ -256,7 +256,7 @@ export const CustomerDashboard: React.FC = () => {
 
                   <Link
                     to={`/bookings/${booking._id}`}
-                    className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-2xs transition-all"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-2xs transition-all"
                   >
                     <span>View Details & Chat</span>
                     <ChevronRight className="w-4 h-4" />

@@ -161,17 +161,17 @@ export const DiscoveryPage: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by trade (electrician, plumber, mechanic...) or pro name..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
           <div className="flex items-center gap-2">
             <div className="relative">
-              <MapPin className="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2" />
+              <MapPin className="w-4 h-4 text-blue-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="pl-9 pr-8 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white font-medium text-slate-700"
+                className="pl-9 pr-8 py-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white font-medium text-slate-700"
               >
                 <option value="">{t('hero.allCities')}</option>
                 <option value="Adama">{t('locations.adama')}</option>
@@ -184,17 +184,17 @@ export const DiscoveryPage: React.FC = () => {
               type="button"
               onClick={handleGetLocation}
               disabled={locationLoading}
-              className={`p-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 userLocation
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
                   : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'
               }`}
               title="Filter by current geolocation"
             >
               {locationLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
               ) : (
-                <Navigation className="w-4 h-4 text-emerald-600" />
+                <Navigation className="w-4 h-4 text-blue-600" />
               )}
               <span className="hidden md:inline">
                 {userLocation ? 'Location Active' : 'Near Me'}
@@ -203,7 +203,7 @@ export const DiscoveryPage: React.FC = () => {
 
             <button
               type="submit"
-              className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer"
+              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all cursor-pointer"
             >
               Search
             </button>
@@ -218,7 +218,7 @@ export const DiscoveryPage: React.FC = () => {
               onClick={() => setSelectedCategory('')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 selectedCategory === ''
-                  ? 'bg-emerald-700 text-white shadow-2xs'
+                  ? 'bg-blue-600 text-white shadow-2xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
@@ -234,7 +234,7 @@ export const DiscoveryPage: React.FC = () => {
                   onClick={() => setSelectedCategory(active ? '' : cat.slug)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     active
-                      ? 'bg-emerald-700 text-white shadow-2xs'
+                      ? 'bg-blue-600 text-white shadow-2xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
@@ -259,12 +259,12 @@ export const DiscoveryPage: React.FC = () => {
             </label>
 
             {/* View Mode Switcher */}
-            <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl">
+            <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-lg">
               <button
                 type="button"
                 onClick={() => setViewMode('split')}
-                className={`p-1.5 rounded-lg text-xs font-semibold ${
-                  viewMode === 'split' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-500'
+                className={`p-1.5 rounded-md text-xs font-semibold ${
+                  viewMode === 'split' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-500'
                 }`}
                 title="Split View"
               >
@@ -273,8 +273,8 @@ export const DiscoveryPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg text-xs font-semibold ${
-                  viewMode === 'list' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-500'
+                className={`p-1.5 rounded-md text-xs font-semibold ${
+                  viewMode === 'list' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-500'
                 }`}
                 title="List View"
               >
@@ -283,8 +283,8 @@ export const DiscoveryPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setViewMode('map')}
-                className={`p-1.5 rounded-lg text-xs font-semibold ${
-                  viewMode === 'map' ? 'bg-white text-emerald-700 shadow-2xs' : 'text-slate-500'
+                className={`p-1.5 rounded-md text-xs font-semibold ${
+                  viewMode === 'map' ? 'bg-white text-blue-700 shadow-2xs' : 'text-slate-500'
                 }`}
                 title="Map View"
               >
@@ -305,12 +305,12 @@ export const DiscoveryPage: React.FC = () => {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
           <p className="text-xs font-medium">Searching verified specialists...</p>
         </div>
       ) : providers.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-200 p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4">
-          <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
             <Search className="w-6 h-6" />
           </div>
           <h3 className="text-base font-bold text-slate-900">
@@ -330,7 +330,7 @@ export const DiscoveryPage: React.FC = () => {
                     setUserLocation(null);
                     setSelectedCity('Adama');
                   }}
-                  className="px-3 py-1.5 bg-emerald-700 text-white rounded-lg text-xs font-bold hover:bg-emerald-800 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer"
                 >
                   Browse Adama
                 </button>
@@ -340,7 +340,7 @@ export const DiscoveryPage: React.FC = () => {
                     setUserLocation(null);
                     setSelectedCity('Bishoftu');
                   }}
-                  className="px-3 py-1.5 bg-teal-700 text-white rounded-lg text-xs font-bold hover:bg-teal-800 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors cursor-pointer"
                 >
                   Browse Bishoftu
                 </button>
@@ -362,7 +362,7 @@ export const DiscoveryPage: React.FC = () => {
                   setVerifiedOnly(false);
                   setUserLocation(null);
                 }}
-                className="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-800 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Clear All Filters
               </button>
@@ -370,7 +370,7 @@ export const DiscoveryPage: React.FC = () => {
           </div>
           <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500">
             Are you a local service provider in this trade?{' '}
-            <Link to="/profile" className="text-emerald-700 font-bold hover:underline">
+            <Link to="/profile" className="text-blue-700 font-bold hover:underline">
               Register as a Specialist →
             </Link>
           </div>

@@ -284,7 +284,7 @@ export const BookingDetailPage: React.FC = () => {
       <div>
         <Link
           to={isCustomer ? '/customer/dashboard' : '/provider/dashboard'}
-          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-emerald-700"
+          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700"
         >
           <ChevronLeft className="w-4 h-4" />
           <span>Back to Dashboard</span>
@@ -298,7 +298,7 @@ export const BookingDetailPage: React.FC = () => {
             <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
               Booking #{booking.bookingNumber || booking._id?.slice(-8)}
             </span>
-            <span className="text-xs font-extrabold px-3 py-1 rounded-md border bg-emerald-50 text-emerald-800 border-emerald-300">
+            <span className="text-xs font-extrabold px-3 py-1 rounded-md border bg-blue-50 text-blue-800 border-blue-200">
               {booking.status}
             </span>
           </div>
@@ -313,11 +313,11 @@ export const BookingDetailPage: React.FC = () => {
 
         {/* Agreed Price Badge */}
         {booking.agreedPrice && booking.agreedPrice.amount != null ? (
-          <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-lg text-right">
-            <span className="text-[10px] uppercase font-bold text-emerald-700 block">
+          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-right">
+            <span className="text-[10px] uppercase font-bold text-blue-700 block">
               Agreed Service Total
             </span>
-            <span className="text-2xl font-black text-emerald-900 font-mono">
+            <span className="text-2xl font-black text-blue-900 font-mono">
               {Number(booking.agreedPrice.amount).toLocaleString()} ETB
             </span>
           </div>
@@ -345,15 +345,15 @@ export const BookingDetailPage: React.FC = () => {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-colors z-10 ${
                     isCurrent
-                      ? 'bg-emerald-600 text-white ring-4 ring-emerald-100 shadow-md'
+                      ? 'bg-blue-600 text-white ring-4 ring-blue-100 shadow-md'
                       : isCompleted
-                      ? 'bg-emerald-700 text-white'
+                      ? 'bg-blue-700 text-white'
                       : 'bg-slate-100 text-slate-400'
                   }`}
                 >
                   {isCompleted && !isCurrent ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
                 </div>
-                <span className={`text-[11px] font-bold mt-2 text-center ${isCurrent ? 'text-emerald-700' : 'text-slate-500'}`}>
+                <span className={`text-[11px] font-bold mt-2 text-center ${isCurrent ? 'text-blue-700' : 'text-slate-500'}`}>
                   {step.replace('_', ' ')}
                 </span>
               </div>
@@ -369,16 +369,16 @@ export const BookingDetailPage: React.FC = () => {
           {/* Action Callout if provider needs to issue quote */}
           {/* STEP 1: REQUESTED / AWAITING_QUOTE */}
           {isProvider && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
-            <div className="p-5 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-5 bg-blue-50 border-2 border-blue-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-emerald-950">Step 1: New Booking Request Received</h3>
-                <p className="text-xs text-emerald-700 mt-0.5">
+                <h3 className="text-sm font-bold text-blue-950">Step 1: New Booking Request Received</h3>
+                <p className="text-xs text-blue-700 mt-0.5">
                   Review the customer's request and issue an itemized quotation in ETB to proceed.
                 </p>
               </div>
               <button
                 onClick={() => setIsQuoteOpen(true)}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0 flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0 flex items-center gap-1.5"
               >
                 <FileText className="w-4 h-4" />
                 <span>Issue Itemized Quotation</span>
@@ -388,7 +388,7 @@ export const BookingDetailPage: React.FC = () => {
 
           {isCustomer && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3">
-              <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
+              <Clock className="w-4 h-4 text-blue-600 shrink-0" />
               <div>
                 <h4 className="text-xs font-bold text-slate-900">Step 1: Request Submitted</h4>
                 <p className="text-[11px] text-slate-500 mt-0.5">
@@ -443,11 +443,11 @@ export const BookingDetailPage: React.FC = () => {
           )}
 
           {isCustomer && booking.status === 'CONFIRMED' && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-center gap-3">
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
               <div>
-                <h4 className="text-xs font-bold text-emerald-900">Step 3: Booking Confirmed</h4>
-                <p className="text-[11px] text-emerald-700 mt-0.5">
+                <h4 className="text-xs font-bold text-blue-900">Step 3: Booking Confirmed</h4>
+                <p className="text-[11px] text-blue-700 mt-0.5">
                   Quotation accepted! The specialist will arrive as scheduled and will mark the job in progress once on-site.
                 </p>
               </div>
@@ -456,10 +456,10 @@ export const BookingDetailPage: React.FC = () => {
 
           {/* STEP 4: IN_PROGRESS */}
           {isProvider && booking.status === 'IN_PROGRESS' && (
-            <div className="p-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h4 className="text-xs font-bold text-emerald-950">Step 4: Work In Progress</h4>
-                <p className="text-[11px] text-emerald-700 mt-0.5">
+                <h4 className="text-xs font-bold text-blue-950">Step 4: Work In Progress</h4>
+                <p className="text-[11px] text-blue-700 mt-0.5">
                   Service is actively underway. Once finished on-site, request customer completion or mark it complete directly.
                 </p>
               </div>
@@ -467,14 +467,14 @@ export const BookingDetailPage: React.FC = () => {
                 <button
                   onClick={handleRequestCompletion}
                   disabled={actionLoading}
-                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
                 >
                   Request Customer Completion
                 </button>
                 <button
                   onClick={handleConfirmCompletion}
                   disabled={actionLoading}
-                  className="px-4 py-2.5 bg-emerald-950 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+                  className="px-4 py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
                 >
                   Mark Job Completed
                 </button>
@@ -493,7 +493,7 @@ export const BookingDetailPage: React.FC = () => {
               <button
                 onClick={handleConfirmCompletion}
                 disabled={actionLoading}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 shadow-sm"
               >
                 Confirm Service Completed (Step 6)
               </button>
@@ -512,7 +512,7 @@ export const BookingDetailPage: React.FC = () => {
               <button
                 onClick={handleConfirmCompletion}
                 disabled={actionLoading}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0"
               >
                 Confirm Job Complete
               </button>
@@ -530,7 +530,7 @@ export const BookingDetailPage: React.FC = () => {
               <button
                 onClick={handleConfirmCompletion}
                 disabled={actionLoading}
-                className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0"
+                className="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold cursor-pointer shrink-0"
               >
                 Finalize Complete
               </button>
@@ -571,7 +571,7 @@ export const BookingDetailPage: React.FC = () => {
                     <button
                       onClick={handleConfirmCompletion}
                       disabled={actionLoading}
-                      className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                      className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer"
                     >
                       Admin: Finalize Complete (Step 6)
                     </button>
@@ -581,7 +581,7 @@ export const BookingDetailPage: React.FC = () => {
                   <button
                     onClick={handleConfirmCompletion}
                     disabled={actionLoading}
-                    className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                    className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer"
                   >
                     Admin: Confirm Complete (Step 6)
                   </button>
@@ -592,12 +592,12 @@ export const BookingDetailPage: React.FC = () => {
 
           {/* STEP 6: COMPLETED */}
           {booking.status === 'COMPLETED' && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between gap-4">
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0" />
                 <div>
-                  <h4 className="text-xs font-bold text-emerald-950">Step 6: Service Completed Successfully</h4>
-                  <p className="text-[11px] text-emerald-700 mt-0.5">
+                  <h4 className="text-xs font-bold text-blue-950">Step 6: Service Completed Successfully</h4>
+                  <p className="text-[11px] text-blue-700 mt-0.5">
                     Dual confirmation finalized. Thank you for choosing Lehulu for trusted local services!
                   </p>
                 </div>
@@ -605,7 +605,7 @@ export const BookingDetailPage: React.FC = () => {
               {isCustomer && (
                 <button
                   onClick={() => setIsReviewOpen(true)}
-                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
                 >
                   <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
                   <span>Rate & Review</span>
@@ -620,7 +620,7 @@ export const BookingDetailPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="flex items-start gap-2.5">
-                <Calendar className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <Calendar className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Scheduled Date</span>
                   <span className="font-bold text-slate-900">
@@ -630,7 +630,7 @@ export const BookingDetailPage: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Time Slot</span>
                   <span className="font-bold text-slate-900 capitalize">
@@ -640,7 +640,7 @@ export const BookingDetailPage: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Private Service Location</span>
                   <span className="font-bold text-slate-900">
@@ -650,7 +650,7 @@ export const BookingDetailPage: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <Phone className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="text-slate-400 block font-medium">Contact Phone</span>
                   <span className="font-bold text-slate-900">
@@ -677,7 +677,7 @@ export const BookingDetailPage: React.FC = () => {
           {/* Quotations Section */}
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-emerald-600" />
+              <FileText className="w-4 h-4 text-blue-600" />
               <span>Itemized Quotations ({(Array.isArray(quotes) ? quotes : []).length})</span>
             </h3>
 
@@ -692,7 +692,7 @@ export const BookingDetailPage: React.FC = () => {
                 {isProvider && ['REQUESTED', 'AWAITING_QUOTE'].includes(booking.status) && (
                   <button
                     onClick={() => setIsQuoteOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Create Quotation Now</span>
@@ -802,7 +802,7 @@ export const BookingDetailPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleAddQuoteItem}
-                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 pt-1 cursor-pointer"
+                  className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 pt-1 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Another Item</span>
@@ -829,7 +829,7 @@ export const BookingDetailPage: React.FC = () => {
                     id="inspDetail"
                     checked={quoteInspection}
                     onChange={(e) => setQuoteInspection(e.target.checked)}
-                    className="w-4 h-4 text-emerald-600 rounded-sm cursor-pointer"
+                    className="w-4 h-4 text-blue-600 rounded-sm cursor-pointer"
                   />
                   <label htmlFor="inspDetail" className="text-xs font-semibold text-slate-700 cursor-pointer">
                     Inspection Fee Included
@@ -852,7 +852,7 @@ export const BookingDetailPage: React.FC = () => {
 
               <div className="p-3 bg-slate-50 rounded-xl flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-600">Grand Total:</span>
-                <span className="text-lg font-black text-emerald-900 font-mono">
+                <span className="text-lg font-black text-blue-900 font-mono">
                   {quoteItems.reduce((sum, item) => sum + item.total, 0).toLocaleString()} ETB
                 </span>
               </div>
@@ -868,7 +868,7 @@ export const BookingDetailPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={submittingQuote}
-                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   {submittingQuote && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>Submit Formal Quotation</span>

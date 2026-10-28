@@ -68,7 +68,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
       {/* Quotation Header */}
       <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-lg">
+          <div className="p-2.5 bg-blue-50 text-blue-700 rounded-lg">
             <FileText className="w-5 h-5" />
           </div>
           <div>
@@ -88,7 +88,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
 
         {quote.estimatedDurationHours && (
           <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium bg-white px-3 py-1.5 rounded-lg border border-slate-200">
-            <Clock className="w-3.5 h-3.5 text-emerald-600" />
+            <Clock className="w-3.5 h-3.5 text-blue-600" />
             <span>Est. {quote.estimatedDurationHours} hours</span>
           </div>
         )}
@@ -132,7 +132,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                 <td colSpan={3} className="pt-3 text-right">
                   Agreed Total Amount:
                 </td>
-                <td className="pt-3 text-right font-mono text-emerald-700 text-base">
+                <td className="pt-3 text-right font-mono text-blue-700 text-base">
                   {Number(quote.totalAmount || 0).toLocaleString()} {t('currency.etb') === 'currency.etb' ? 'ETB' : (t('currency.etb') || 'ETB')}
                 </td>
               </tr>
@@ -149,8 +149,8 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
         )}
 
         {quote.inspectionIncluded && (
-          <div className="mt-2 flex items-center gap-2 text-xs text-emerald-700">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <div className="mt-2 flex items-center gap-2 text-xs text-blue-700">
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
             <span>Inspection fee is fully included in this quotation.</span>
           </div>
         )}
@@ -201,7 +201,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                 type="button"
                 onClick={handleAccept}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg shadow-xs transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs transition-all cursor-pointer"
               >
                 <CheckCircle2 className="w-4 h-4 text-white" />
                 <span>Accept & Confirm Booking</span>
