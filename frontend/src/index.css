@@ -8,6 +8,7 @@
   html {
     font-family: 'Inter', 'Noto Sans Ethiopic', system-ui, -apple-system, sans-serif;
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
     color: #0f172a;
     background-color: #f8fafc;
   }

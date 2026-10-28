@@ -310,7 +310,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Service Categories Grid */}
-      <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24 sm:scroll-mt-28">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
@@ -361,7 +361,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="bg-slate-900 text-white py-16">
+      <section id="how-it-works" className="bg-slate-900 text-white py-16 scroll-mt-24 sm:scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold">

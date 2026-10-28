@@ -222,7 +222,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8 bg-slate-50/70">
+    <div className="min-h-[calc(100vh-5rem)] flex items-start justify-center pt-8 sm:pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-50/70">
       <div
         className={`w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xl space-y-6 transition-all ${
           step === 'onboarding' && selectedRole === 'SERVICE_PROVIDER' ? 'max-w-2xl' : 'max-w-md'

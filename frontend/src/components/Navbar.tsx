@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Menu,
   X,
@@ -22,6 +22,8 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
 
   const handleLogout = async () => {
     await logout();
@@ -243,18 +245,29 @@ export const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <Link
-                  to="/login?role=SERVICE_PROVIDER"
-                  className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors"
-                >
-                  {t('nav.becomeProvider')}
-                </Link>
-                <Link
-                  to="/login"
-                  className="text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm px-4 py-2 rounded-lg transition-all"
-                >
-                  {t('nav.signIn')}
-                </Link>
+                {!isLoginPage ? (
+                  <>
+                    <Link
+                      to="/login?role=SERVICE_PROVIDER"
+                      className="text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-lg transition-colors"
+                    >
+                      {t('nav.becomeProvider')}
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-sm px-4 py-2 rounded-lg transition-all"
+                    >
+                      {t('nav.signIn')}
+                    </Link>
+                  </>
+                ) : (
+                  <Link
+                    to="/"
+                    className="text-xs font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 transition-colors"
+                  >
+                    ← Back to Home
+                  </Link>
+                )}
               </div>
             )}
           </div>
@@ -398,20 +411,32 @@ export const Navbar: React.FC = () => {
             </div>
           ) : (
             <div className="pt-3 border-t border-slate-100 space-y-2">
-              <Link
-                to="/login?role=SERVICE_PROVIDER"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-center py-2.5 rounded-lg border border-emerald-300 text-emerald-700 font-semibold bg-emerald-50 text-sm"
-              >
-                {t('nav.becomeProvider')}
-              </Link>
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-center py-2.5 rounded-lg bg-emerald-700 text-white font-bold text-sm shadow-sm"
-              >
-                {t('nav.signIn')}
-              </Link>
+              {!isLoginPage ? (
+                <>
+                  <Link
+                    to="/login?role=SERVICE_PROVIDER"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-center py-2.5 rounded-lg border border-emerald-300 text-emerald-700 font-semibold bg-emerald-50 text-sm"
+                  >
+                    {t('nav.becomeProvider')}
+                  </Link>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-center py-2.5 rounded-lg bg-emerald-700 text-white font-bold text-sm shadow-sm"
+                  >
+                    {t('nav.signIn')}
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-center py-2.5 rounded-lg border border-slate-200 text-slate-700 font-medium text-sm"
+                >
+                  ← Back to Home
+                </Link>
+              )}
             </div>
           )}
         </div>
