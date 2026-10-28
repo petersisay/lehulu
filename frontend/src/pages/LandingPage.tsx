@@ -135,8 +135,8 @@ export const LandingPage: React.FC = () => {
         </svg>
 
         {/* Floating Service Badges (Desktop/Tablet) */}
-        <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
-          <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
             <Zap className="w-4 h-4 text-emerald-100" />
           </div>
           <div className="text-left">
@@ -145,8 +145,8 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-reverse">
-          <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-reverse">
+          <div className="w-8 h-8 rounded-md bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
             <Car className="w-4 h-4 text-emerald-100" />
           </div>
           <div className="text-left">
@@ -155,8 +155,8 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
-          <div className="w-8 h-8 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-emerald-400/50 shadow-lg shadow-emerald-950/5 animate-float-slow">
+          <div className="w-8 h-8 rounded-md bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
             <Home className="w-4 h-4 text-teal-100" />
           </div>
           <div className="text-left">
@@ -165,8 +165,8 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex absolute bottom-24 right-8 xl:right-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-amber-300/70 shadow-lg shadow-amber-950/5 animate-float-reverse">
-          <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        <div className="hidden lg:flex absolute bottom-24 right-8 xl:right-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-amber-300/70 shadow-lg shadow-amber-950/5 animate-float-reverse">
+          <div className="w-8 h-8 rounded-md bg-amber-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
             <Sparkles className="w-4 h-4 text-amber-100" />
           </div>
           <div className="text-left">
@@ -179,7 +179,7 @@ export const LandingPage: React.FC = () => {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-emerald-400/60 text-emerald-900 text-xs font-black shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white/90 backdrop-blur-md border border-emerald-400/60 text-emerald-900 text-xs font-black shadow-sm">
               <Sparkles className="w-4 h-4 text-emerald-600 animate-pulse-glow" />
               <span>{t('hero.badge')}</span>
             </div>
@@ -197,7 +197,7 @@ export const LandingPage: React.FC = () => {
             {/* Search Bar */}
             <form
               onSubmit={handleSearch}
-              className="mt-8 p-2.5 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-white/90 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto"
+              className="mt-8 p-2 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/90 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto"
             >
               <div className="flex items-center gap-2.5 px-3 flex-1 w-full border-b sm:border-b-0 sm:border-r border-slate-200/80 py-2 sm:py-0">
                 <Search className="w-5 h-5 text-slate-400 shrink-0" />
@@ -226,7 +226,7 @@ export const LandingPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-700/20 hover:shadow-lg transition-all shrink-0 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all shrink-0 cursor-pointer"
               >
                 {t('hero.searchButton')}
               </button>
@@ -259,8 +259,8 @@ export const LandingPage: React.FC = () => {
       {/* Trust & Safety Highlights */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -271,8 +271,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-amber-100/70 text-amber-700 flex items-center justify-center mb-4">
               <Award className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -283,8 +283,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-blue-100/70 text-blue-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-blue-100/70 text-blue-700 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -295,8 +295,8 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
-            <div className="w-12 h-12 rounded-xl bg-purple-100/70 text-purple-700 flex items-center justify-center mb-4">
+          <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-purple-100/70 text-purple-700 flex items-center justify-center mb-4">
               <Star className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -337,10 +337,10 @@ export const LandingPage: React.FC = () => {
               <Link
                 key={cat._id}
                 to={`/discover?category=${cat.slug}`}
-                className="group p-5 bg-white rounded-2xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all flex flex-col justify-between"
+                className="group p-5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                     {CATEGORY_ICONS[cat.slug] || <Wrench className="w-6 h-6 text-emerald-600" />}
                   </div>
                   <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
@@ -374,7 +374,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-lg">
+              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 1
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step1Title')}</h3>
@@ -384,7 +384,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-lg">
+              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 2
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step2Title')}</h3>
@@ -394,7 +394,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-lg">
+              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 3
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step3Title')}</h3>
@@ -404,7 +404,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-lg">
+              <div className="w-12 h-12 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                 4
               </div>
               <h3 className="text-base font-bold text-white">{t('howItWorks.step4Title')}</h3>
@@ -447,9 +447,9 @@ export const LandingPage: React.FC = () => {
 
       {/* Become a Provider CTA Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-950 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="rounded-xl bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-950 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-xl space-y-4">
-            <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider bg-emerald-900/50 px-3 py-1 rounded-full border border-emerald-600/40">
+            <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider bg-emerald-900/50 px-3 py-1 rounded-md border border-emerald-600/40">
               For Professional Trades & Technicians
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
@@ -462,7 +462,7 @@ export const LandingPage: React.FC = () => {
 
           <Link
             to="/login?role=SERVICE_PROVIDER"
-            className="px-8 py-4 bg-white text-emerald-900 hover:bg-emerald-50 text-sm font-extrabold rounded-2xl shadow-lg transition-transform hover:scale-105 shrink-0"
+            className="px-8 py-3.5 bg-white text-emerald-900 hover:bg-emerald-50 text-sm font-extrabold rounded-lg shadow-lg transition-transform hover:scale-105 shrink-0"
           >
             {t('nav.becomeProvider')}
           </Link>

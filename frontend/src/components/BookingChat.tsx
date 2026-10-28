@@ -122,7 +122,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[520px] overflow-hidden">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col h-[520px] overflow-hidden">
       {/* Chat Header */}
       <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -175,7 +175,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
                 className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[78%] px-4 py-2.5 rounded-2xl text-xs ${
+                  className={`max-w-[78%] px-4 py-2.5 rounded-xl text-xs ${
                     isMe
                       ? 'bg-emerald-700 text-white rounded-br-xs'
                       : 'bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs'
@@ -209,13 +209,13 @@ export const BookingChat: React.FC<BookingChatProps> = ({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Type a message to discuss your service..."
-          className="flex-1 px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+          className="flex-1 px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
           disabled={sending}
         />
         <button
           type="submit"
           disabled={!content.trim() || sending}
-          className="p-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl disabled:opacity-40 transition-colors cursor-pointer"
+          className="p-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg disabled:opacity-40 transition-colors cursor-pointer"
         >
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         </button>

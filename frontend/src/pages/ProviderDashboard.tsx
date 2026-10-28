@@ -204,19 +204,19 @@ export const ProviderDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Banner & Availability Header */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white rounded-xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
               Provider Portal
             </span>
             {verificationStatus === 'VERIFIED' ? (
-              <span className="text-xs font-extrabold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
+              <span className="text-xs font-extrabold text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-md border border-emerald-300 flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Verified Specialist
               </span>
             ) : (
-              <span className="text-xs font-bold text-amber-800 bg-amber-100/70 px-2.5 py-0.5 rounded-full border border-amber-300">
+              <span className="text-xs font-bold text-amber-800 bg-amber-100/70 px-2.5 py-0.5 rounded-md border border-amber-300">
                 Status: {verificationStatus}
               </span>
             )}
@@ -405,21 +405,21 @@ export const ProviderDashboard: React.FC = () => {
 
         return (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
               <span className="text-xs text-slate-500 font-medium block">Total Bookings</span>
               <span className="text-2xl font-black text-slate-900 mt-1 block">
                 {totalBookingsCount}
               </span>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
               <span className="text-xs text-slate-500 font-medium block">Completed Jobs</span>
               <span className="text-2xl font-black text-emerald-700 mt-1 block">
                 {completedJobsCount}
               </span>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
               <span className="text-xs text-slate-500 font-medium block">Rating</span>
               <div className="flex items-center gap-1.5 mt-1">
                 <Star className="w-5 h-5 fill-amber-400 text-amber-500" />
@@ -430,7 +430,7 @@ export const ProviderDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
               <span className="text-xs text-slate-500 font-medium block">Base Starting Rate</span>
               <span className="text-2xl font-black text-slate-900 mt-1 block">
                 {profile?.pricing?.startingPrice ? `${profile.pricing.startingPrice} ETB` : 'Custom'}
@@ -453,7 +453,7 @@ export const ProviderDashboard: React.FC = () => {
             <span className="text-xs font-semibold">Loading job inquiries...</span>
           </div>
         ) : bookings.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-3">
+          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-3">
             <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
             <h3 className="text-sm font-bold text-slate-900">No Booking Requests Yet</h3>
             <p className="text-xs text-slate-500">
@@ -467,7 +467,7 @@ export const ProviderDashboard: React.FC = () => {
               return (
                 <div
                   key={booking._id}
-                  className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                  className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
                 >
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">

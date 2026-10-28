@@ -224,7 +224,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-start justify-center pt-8 sm:pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-slate-50/70">
       <div
-        className={`w-full bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xl space-y-6 transition-all ${
+        className={`w-full bg-white rounded-xl border border-slate-200/90 p-6 sm:p-8 shadow-xl space-y-6 transition-all ${
           step === 'onboarding' && selectedRole === 'SERVICE_PROVIDER' ? 'max-w-2xl' : 'max-w-md'
         }`}
       >
@@ -274,7 +274,7 @@ export const LoginPage: React.FC = () => {
 
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-emerald-600/30 mx-auto">
+          <div className="w-16 h-16 rounded-lg overflow-hidden shadow-md border-2 border-emerald-600/30 mx-auto">
             <img src="/lehulu-logo.jpg" alt="Lehulu" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -298,7 +298,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -307,9 +307,9 @@ export const LoginPage: React.FC = () => {
         {/* Step 1: Authentication */}
         {step === 'auth' && (
           <div className="space-y-5">
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
+            <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-xs space-y-2.5">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
+                <div className="w-8 h-8 rounded-md bg-purple-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
                   ADM
                 </div>
                 <div className="flex-1 min-w-0">
@@ -365,13 +365,13 @@ export const LoginPage: React.FC = () => {
           <div className="space-y-4">
             <div
               onClick={() => setSelectedRole('CUSTOMER')}
-              className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
+              className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
                 selectedRole === 'CUSTOMER'
                   ? 'border-emerald-600 bg-emerald-50/60 shadow-xs'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl mt-0.5">
+              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-md mt-0.5">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div className="flex-1">
@@ -384,13 +384,13 @@ export const LoginPage: React.FC = () => {
 
             <div
               onClick={() => setSelectedRole('SERVICE_PROVIDER')}
-              className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
+              className={`p-4 rounded-lg border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
                 selectedRole === 'SERVICE_PROVIDER'
                   ? 'border-emerald-600 bg-emerald-50/60 shadow-xs'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl mt-0.5">
+              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-md mt-0.5">
                 <Briefcase className="w-5 h-5" />
               </div>
               <div className="flex-1">
@@ -585,7 +585,7 @@ export const LoginPage: React.FC = () => {
                 </div>
 
                 {/* Service Location Selection */}
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-emerald-600" />
@@ -642,7 +642,7 @@ export const LoginPage: React.FC = () => {
                 </div>
 
                 {/* Identity Verification Section */}
-                <div className="p-4 bg-emerald-50/50 border border-emerald-200/80 rounded-2xl space-y-3">
+                <div className="p-4 bg-emerald-50/50 border border-emerald-200/80 rounded-lg space-y-3">
                   <div className="flex items-start gap-2">
                     <Lock className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                     <div>

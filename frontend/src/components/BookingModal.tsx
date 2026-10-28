@@ -128,7 +128,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in">
-      <div className="bg-white rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden my-8">
+      <div className="bg-white rounded-xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden my-8">
         {/* Header */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div>
@@ -150,14 +150,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {/* Content Form */}
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
           {error && (
-            <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 text-red-700 text-xs">
+            <div className="p-3.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-700 text-xs">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {/* Privacy Notice */}
-          <div className="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-xl flex items-center gap-2.5 text-emerald-800 text-xs">
+          <div className="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-lg flex items-center gap-2.5 text-emerald-800 text-xs">
             <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>
               Your exact address and contact phone are kept strictly private and shared only with this verified professional once you confirm.
@@ -174,7 +174,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               value={problemDescription}
               onChange={(e) => setProblemDescription(e.target.value)}
               placeholder="e.g. Living room socket sparking, kitchen pipe leaking under sink, car brakes squeaking..."
-              className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
               required
             />
           </div>
@@ -191,7 +191,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 min={minDate}
                 value={requestedDate}
                 onChange={(e) => setRequestedDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 required
               />
             </div>
@@ -204,7 +204,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               <select
                 value={requestedTimeSlot}
                 onChange={(e) => setRequestedTimeSlot(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
               >
                 <option value="morning">Morning (8:00 AM – 12:00 PM)</option>
                 <option value="afternoon">Afternoon (12:00 PM – 4:00 PM)</option>
@@ -229,7 +229,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white"
                 >
                   <option value="Adama">{t('locations.adama')}</option>
                   <option value="Bishoftu">{t('locations.bishoftu')}</option>
@@ -246,7 +246,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={subcity}
                   onChange={(e) => setSubcity(e.target.value)}
                   placeholder="e.g. Boku, Bole"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
@@ -259,7 +259,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={kebele}
                   onChange={(e) => setKebele(e.target.value)}
                   placeholder="e.g. Kebele 04"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
             </div>
@@ -274,7 +274,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={streetAddress}
                   onChange={(e) => setStreetAddress(e.target.value)}
                   placeholder="e.g. Near Posta Bet, House #412"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   required
                 />
               </div>
@@ -289,7 +289,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="e.g. +251 91 123 4567"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                   required
                 />
               </div>
@@ -306,7 +306,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               value={referenceImageUrl}
               onChange={(e) => setReferenceImageUrl(e.target.value)}
               placeholder="https://... photo of damaged item or room"
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-600"
             />
           </div>
 
@@ -316,14 +316,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 rounded-xl shadow-xs transition-all cursor-pointer"
+              className="px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 rounded-lg shadow-xs transition-all cursor-pointer"
             >
               {loading ? 'Submitting Request...' : t('booking.submitRequest')}
             </button>

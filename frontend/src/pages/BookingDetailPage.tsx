@@ -292,13 +292,13 @@ export const BookingDetailPage: React.FC = () => {
       </div>
 
       {/* Header Info Banner */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white rounded-xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
               Booking #{booking.bookingNumber || booking._id?.slice(-8)}
             </span>
-            <span className="text-xs font-extrabold px-3 py-1 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-300">
+            <span className="text-xs font-extrabold px-3 py-1 rounded-md border bg-emerald-50 text-emerald-800 border-emerald-300">
               {booking.status}
             </span>
           </div>
@@ -313,7 +313,7 @@ export const BookingDetailPage: React.FC = () => {
 
         {/* Agreed Price Badge */}
         {booking.agreedPrice && booking.agreedPrice.amount != null ? (
-          <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-right">
+          <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-lg text-right">
             <span className="text-[10px] uppercase font-bold text-emerald-700 block">
               Agreed Service Total
             </span>
@@ -322,7 +322,7 @@ export const BookingDetailPage: React.FC = () => {
             </span>
           </div>
         ) : (
-          <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-right">
+          <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg text-right">
             <span className="text-[10px] uppercase font-bold text-slate-400 block">
               Pricing Status
             </span>

@@ -251,9 +251,9 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Admin Header */}
-      <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-950 rounded-xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-900/50 px-2.5 py-0.5 rounded-full border border-purple-500/30">
+          <span className="text-xs font-bold uppercase tracking-wider text-purple-300 bg-purple-900/50 px-2.5 py-0.5 rounded-md border border-purple-500/30">
             Administrative Console
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
@@ -267,7 +267,7 @@ export const AdminDashboard: React.FC = () => {
         <button
           onClick={fetchAdminData}
           disabled={loading}
-          className="px-4 py-2 bg-purple-700/60 hover:bg-purple-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 border border-purple-500/40 transition-colors cursor-pointer"
+          className="px-4 py-2 bg-purple-700/60 hover:bg-purple-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 border border-purple-500/40 transition-colors cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh Data</span>
@@ -657,9 +657,9 @@ export const AdminDashboard: React.FC = () => {
           {activeTab === 'verified-providers' && (
             <div className="space-y-6">
               {/* Header Card */}
-              <div className="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+              <div className="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-900 rounded-xl p-6 sm:p-7 text-white border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
                     <ShieldCheck className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div>

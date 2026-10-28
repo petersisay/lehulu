@@ -107,17 +107,17 @@ export const ProviderProfilePage: React.FC = () => {
       </div>
 
       {/* Profile Header Hero Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start justify-between gap-6">
+      <div className="bg-white rounded-xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start justify-between gap-6">
         <div className="flex items-start gap-5">
           <div className="relative shrink-0">
             {user?.avatarUrl ? (
               <img
                 src={user.avatarUrl}
                 alt={displayName}
-                className="w-24 h-24 rounded-2xl object-cover border-2 border-emerald-500/20 shadow-md"
+                className="w-24 h-24 rounded-lg object-cover border-2 border-emerald-500/20 shadow-md"
               />
             ) : (
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-extrabold text-3xl shadow-md">
+              <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-extrabold text-3xl shadow-md">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}

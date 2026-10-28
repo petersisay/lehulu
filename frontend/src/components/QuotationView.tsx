@@ -64,11 +64,11 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden my-4">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden my-4">
       {/* Quotation Header */}
       <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl">
+          <div className="p-2.5 bg-emerald-100 text-emerald-700 rounded-lg">
             <FileText className="w-5 h-5" />
           </div>
           <div>
@@ -95,7 +95,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
       </div>
 
       {error && (
-        <div className="m-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2">
+        <div className="m-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -142,7 +142,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
 
         {/* Notes & Inclusions */}
         {quote.notes && (
-          <div className="mt-4 p-3 bg-slate-50 rounded-xl text-xs text-slate-600">
+          <div className="mt-4 p-3 bg-slate-50 rounded-lg text-xs text-slate-600">
             <span className="font-bold text-slate-700 block mb-0.5">Notes:</span>
             {quote.notes}
           </div>
@@ -166,21 +166,21 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                 placeholder="Reason for declining (e.g. Price too high, found other schedule)..."
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="flex-1 px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500"
                 required
               />
               <div className="flex gap-2">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold hover:bg-red-700 cursor-pointer"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 cursor-pointer"
                 >
                   Confirm Decline
                 </button>
                 <button
                   type="button"
                   onClick={() => setRejecting(false)}
-                  className="px-3 py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -192,7 +192,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                 type="button"
                 onClick={() => setRejecting(true)}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 border border-red-200 rounded-xl transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors cursor-pointer"
               >
                 <XCircle className="w-4 h-4 text-red-500" />
                 <span>Decline Quote</span>
@@ -201,7 +201,7 @@ export const QuotationView: React.FC<QuotationViewProps> = ({
                 type="button"
                 onClick={handleAccept}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl shadow-xs transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-6 py-2.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg shadow-xs transition-all cursor-pointer"
               >
                 <CheckCircle2 className="w-4 h-4 text-white" />
                 <span>Accept & Confirm Booking</span>

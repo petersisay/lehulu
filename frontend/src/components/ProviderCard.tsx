@@ -17,7 +17,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
   const bio = (language === 'am' && provider.bioAm) ? provider.bioAm : provider.bioEn;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group">
       <div className="p-5">
         {/* Top Header: Avatar, Name, Verification */}
         <div className="flex items-start gap-4">
@@ -26,10 +26,10 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
               <img
                 src={user.avatarUrl}
                 alt={displayName}
-                className="w-16 h-16 rounded-xl object-cover border-2 border-slate-100 shadow-xs"
+                className="w-16 h-16 rounded-lg object-cover border-2 border-slate-100 shadow-xs"
               />
             ) : (
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-bold text-xl shadow-xs">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center font-bold text-xl shadow-xs">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -152,7 +152,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
 
         <Link
           to={`/providers/${provider._id}`}
-          className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-xs hover:shadow-sm transition-all"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 shadow-xs hover:shadow-sm transition-all"
         >
           {t('provider.viewProfile')}
         </Link>

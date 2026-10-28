@@ -237,7 +237,7 @@ export const ProfilePage: React.FC = () => {
       {/* Profile Form */}
       <form onSubmit={handleSave} className="space-y-8">
         {/* Identity & Avatar Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
           <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
             <UserIcon className="w-5 h-5 text-emerald-600" />
             {language === 'am' ? 'የግል ማንነት እና መገለጫ' : 'Personal Identity'}
@@ -374,7 +374,7 @@ export const ProfilePage: React.FC = () => {
 
         {/* Service Provider Details Card */}
         {user.role === 'SERVICE_PROVIDER' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-emerald-600" />
@@ -562,7 +562,7 @@ export const ProfilePage: React.FC = () => {
             type="button"
             onClick={handleReset}
             disabled={saving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             <RotateCcw className="w-4 h-4 text-slate-500" />
             <span>{language === 'am' ? 'ሰርዝ' : 'Reset'}</span>
@@ -571,7 +571,7 @@ export const ProfilePage: React.FC = () => {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-60"
           >
             {saving ? (
               <>

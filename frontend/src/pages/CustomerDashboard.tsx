@@ -99,7 +99,7 @@ export const CustomerDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 rounded-xl p-6 sm:p-8 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
             Customer Dashboard
@@ -115,7 +115,7 @@ export const CustomerDashboard: React.FC = () => {
 
         <Link
           to="/discover"
-          className="px-5 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 text-xs font-bold rounded-xl shadow-md transition-all shrink-0"
+          className="px-5 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 text-xs font-bold rounded-lg shadow-md transition-all shrink-0"
         >
           Book Another Service
         </Link>
@@ -125,7 +125,7 @@ export const CustomerDashboard: React.FC = () => {
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('active')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
             activeTab === 'active'
               ? 'bg-emerald-700 text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
@@ -158,8 +158,8 @@ export const CustomerDashboard: React.FC = () => {
           <p className="text-xs font-semibold">Loading your bookings...</p>
         </div>
       ) : (activeTab === 'active' ? activeBookings : completedBookings).length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-4">
-          <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-4">
+          <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-lg flex items-center justify-center mx-auto">
             <Calendar className="w-6 h-6" />
           </div>
           <h3 className="text-base font-bold text-slate-900">
@@ -173,7 +173,7 @@ export const CustomerDashboard: React.FC = () => {
           {activeTab === 'active' && (
             <Link
               to="/discover"
-              className="inline-block px-5 py-2.5 bg-emerald-700 text-white rounded-xl text-xs font-bold hover:bg-emerald-800"
+              className="inline-block px-5 py-2.5 bg-emerald-700 text-white rounded-lg text-xs font-bold hover:bg-emerald-800"
             >
               Explore Services
             </Link>
@@ -189,7 +189,7 @@ export const CustomerDashboard: React.FC = () => {
             return (
               <div
                 key={booking._id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-emerald-300 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-emerald-300 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
