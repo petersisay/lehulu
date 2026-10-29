@@ -10,7 +10,7 @@ flowchart TD
         UI["React 18 SPA + Tailwind CSS"]
         Router["React Router v6 with lazyRetry"]
         Query["TanStack Query Cache (3m stale / 15m gc)"]
-        Leaflet["Leaflet Interactive Discovery Map"]
+        Grid["Responsive Provider Discovery Grid"]
         I18n["Bilingual Engine (English & Amharic)"]
     end
 

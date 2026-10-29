@@ -1,22 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Star, MapPin, CheckCircle2, Clock, Calendar, Navigation } from 'lucide-react';
+import { ShieldCheck, Star, MapPin, CheckCircle2 } from 'lucide-react';
 import { ProviderProfile } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ProviderCardProps {
   provider: ProviderProfile;
-  distanceKm?: number;
-  isSelected?: boolean;
-  onLocateRoute?: () => void;
 }
 
-export const ProviderCard: React.FC<ProviderCardProps> = ({
-  provider,
-  distanceKm,
-  isSelected = false,
-  onLocateRoute,
-}) => {
+export const ProviderCard: React.FC<ProviderCardProps> = ({ provider }) => {
   const { language, t } = useLanguage();
 
   const user = typeof provider.userId === 'object' ? provider.userId : null;
@@ -24,13 +16,7 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
   const bio = (language === 'am' && provider.bioAm) ? provider.bioAm : provider.bioEn;
 
   return (
-    <div
-      className={`bg-white rounded-xl border transition-all duration-200 flex flex-col justify-between overflow-hidden group ${
-        isSelected
-          ? 'border-blue-500 ring-2 ring-blue-600 shadow-md'
-          : 'border-slate-200 shadow-xs hover:shadow-md'
-      }`}
-    >
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group">
       <div className="p-5">
         {/* Top Header: Avatar, Name, Verification */}
         <div className="flex items-start gap-4">
@@ -81,17 +67,12 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
               )}
             </div>
 
-            {/* City & Distance */}
+            {/* City */}
             <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
               <span className="flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 {provider.serviceCities?.join(', ') || provider.publicAddress || 'Adama'}
               </span>
-              {distanceKm !== undefined && (
-                <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 text-[11px]">
-                  📍 {distanceKm.toFixed(1)} km away
-                </span>
-              )}
             </div>
 
             {/* Rating & Real Completed Counts */}
@@ -164,22 +145,6 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({
         </div>
 
         <div className="flex items-center gap-1.5">
-          {onLocateRoute && (
-            <button
-              type="button"
-              onClick={onLocateRoute}
-              className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                isSelected
-                  ? 'bg-blue-700 text-white shadow-xs'
-                  : 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50'
-              }`}
-              title="Locate route line to this specialist on the map"
-            >
-              <Navigation className="w-3.5 h-3.5" />
-              <span>{isSelected ? 'Route Connected' : 'Route Line'}</span>
-            </button>
-          )}
-
           <Link
             to={`/providers/${provider._id}`}
             className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-xs hover:shadow-sm transition-all"

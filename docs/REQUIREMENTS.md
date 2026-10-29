@@ -27,9 +27,9 @@ The system supports exactly three mutually exclusive roles:
 - **FR-AUTH-4**: Provider onboarding requires National ID / Kebele ID submission, optional trade licenses/certificates, and portfolio photos.
 - **FR-AUTH-5**: Administrator access strictly restricted to server-side provisioning matching `ADMIN_EMAIL`. Client-side role escalation attempts receive HTTP 403 Forbidden.
 
-### 3.2 Service Discovery & Geolocation
-- **FR-DISC-1**: Search providers by trade category, provider name, city (Adama, Bishoftu), or GPS coordinates.
-- **FR-DISC-2**: Interactive Leaflet / OpenStreetMap view showing verified providers with public business locations or service coverage radii.
+### 3.2 Service Discovery & Location
+- **FR-DISC-1**: Search providers by trade category, provider name, and city (Adama, Bishoftu).
+- **FR-DISC-2**: Responsive grid discovery showing verified providers with business descriptions, ratings, and configured service cities.
 - **FR-DISC-3**: Privacy enforcement: Customer residential addresses and provider personal residences are never exposed publicly.
 - **FR-DISC-4**: Only providers with `isVerified === true` and `verificationStatus === 'VERIFIED'` appear in customer search results.
 

@@ -255,20 +255,12 @@ describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
       expect(screen.getByText(/Adama, Bishoftu/i)).toBeInTheDocument();
     });
 
-    it('renders Route Line button and triggers onLocateRoute callback', () => {
-      const handleLocateRoute = vi.fn();
-      renderWithProviders(
-        <ProviderCard
-          provider={mockProvider}
-          isSelected={false}
-          onLocateRoute={handleLocateRoute}
-        />
-      );
+    it('renders provider profile link with starting price for customer discovery', () => {
+      renderWithProviders(<ProviderCard provider={mockProvider} />);
 
-      const routeBtn = screen.getByRole('button', { name: /Route Line/i });
-      expect(routeBtn).toBeInTheDocument();
-      fireEvent.click(routeBtn);
-      expect(handleLocateRoute).toHaveBeenCalledTimes(1);
+      const profileLink = screen.getByRole('link', { name: /viewProfile|view profile|የባለሙያ መረጃ/i });
+      expect(profileLink).toBeInTheDocument();
+      expect(profileLink).toHaveAttribute('href', '/providers/prov-101');
     });
   });
 

@@ -40,16 +40,7 @@
   background: #94a3b8;
 }
 
-/* Leaflet Container & Pin Styles */
-.leaflet-container {
-  font-family: 'Inter', system-ui, sans-serif !important;
-  z-index: 10;
-}
 
-.custom-lehulu-pin {
-  background: transparent;
-  border: none;
-}
 
 /* Hero Animations & Motion Accessibility */
 @keyframes floatSlow {

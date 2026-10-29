@@ -50,8 +50,6 @@ export const LoginPage: React.FC = () => {
   const [idCardPreview, setIdCardPreview] = useState<string | null>(null);
   const [idCardFileError, setIdCardFileError] = useState<string | null>(null);
   const [consentGiven, setConsentGiven] = useState<boolean>(true);
-  const [providerCoordinates, setProviderCoordinates] = useState<[number, number]>([39.2683, 8.54]);
-  const [detectingGps, setDetectingGps] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -176,25 +174,7 @@ export const LoginPage: React.FC = () => {
     setIdCardFileError(null);
   };
 
-  const handleDetectGps = () => {
-    if (!navigator.geolocation) {
-      setError('Browser geolocation is not supported on this device.');
-      return;
-    }
-    setDetectingGps(true);
-    setError(null);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setProviderCoordinates([pos.coords.longitude, pos.coords.latitude]);
-        setDetectingGps(false);
-      },
-      (err) => {
-        setDetectingGps(false);
-        setError(`Could not access GPS location: ${err.message}. You can manually choose your city.`);
-      },
-      { timeout: 10000, enableHighAccuracy: true }
-    );
-  };
+
 
   const handleOnboardSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,7 +204,6 @@ export const LoginPage: React.FC = () => {
         skills: selectedRole === 'SERVICE_PROVIDER' ? skillsArray : undefined,
         serviceDescription: selectedRole === 'SERVICE_PROVIDER' ? serviceDescription.trim() || undefined : undefined,
         serviceArea: selectedRole === 'SERVICE_PROVIDER' ? serviceArea.trim() || city : undefined,
-        location: selectedRole === 'SERVICE_PROVIDER' ? { type: 'Point', coordinates: providerCoordinates } : undefined,
         nationalIdNumber: selectedRole === 'SERVICE_PROVIDER' ? nationalIdNumber.trim() || undefined : undefined,
         idCardImageUrl: selectedRole === 'SERVICE_PROVIDER' ? idCardPreview || undefined : undefined,
         consentGiven: selectedRole === 'SERVICE_PROVIDER' ? consentGiven : undefined,
@@ -627,62 +606,7 @@ export const LoginPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Service Location Selection */}
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                      Base Service Coordinates
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleDetectGps}
-                      disabled={detectingGps}
-                      className="text-[11px] font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
-                    >
-                      {detectingGps ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-                      Use Current GPS
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => setProviderCoordinates([39.2683, 8.54])}
-                      className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
-                        Math.abs(providerCoordinates[0] - 39.2683) < 0.01
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      Adama Center
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setProviderCoordinates([38.9785, 8.7523])}
-                      className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
-                        Math.abs(providerCoordinates[0] - 38.9785) < 0.01
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      Bishoftu Center
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setProviderCoordinates([38.7578, 9.0108])}
-                      className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border cursor-pointer ${
-                        Math.abs(providerCoordinates[0] - 38.7578) < 0.01
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      Addis Ababa
-                    </button>
-                  </div>
-                  <p className="text-[10px] text-slate-500 font-mono">
-                    Current Coordinates: [{providerCoordinates[0].toFixed(4)}, {providerCoordinates[1].toFixed(4)}]
-                  </p>
-                </div>
+
 
                 {/* Identity Verification Section */}
                 <div className="p-4 bg-blue-50/40 border border-blue-200/80 rounded-lg space-y-3">

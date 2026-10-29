@@ -29,7 +29,7 @@ For service providers, informal operations constrain growth:
 - **Lost Revenue**: Inefficient scheduling, missed requests, and disputed payments.
 
 **Lehulu resolves these challenges through a three-role, trust-first marketplace**:
-1. **Customers**: Discover verified providers on interactive Leaflet maps, inspect authentic ratings, submit detailed job requests with private addresses and photo attachments, receive itemized quotations in ETB, chat in real-time, track the 6-step job lifecycle, and rate completed work.
+1. **Customers**: Discover verified providers through focused trade and city search, inspect authentic ratings, submit detailed job requests with private addresses and photo attachments, receive itemized quotations in ETB, chat in real-time, track the 6-step job lifecycle, and rate completed work.
 2. **Service Providers**: Pass identity verification, showcase trade credentials and portfolios, receive targeted bookings, send formal itemized quotes, manage job progression through the structured lifecycle, and earn a "Job Completed • Ready for Another Service" blue badge.
 3. **Administrators**: Audit national IDs and trade licenses, manage the verification queue, approve or revoke provider status with audit trails, curate service categories, resolve customer disputes, and track completed platform transactions.
 
@@ -51,10 +51,10 @@ flowchart TD
 ```
 
 ### Technology Highlights
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, React Router v6, TanStack Query (React Query), React Hook Form, Zod, Lucide Icons, Leaflet / OpenStreetMap.
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, React Router v6, TanStack Query (React Query), React Hook Form, Zod, Lucide Icons.
 - **Backend**: Node.js, Express, TypeScript, Mongoose / MongoDB Atlas, Socket.IO, Helmet, CORS, Rate-Limiter, Zod Validation.
 - **Authentication**: Google Identity Services token verification with secure `HttpOnly`, `SameSite` cookies, session management, and role-based onboarding.
-- **Performance**: In-memory TTL catalog caching (<1ms response time), $O(1)$ set-based admin verification synchronization, compound database indexing, and code-split frontend bundles (`vendor-react`, `vendor-maps`, `vendor-icons`, `vendor-data`).
+- **Performance**: In-memory TTL catalog caching (<1ms response time), $O(1)$ set-based admin verification synchronization, compound database indexing, and code-split frontend bundles (`vendor-react`, `vendor-icons`, `vendor-data`).
 - **Localization**: Native bilingual interface supporting **English** and **Amharic (አማርኛ)** with instant language toggling.
 - **Currency**: Ethiopian Birr (**ETB / ብር**) with itemized quotation breakdowns.
 
