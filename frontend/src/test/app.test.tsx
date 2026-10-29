@@ -254,6 +254,22 @@ describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
       expect(screen.getByText(/350/)).toBeInTheDocument();
       expect(screen.getByText(/Adama, Bishoftu/i)).toBeInTheDocument();
     });
+
+    it('renders Route Line button and triggers onLocateRoute callback', () => {
+      const handleLocateRoute = vi.fn();
+      renderWithProviders(
+        <ProviderCard
+          provider={mockProvider}
+          isSelected={false}
+          onLocateRoute={handleLocateRoute}
+        />
+      );
+
+      const routeBtn = screen.getByRole('button', { name: /Route Line/i });
+      expect(routeBtn).toBeInTheDocument();
+      fireEvent.click(routeBtn);
+      expect(handleLocateRoute).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('3. Language Switcher (Amharic & English)', () => {

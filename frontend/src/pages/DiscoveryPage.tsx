@@ -37,6 +37,7 @@ export const DiscoveryPage: React.FC = () => {
   const [isLiveTracking, setIsLiveTracking] = useState<boolean>(false);
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'split' | 'list' | 'map'>('split');
+  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(null);
   const watchIdRef = useRef<number | null>(null);
 
   // Stop watching on unmount
@@ -126,6 +127,16 @@ export const DiscoveryPage: React.FC = () => {
       })
       .sort((a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999));
   }, [providers, userLocation]);
+
+  // Keep active route line provider synchronized
+  useEffect(() => {
+    if (computedProviders.length > 0) {
+      const exists = computedProviders.some((p) => p._id === selectedProviderId);
+      if (!exists) {
+        setSelectedProviderId(computedProviders[0]._id);
+      }
+    }
+  }, [computedProviders, selectedProviderId]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -511,7 +522,22 @@ export const DiscoveryPage: React.FC = () => {
               </div>
               <div className={viewMode === 'split' ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'contents'}>
                 {computedProviders.map((prov) => (
-                  <ProviderCard key={prov._id} provider={prov} distanceKm={prov.distanceKm} />
+                  <ProviderCard
+                    key={prov._id}
+                    provider={prov}
+                    distanceKm={prov.distanceKm}
+                    isSelected={selectedProviderId === prov._id}
+                    onLocateRoute={() => {
+                      setSelectedProviderId(prov._id);
+                      if (viewMode === 'list') {
+                        setViewMode('split');
+                      }
+                      const mapEl = document.getElementById('map-discovery-container');
+                      if (mapEl) {
+                        mapEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                      }
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -526,6 +552,8 @@ export const DiscoveryPage: React.FC = () => {
                   userLocation={userLocation}
                   onLocationSelect={handleLocationSelect}
                   selectedCity={selectedCity || 'Adama'}
+                  selectedProviderId={selectedProviderId || undefined}
+                  onProviderSelect={(prov) => setSelectedProviderId(prov._id)}
                   isLiveTracking={isLiveTracking}
                   onToggleLiveTracking={handleToggleLiveTracking}
                   onLocateMe={handleLocateMe}

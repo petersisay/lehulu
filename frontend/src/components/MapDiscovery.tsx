@@ -32,6 +32,7 @@ interface MapDiscoveryProps {
   userLocation: UserLocation | null;
   onLocationSelect: (lat: number, lng: number, accuracy?: number) => void;
   selectedCity?: string;
+  selectedProviderId?: string;
   onProviderSelect?: (provider: ProviderProfile) => void;
   isLiveTracking?: boolean;
   onToggleLiveTracking?: () => void;
@@ -83,6 +84,7 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
   userLocation,
   onLocationSelect,
   selectedCity = 'Adama',
+  selectedProviderId,
   onProviderSelect,
   isLiveTracking = false,
   onToggleLiveTracking,
@@ -95,8 +97,36 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
   const userMarkerRef = useRef<L.Marker | null>(null);
   const accuracyCircleRef = useRef<L.Circle | null>(null);
   const routePolylineRef = useRef<L.Polyline | null>(null);
+  const routeHaloRef = useRef<L.Polyline | null>(null);
+  const distanceMarkerRef = useRef<L.Marker | null>(null);
   const [activeProvider, setActiveProvider] = useState<ProviderProfile | null>(null);
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null);
+
+  // Active customer coordinates: GPS fix if available, or selectedCity center
+  const customerCoords = useMemo<[number, number]>(() => {
+    if (userLocation) return [userLocation.lat, userLocation.lng];
+    return CITY_COORDINATES[selectedCity] || [8.54, 39.27];
+  }, [userLocation, selectedCity]);
+
+  // Determine active provider to connect the route line to
+  const targetProvider = useMemo(() => {
+    if (activeProvider) return activeProvider;
+    if (selectedProviderId) {
+      const found = providers.find((p) => p._id === selectedProviderId);
+      if (found) return found;
+    }
+    return providers[0] || null;
+  }, [activeProvider, selectedProviderId, providers]);
+
+  // Sync external selectedProviderId into activeProvider
+  useEffect(() => {
+    if (selectedProviderId) {
+      const found = providers.find((p) => p._id === selectedProviderId);
+      if (found) {
+        setActiveProvider(found);
+      }
+    }
+  }, [selectedProviderId, providers]);
 
   // Initialize Leaflet Map once container is mounted
   useEffect(() => {
@@ -131,7 +161,7 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
       const clickedLat = Number(e.latlng.lat.toFixed(6));
       const clickedLng = Number(e.latlng.lng.toFixed(6));
       onLocationSelect(clickedLat, clickedLng, 10);
-      setCopiedNotification(`Location set to [${clickedLat.toFixed(4)}, ${clickedLng.toFixed(4)}]`);
+      setCopiedNotification(`Customer location set to [${clickedLat.toFixed(4)}, ${clickedLng.toFixed(4)}]`);
       setTimeout(() => setCopiedNotification(null), 3000);
     });
 
@@ -166,8 +196,8 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
     }
   }, [selectedCity, userLocation]);
 
-  // Render Customer Live Radar Marker & GPS Accuracy Ring
-  const renderUserMarker = useCallback((loc: UserLocation) => {
+  // Render Customer Location Pin (Live GPS Radar or City Center default anchor)
+  const renderUserMarker = useCallback(() => {
     if (!mapInstanceRef.current || !markersGroupRef.current) return;
 
     if (userMarkerRef.current) {
@@ -179,60 +209,101 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
       accuracyCircleRef.current = null;
     }
 
-    // Accuracy Circle
-    const accuracy = loc.accuracy || 15;
-    if (accuracy > 0 && accuracy < 25000) {
-      accuracyCircleRef.current = L.circle([loc.lat, loc.lng], {
-        radius: accuracy,
-        color: '#2563eb',
-        weight: 1.5,
-        fillColor: '#3b82f6',
-        fillOpacity: 0.12,
-      }).addTo(markersGroupRef.current);
-    }
+    if (userLocation) {
+      // Live GPS Fix with Accuracy Ring & Pulsing Radar
+      const accuracy = userLocation.accuracy || 15;
+      if (accuracy > 0 && accuracy < 25000) {
+        accuracyCircleRef.current = L.circle([userLocation.lat, userLocation.lng], {
+          radius: accuracy,
+          color: '#2563eb',
+          weight: 1.5,
+          fillColor: '#3b82f6',
+          fillOpacity: 0.12,
+        }).addTo(markersGroupRef.current);
+      }
 
-    // Custom Live Radar "You are here" Pin (Pulsating outer radar wave + Cobalt center)
-    const userRadarIcon = L.divIcon({
-      className: 'custom-buyer-radar-pin',
-      html: `
-        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;">
-          <div style="position: absolute; width: 44px; height: 44px; border-radius: 50%; background-color: #2563eb; opacity: 0.35; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-          <div style="background-color: #1d4ed8; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(29,78,216,0.45); border: 3px solid white; z-index: 20; cursor: pointer;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-            </svg>
+      const userRadarIcon = L.divIcon({
+        className: 'custom-buyer-radar-pin',
+        html: `
+          <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;">
+            <div style="position: absolute; width: 44px; height: 44px; border-radius: 50%; background-color: #2563eb; opacity: 0.35; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="background-color: #1d4ed8; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(29,78,216,0.45); border: 3px solid white; z-index: 20; cursor: pointer;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+            </div>
+          </div>
+        `,
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+      });
+
+      const popupHtml = `
+        <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 190px;">
+          <div style="font-weight: 800; color: #1e3a8a; margin-bottom: 4px;">
+            📍 You are here (Customer Location)
+          </div>
+          <div style="color: #475569;">Latitude: <strong>${userLocation.lat.toFixed(6)}°N</strong></div>
+          <div style="color: #475569;">Longitude: <strong>${userLocation.lng.toFixed(6)}°E</strong></div>
+          <div style="color: #64748b; font-size: 11px; margin-top: 2px;">Accuracy: ±${Math.round(accuracy)} meters</div>
+          <div style="margin-top: 6px; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 10px; text-align: center; background-color: #dbeafe; color: #1e40af;">
+            ${isLiveTracking ? '🟢 Live GPS Tracking Active' : '📍 Customer Pin'}
           </div>
         </div>
-      `,
-      iconSize: [44, 44],
-      iconAnchor: [22, 22],
-    });
+      `;
 
-    const popupHtml = `
-      <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 190px;">
-        <div style="font-weight: 800; color: #1e3a8a; margin-bottom: 4px; display: flex; items-center: gap: 4px;">
-          📍 You are here (Customer Location)
+      userMarkerRef.current = L.marker([userLocation.lat, userLocation.lng], { icon: userRadarIcon, zIndexOffset: 1000 })
+        .bindPopup(popupHtml)
+        .bindTooltip('📍 Customer Location (Live GPS)', {
+          permanent: false,
+          direction: 'top',
+          offset: [0, -22],
+        })
+        .addTo(markersGroupRef.current);
+    } else {
+      // Default City Anchor Pin (Always gives customer a concrete location on the map)
+      const defaultIcon = L.divIcon({
+        className: 'custom-buyer-default-pin',
+        html: `
+          <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
+            <div style="position: absolute; width: 40px; height: 40px; border-radius: 50%; background-color: #3b82f6; opacity: 0.25;"></div>
+            <div style="background-color: #2563eb; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.45); border: 2.5px solid white; z-index: 20; cursor: pointer;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+            </div>
+          </div>
+        `,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+      });
+
+      const popupHtml = `
+        <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 190px;">
+          <div style="font-weight: 800; color: #1e3a8a; margin-bottom: 4px;">
+            📍 Customer Location (${selectedCity})
+          </div>
+          <div style="color: #64748b; font-size: 11px;">
+            Click anywhere on the map or tap <strong>Locate Me</strong> to pin your exact location.
+          </div>
+          <div style="margin-top: 6px; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 10px; text-align: center; background-color: #dbeafe; color: #1e40af;">
+            🛣️ Route line is actively connected to specialist
+          </div>
         </div>
-        <div style="color: #475569;">Latitude: <strong>${loc.lat.toFixed(6)}°N</strong></div>
-        <div style="color: #475569;">Longitude: <strong>${loc.lng.toFixed(6)}°E</strong></div>
-        <div style="color: #64748b; font-size: 11px; margin-top: 2px;">Accuracy: ±${Math.round(accuracy)} meters</div>
-        <div style="margin-top: 6px; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 10px; text-align: center; background-color: #dbeafe; color: #1e40af;">
-          ${isLiveTracking ? '🟢 Live GPS Tracking Active' : '📍 Custom Pinned Location'}
-        </div>
-      </div>
-    `;
+      `;
 
-    userMarkerRef.current = L.marker([loc.lat, loc.lng], { icon: userRadarIcon, zIndexOffset: 1000 })
-      .bindPopup(popupHtml)
-      .bindTooltip('You are here (Live Customer Pin)', {
-        permanent: false,
-        direction: 'top',
-        offset: [0, -22],
-      })
-      .addTo(markersGroupRef.current);
-  }, [isLiveTracking]);
+      userMarkerRef.current = L.marker([customerCoords[0], customerCoords[1]], { icon: defaultIcon, zIndexOffset: 1000 })
+        .bindPopup(popupHtml)
+        .bindTooltip(`📍 Customer Location (${selectedCity} Center) • Click map to move`, {
+          permanent: false,
+          direction: 'top',
+          offset: [0, -20],
+        })
+        .addTo(markersGroupRef.current);
+    }
+  }, [userLocation, customerCoords, selectedCity, isLiveTracking]);
 
-  // Render Provider Location Markers with rich info
+  // Render Provider Location Markers with active route indicators
   const renderProviderMarkers = useCallback(() => {
     if (!mapInstanceRef.current || !markersGroupRef.current) return;
 
@@ -241,15 +312,11 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
       if (!latLng) return;
 
       const [pLat, pLng] = latLng;
+      const isTarget = targetProvider?._id === prov._id;
 
-      // Distance calculation from live user coordinates
-      let distText = '';
-      if (userLocation) {
-        const dKm = calculateDistanceKm(userLocation.lat, userLocation.lng, pLat, pLng);
-        distText = `${dKm} km`;
-      } else if (prov.distanceKm !== undefined) {
-        distText = `${prov.distanceKm.toFixed(1)} km`;
-      }
+      // Distance calculation from active customer coordinates
+      const dKm = calculateDistanceKm(customerCoords[0], customerCoords[1], pLat, pLng);
+      const distText = `${dKm} km`;
 
       const businessName = prov.businessName || 'Specialist';
       const categoryName =
@@ -259,10 +326,10 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
 
       const priceText = prov.pricing?.startingPrice ? `${prov.pricing.startingPrice} ETB` : 'Quote';
 
-      // Custom Provider Pin HTML with brand gradient & trade badge
+      // Custom Provider Pin HTML with brand gradient & connected route styling
       const providerIconHtml = `
         <div style="
-          background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+          background: ${isTarget ? 'linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)' : 'linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)'};
           color: white;
           border-radius: 12px;
           padding: 5px 9px;
@@ -271,20 +338,19 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
           gap: 5px;
           font-size: 11px;
           font-weight: 800;
-          box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4);
-          border: 2px solid white;
+          box-shadow: ${isTarget ? '0 0 16px rgba(59, 130, 246, 0.7), 0 4px 14px rgba(0,0,0,0.4)' : '0 4px 12px rgba(29, 78, 216, 0.4)'};
+          border: ${isTarget ? '2.5px solid #60a5fa' : '2px solid white'};
           white-space: nowrap;
           cursor: pointer;
           transform: translate(-50%, -50%);
           transition: transform 0.15s ease-in-out;
         ">
-          <div style="width: 7px; height: 7px; border-radius: 50%; background-color: #60a5fa;"></div>
+          <div style="width: 8px; height: 8px; border-radius: 50%; background-color: ${isTarget ? '#60a5fa' : '#93c5fd'};"></div>
           <span>${prov.isVerified ? '✓ ' : ''}${businessName}</span>
-          ${
-            distText
-              ? `<span style="background: rgba(255,255,255,0.25); border-radius: 4px; padding: 1px 4px; font-size: 10px; font-weight: 700;">${distText}</span>`
-              : `<span style="background: rgba(255,255,255,0.25); border-radius: 4px; padding: 1px 4px; font-size: 10px; font-weight: 700;">${priceText}</span>`
-          }
+          <span style="background: ${isTarget ? 'rgba(96, 165, 250, 0.35)' : 'rgba(255,255,255,0.25)'}; border-radius: 4px; padding: 1px 4px; font-size: 10px; font-weight: 700;">
+            ${distText}
+          </span>
+          ${isTarget ? '<span style="background: #2563eb; color: #ffffff; border-radius: 4px; padding: 1px 4px; font-size: 9px; font-weight: 800;">ROUTE</span>' : ''}
         </div>
       `;
 
@@ -301,11 +367,7 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
             ${prov.isVerified ? '<span style="font-size: 10px; font-weight: 700; color: #15803d; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">✓ Verified</span>' : ''}
           </div>
           <p style="color: #64748b; font-size: 11px; margin: 0 0 6px 0;">Trade: ${categoryName}</p>
-          ${
-            distText
-              ? `<div style="color: #2563eb; font-weight: 700; font-size: 11px; margin-bottom: 6px;">📍 ${distText} from your location</div>`
-              : ''
-          }
+          <div style="color: #2563eb; font-weight: 700; font-size: 11px; margin-bottom: 6px;">📍 ${distText} from customer location</div>
           <div style="font-weight: 700; color: #0f172a; margin-bottom: 8px;">
             Starting: <span style="color: #1d4ed8;">${priceText}</span>
           </div>
@@ -325,9 +387,9 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
         </div>
       `;
 
-      const marker = L.marker([pLat, pLng], { icon: providerIcon })
+      const marker = L.marker([pLat, pLng], { icon: providerIcon, zIndexOffset: isTarget ? 500 : 100 })
         .bindPopup(popupHtml)
-        .bindTooltip(`${businessName} (${categoryName}) ${distText ? '• ' + distText : ''}`, {
+        .bindTooltip(`${businessName} (${categoryName}) • ${distText} away`, {
           direction: 'top',
           offset: [0, -14],
         })
@@ -341,45 +403,109 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
         }
       });
     });
-  }, [providers, userLocation, onProviderSelect]);
+  }, [providers, customerCoords, targetProvider, onProviderSelect]);
 
-  // Synchronize Markers & Distance Route Line
+  // Synchronize Markers & High-Visibility Route Line between Customer & Provider
   useEffect(() => {
     if (!markersGroupRef.current) return;
     markersGroupRef.current.clearLayers();
 
-    // Render customer live location pin if present
-    if (userLocation) {
-      renderUserMarker(userLocation);
-    }
+    // Render customer location marker (Live GPS or City Center default)
+    renderUserMarker();
 
-    // Render provider pins
+    // Render provider markers
     renderProviderMarkers();
 
-    // Route connection polyline between user and active provider
+    // Clear previous route layers
     if (routePolylineRef.current) {
       routePolylineRef.current.remove();
       routePolylineRef.current = null;
     }
+    if (routeHaloRef.current) {
+      routeHaloRef.current.remove();
+      routeHaloRef.current = null;
+    }
+    if (distanceMarkerRef.current) {
+      distanceMarkerRef.current.remove();
+      distanceMarkerRef.current = null;
+    }
 
-    if (userLocation && activeProvider && mapInstanceRef.current) {
-      const pCoords = normalizeCoordinates(activeProvider.location?.coordinates);
+    // Render high-visibility route line connecting customer and target provider
+    if (targetProvider && mapInstanceRef.current) {
+      const pCoords = normalizeCoordinates(targetProvider.location?.coordinates);
       if (pCoords) {
-        routePolylineRef.current = L.polyline(
-          [
-            [userLocation.lat, userLocation.lng],
-            [pCoords[0], pCoords[1]],
-          ],
+        // 1. Outer route glowing halo line for maximum contrast and high visibility
+        routeHaloRef.current = L.polyline(
+          [customerCoords, [pCoords[0], pCoords[1]]],
           {
-            color: '#2563eb',
-            weight: 3.5,
-            dashArray: '6, 8',
-            opacity: 0.85,
+            color: '#60a5fa',
+            weight: 7,
+            opacity: 0.38,
+            lineCap: 'round',
+            lineJoin: 'round',
           }
         ).addTo(mapInstanceRef.current);
+
+        // 2. Core high-contrast dashed route line
+        routePolylineRef.current = L.polyline(
+          [customerCoords, [pCoords[0], pCoords[1]]],
+          {
+            color: '#1d4ed8',
+            weight: 3.5,
+            dashArray: '8, 8',
+            opacity: 0.95,
+            lineCap: 'round',
+            lineJoin: 'round',
+          }
+        ).addTo(mapInstanceRef.current);
+
+        // 3. Midpoint coordinates for floating distance badge
+        const midLat = (customerCoords[0] + pCoords[0]) / 2;
+        const midLng = (customerCoords[1] + pCoords[1]) / 2;
+        const distKm = calculateDistanceKm(customerCoords[0], customerCoords[1], pCoords[0], pCoords[1]);
+        const estMin = Math.max(2, Math.round((distKm / 35) * 60));
+
+        const distIcon = L.divIcon({
+          className: 'custom-route-distance-pill',
+          html: `
+            <div style="transform: translate(-50%, -50%); background: #1e3a8a; color: white; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 800; border: 2px solid white; box-shadow: 0 4px 12px rgba(30,58,138,0.45); white-space: nowrap; display: flex; align-items: center; gap: 5px; pointer-events: none; cursor: default;">
+              <span>📍</span>
+              <span>${distKm.toFixed(1)} km</span>
+              <span style="color: #93c5fd; font-weight: 600; font-size: 10px;">(~${estMin} min)</span>
+            </div>
+          `,
+          iconSize: [0, 0],
+          iconAnchor: [0, 0],
+        });
+
+        distanceMarkerRef.current = L.marker([midLat, midLng], {
+          icon: distIcon,
+          interactive: false,
+          zIndexOffset: 1200,
+        }).addTo(mapInstanceRef.current);
+
+        routePolylineRef.current.bindTooltip(
+          `🛣️ Route: Customer ➔ ${targetProvider.businessName || 'Provider'} (${distKm.toFixed(1)} km, ~${estMin} min)`,
+          { sticky: true, direction: 'top', offset: [0, -10] }
+        );
       }
     }
-  }, [providers, userLocation, activeProvider, renderUserMarker, renderProviderMarkers]);
+  }, [providers, customerCoords, targetProvider, renderUserMarker, renderProviderMarkers]);
+
+  // Focus Route Line Camera to simultaneously frame customer and target provider
+  const handleFocusRoute = useCallback(() => {
+    if (!mapInstanceRef.current || !targetProvider) return;
+    const pCoords = normalizeCoordinates(targetProvider.location?.coordinates);
+    if (!pCoords) return;
+
+    mapInstanceRef.current.fitBounds(
+      [
+        customerCoords,
+        [pCoords[0], pCoords[1]],
+      ],
+      { padding: [55, 55], maxZoom: 15 }
+    );
+  }, [customerCoords, targetProvider]);
 
   // Map Camera Navigation Helpers
   const handleFlyToUser = () => {
@@ -397,11 +523,11 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[480px] lg:h-[620px] rounded-xl overflow-hidden border border-slate-200/90 shadow-md z-0 flex flex-col bg-slate-50">
+    <div id="map-discovery-container" className="relative w-full h-[480px] lg:h-[620px] rounded-xl overflow-hidden border border-slate-200/90 shadow-md z-0 flex flex-col bg-slate-50">
       {/* Top Floating Control Toolbar */}
       <div className="absolute top-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-        {/* Left Actions: Live GPS & Locate Me */}
-        <div className="flex items-center gap-2 pointer-events-auto">
+        {/* Left Actions: Live GPS, Locate Me & Locate Route Line */}
+        <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
           {onToggleLiveTracking && (
             <button
               type="button"
@@ -437,6 +563,18 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
             <LocateFixed className={`w-3.5 h-3.5 ${gpsLoading ? 'animate-spin text-blue-600' : 'text-blue-600'}`} />
             <span>{gpsLoading ? 'Locating...' : 'Locate Me'}</span>
           </button>
+
+          {targetProvider && (
+            <button
+              type="button"
+              onClick={handleFocusRoute}
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold border border-blue-500 shadow-md flex items-center gap-1.5 backdrop-blur-md transition-all cursor-pointer"
+              title="Locate and fit the route line between customer and provider"
+            >
+              <Navigation className="w-3.5 h-3.5" />
+              <span>Locate Route Line</span>
+            </button>
+          )}
         </div>
 
         {/* Right Actions: Quick City Center Jumps */}
@@ -477,13 +615,15 @@ export const MapDiscovery: React.FC<MapDiscoveryProps> = ({
               <span>
                 📍 Live Coordinates: {userLocation.lat.toFixed(4)}°N, {userLocation.lng.toFixed(4)}°E{' '}
                 {userLocation.accuracy ? `(±${Math.round(userLocation.accuracy)}m)` : ''} •{' '}
-                {providers.length} Specialists on Map
+                Route connected to {targetProvider?.businessName || 'Specialist'}
               </span>
             </>
           ) : (
             <>
-              <span className="text-amber-400 font-bold">👆 Tip:</span>
-              <span>Click anywhere on the map or tap &apos;Locate Me&apos; to place your customer pin</span>
+              <span className="w-2 h-2 rounded-full bg-blue-400" />
+              <span>
+                🛣️ Route Line connected to {targetProvider?.businessName || 'Specialist'} • Click map to move customer pin
+              </span>
             </>
           )}
         </div>
