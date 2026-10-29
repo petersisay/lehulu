@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   ShieldCheck,
   Star,
@@ -12,6 +14,7 @@ import {
   Award,
   ChevronLeft,
   MessageCircle,
+  Navigation,
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { providerApi } from '../services/api';
@@ -19,6 +22,32 @@ import { ProviderProfile, Review } from '../types';
 import { BookingModal } from '../components/BookingModal';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+// Helper to validate and convert GeoJSON coordinates [longitude, latitude] to Leaflet [latitude, longitude]
+// Standard global geographic boundaries: Longitude: -180 to 180, Latitude: -90 to 90
+const parseGeoJsonCoordinates = (
+  coords?: [number, number] | number[] | null
+): [number, number] | null => {
+  if (!coords || !Array.isArray(coords) || coords.length !== 2) return null;
+  const [lng, lat] = coords;
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null;
+  if (lng < -180 || lng > 180 || lat < -90 || lat > 90) return null;
+  return [lat, lng];
+};
+
+// Validate that service radius is a finite number within the supported 1-100 km boundary
+const parseServiceRadiusKm = (radius?: number | null): number | null => {
+  if (typeof radius !== 'number' || !Number.isFinite(radius)) return null;
+  if (radius < 1 || radius > 100) return null;
+  return radius;
+};
+
+// Helper to format latitude and longitude with correct hemisphere directions (N/S, E/W)
+const formatCoordinateLabel = (lat: number, lng: number): string => {
+  const latDir = lat >= 0 ? 'N' : 'S';
+  const lngDir = lng >= 0 ? 'E' : 'W';
+  return `${Math.abs(lat).toFixed(5)}°${latDir}, ${Math.abs(lng).toFixed(5)}°${lngDir}`;
+};
 
 export const ProviderProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +58,132 @@ export const ProviderProfilePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState<boolean>(false);
+
+  // Map and Location References
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const circleRef = useRef<L.Circle | null>(null);
+
+  // Parse and validate provider base coordinates
+  const providerLeafletCoords = useMemo<[number, number] | null>(() => {
+    return parseGeoJsonCoordinates(provider?.location?.coordinates);
+  }, [provider?.location?.coordinates]);
+
+  // Parse and validate service radius (1 - 100 km)
+  const validRadiusKm = useMemo<number | null>(() => {
+    return parseServiceRadiusKm(provider?.serviceRadiusKm);
+  }, [provider?.serviceRadiusKm]);
+
+  // Initialize and synchronize Leaflet service area map on mount or coordinate update
+  useEffect(() => {
+    if (!providerLeafletCoords || !mapContainerRef.current) return;
+
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+    }
+
+    const map = L.map(mapContainerRef.current, {
+      center: providerLeafletCoords,
+      zoom: 13,
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Custom Workshop / Operating Base Marker
+    const workshopPinIcon = L.divIcon({
+      className: 'custom-provider-profile-base-pin',
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;">
+          <div style="position: absolute; width: 38px; height: 38px; border-radius: 50%; background-color: #2563eb; opacity: 0.25; animation: pulse 2s infinite;"></div>
+          <div style="background-color: #1d4ed8; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(29,78,216,0.4); border: 2.5px solid white;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+          </div>
+        </div>
+      `,
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+    });
+
+    const bName = provider?.businessName || 'Specialist Base';
+    const cityText = provider?.publicAddress || provider?.serviceCities?.[0] || 'Service Area';
+
+    L.marker(providerLeafletCoords, { icon: workshopPinIcon })
+      .bindPopup(`
+        <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 180px;">
+          <div style="font-weight: 800; color: #1e3a8a; margin-bottom: 2px;">🔧 ${bName}</div>
+          <div style="color: #475569; font-weight: 600;">${cityText}</div>
+          <div style="color: #64748b; font-size: 11px; margin-top: 3px;">${formatCoordinateLabel(providerLeafletCoords[0], providerLeafletCoords[1])}</div>
+        </div>
+      `)
+      .bindTooltip(`🔧 ${bName} (Operating Base)`, { direction: 'top', offset: [0, -19] })
+      .addTo(map);
+
+    // Render service radius circle only when radius is present, finite, and in supported range 1-100 km
+    if (validRadiusKm) {
+      const radiusMeters = validRadiusKm * 1000;
+      const circle = L.circle(providerLeafletCoords, {
+        radius: radiusMeters,
+        color: '#2563eb',
+        weight: 1.5,
+        dashArray: '5, 5',
+        fillColor: '#3b82f6',
+        fillOpacity: 0.12,
+      }).addTo(map);
+
+      circle.bindTooltip(`Service Radius: ~${validRadiusKm} km from base`, {
+        permanent: false,
+        direction: 'top',
+      });
+
+      circleRef.current = circle;
+      map.fitBounds(circle.getBounds(), { padding: [25, 25], maxZoom: 15 });
+    } else {
+      map.setView(providerLeafletCoords, 14);
+      circleRef.current = null;
+    }
+
+    mapInstanceRef.current = map;
+
+    // Viewport resize and layout invalidation handling
+    const t1 = setTimeout(() => {
+      map.invalidateSize();
+    }, 120);
+    const t2 = setTimeout(() => {
+      map.invalidateSize();
+    }, 320);
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', handleResize);
+      map.remove();
+      mapInstanceRef.current = null;
+      circleRef.current = null;
+    };
+  }, [providerLeafletCoords, validRadiusKm, provider?.businessName, provider?.publicAddress, provider?.serviceCities]);
+
+  const handleFitServiceArea = () => {
+    if (!mapInstanceRef.current) return;
+    if (circleRef.current) {
+      mapInstanceRef.current.fitBounds(circleRef.current.getBounds(), { padding: [25, 25], maxZoom: 15 });
+    } else if (providerLeafletCoords) {
+      mapInstanceRef.current.setView(providerLeafletCoords, 14, { animate: true });
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -357,6 +512,88 @@ export const ProviderProfilePage: React.FC = () => {
 
         {/* Right Col: Working Hours & Trust Info */}
         <div className="space-y-6">
+          {/* Service Area & Coverage Map Card */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                <Navigation className="w-4 h-4 text-blue-600" />
+                <span>Service Coverage Area</span>
+              </h3>
+              {providerLeafletCoords && (
+                <button
+                  type="button"
+                  onClick={handleFitServiceArea}
+                  className="text-[11px] font-semibold text-blue-700 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200 transition-colors cursor-pointer"
+                >
+                  Fit Service Area
+                </button>
+              )}
+            </div>
+
+            {/* Configured Service Cities Badges */}
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-semibold text-slate-500 block">
+                Configured Service Cities:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {provider.serviceCities && provider.serviceCities.length > 0 ? (
+                  provider.serviceCities.map((city, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200"
+                    >
+                      <MapPin className="w-3 h-3 text-blue-600" />
+                      {city}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs text-slate-400">No specific cities listed</span>
+                )}
+              </div>
+            </div>
+
+            {/* Leaflet Map / Fallback Card */}
+            {providerLeafletCoords ? (
+              <div className="space-y-2">
+                <div
+                  ref={mapContainerRef}
+                  className="w-full h-56 rounded-xl overflow-hidden border border-slate-200 shadow-inner z-0 bg-slate-100"
+                />
+                <div className="flex items-center justify-between text-[11px] text-slate-500 flex-wrap gap-2 px-1">
+                  <span>
+                    📍 Operating Base: <strong className="text-slate-800">{formatCoordinateLabel(providerLeafletCoords[0], providerLeafletCoords[1])}</strong>
+                  </span>
+                  {validRadiusKm ? (
+                    <span className="text-[10px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                      ~{validRadiusKm} km operational radius
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-amber-700 font-medium bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                      Exact radius not configured
+                    </span>
+                  )}
+                </div>
+                {validRadiusKm && provider.serviceCities && provider.serviceCities.length > 1 && (
+                  <p className="text-[10px] text-slate-400 italic px-1">
+                    Note: Circle indicates operational travel radius around the primary base; travel to other listed cities may depend on scheduled appointments.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="text-xs font-semibold text-slate-700">
+                    No precise map coordinates published for this specialist.
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    Service is offered throughout {provider.serviceCities?.join(', ') || 'their local area'}.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Working Hours */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
