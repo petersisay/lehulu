@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   Calendar,
   Clock,
@@ -16,6 +18,8 @@ import {
   Plus,
   Trash2,
   X,
+  ExternalLink,
+  Navigation,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -25,6 +29,7 @@ import { Booking, Quote, BookingStatus } from '../types';
 import { QuotationView } from '../components/QuotationView';
 import { BookingChat } from '../components/BookingChat';
 import { ReviewModal } from '../components/ReviewModal';
+import { calculateDistanceKm } from '../components/MapDiscovery';
 
 const LIFECYCLE_STEPS: BookingStatus[] = [
   'REQUESTED',
@@ -34,6 +39,25 @@ const LIFECYCLE_STEPS: BookingStatus[] = [
   'COMPLETION_PENDING',
   'COMPLETED',
 ];
+
+// Helper to validate and convert GeoJSON coordinates [longitude, latitude] to Leaflet [latitude, longitude]
+// Standard global geographic boundaries: Longitude: -180 to 180, Latitude: -90 to 90
+const parseGeoJsonCoordinates = (
+  coords?: [number, number] | number[] | null
+): [number, number] | null => {
+  if (!coords || !Array.isArray(coords) || coords.length !== 2) return null;
+  const [lng, lat] = coords;
+  if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null;
+  if (lng < -180 || lng > 180 || lat < -90 || lat > 90) return null;
+  return [lat, lng];
+};
+
+// Helper to format latitude and longitude with correct hemisphere directions (N/S, E/W)
+export const formatCoordinateLabel = (lat: number, lng: number): string => {
+  const latDir = lat >= 0 ? 'N' : 'S';
+  const lngDir = lng >= 0 ? 'E' : 'W';
+  return `${Math.abs(lat).toFixed(5)}°${latDir}, ${Math.abs(lng).toFixed(5)}°${lngDir}`;
+};
 
 export const BookingDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -58,6 +82,193 @@ export const BookingDetailPage: React.FC = () => {
   const [quoteInspection, setQuoteInspection] = useState<boolean>(true);
   const [quoteNotes, setQuoteNotes] = useState<string>('');
   const [submittingQuote, setSubmittingQuote] = useState<boolean>(false);
+
+  // Map and Location References
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+
+  // Parse and validate service address coordinates
+  const serviceLeafletCoords = useMemo<[number, number] | null>(() => {
+    return parseGeoJsonCoordinates(booking?.serviceAddress?.coordinates);
+  }, [booking?.serviceAddress?.coordinates]);
+
+  // Parse and validate provider base coordinates (if authorized & available)
+  const providerLeafletCoords = useMemo<[number, number] | null>(() => {
+    return parseGeoJsonCoordinates(booking?.providerId?.location?.coordinates);
+  }, [booking?.providerId?.location?.coordinates]);
+
+  // Safe external navigation link
+  const googleMapsUrl = useMemo<string | null>(() => {
+    if (!serviceLeafletCoords) return null;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${serviceLeafletCoords[0]},${serviceLeafletCoords[1]}`
+    )}`;
+  }, [serviceLeafletCoords]);
+
+  // Initialize and synchronize Leaflet Map on mount or coordinate update
+  useEffect(() => {
+    if (!serviceLeafletCoords || !mapContainerRef.current) return;
+
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+    }
+
+    const map = L.map(mapContainerRef.current, {
+      center: serviceLeafletCoords,
+      zoom: 15,
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Custom Service Location Pin
+    const servicePinIcon = L.divIcon({
+      className: 'custom-booking-detail-service-pin',
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;">
+          <div style="position: absolute; width: 38px; height: 38px; border-radius: 50%; background-color: #2563eb; opacity: 0.3; animation: pulse 2s infinite;"></div>
+          <div style="background-color: #1d4ed8; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.35); border: 2.5px solid white;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+        </div>
+      `,
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+    });
+
+    const streetLabel = booking?.serviceAddress?.streetAddress || 'Service Destination';
+    const cityLabel = booking?.serviceAddress?.city ? `, ${booking.serviceAddress.city}` : '';
+
+    L.marker(serviceLeafletCoords, { icon: servicePinIcon })
+      .bindPopup(`
+        <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 180px;">
+          <div style="font-weight: 800; color: #1e3a8a; margin-bottom: 3px;">📍 Service Location</div>
+          <div style="color: #334155; font-weight: 600;">${streetLabel}${cityLabel}</div>
+          <div style="color: #64748b; font-size: 11px; margin-top: 3px;">${formatCoordinateLabel(serviceLeafletCoords[0], serviceLeafletCoords[1])}</div>
+        </div>
+      `)
+      .bindTooltip(`📍 Service Location: ${streetLabel}`, { direction: 'top', offset: [0, -19] })
+      .addTo(map);
+
+    // If genuine provider coordinates exist and are distinct from service location
+    if (
+      providerLeafletCoords &&
+      (providerLeafletCoords[0] !== serviceLeafletCoords[0] ||
+        providerLeafletCoords[1] !== serviceLeafletCoords[1])
+    ) {
+      const providerPinIcon = L.divIcon({
+        className: 'custom-booking-detail-provider-pin',
+        html: `
+          <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;">
+            <div style="background-color: #4338ca; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid white;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </div>
+          </div>
+        `,
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
+      });
+
+      const providerName = booking?.providerId?.businessName || 'Provider Base';
+
+      L.marker(providerLeafletCoords, { icon: providerPinIcon })
+        .bindPopup(`
+          <div style="font-family: inherit; font-size: 12px; line-height: 1.4; padding: 4px; min-width: 180px;">
+            <div style="font-weight: 800; color: #312e81; margin-bottom: 3px;">🔧 Provider Base</div>
+            <div style="color: #334155; font-weight: 600;">${providerName}</div>
+            <div style="color: #64748b; font-size: 11px; margin-top: 3px;">${formatCoordinateLabel(providerLeafletCoords[0], providerLeafletCoords[1])}</div>
+          </div>
+        `)
+        .bindTooltip(`🔧 ${providerName}`, { direction: 'top', offset: [0, -17] })
+        .addTo(map);
+
+      // Route polyline with halo
+      L.polyline([providerLeafletCoords, serviceLeafletCoords], {
+        color: '#60a5fa',
+        weight: 6,
+        opacity: 0.35,
+        lineCap: 'round',
+      }).addTo(map);
+
+      L.polyline([providerLeafletCoords, serviceLeafletCoords], {
+        color: '#2563eb',
+        weight: 3,
+        dashArray: '6, 6',
+        opacity: 0.9,
+        lineCap: 'round',
+      }).addTo(map);
+
+      const distKm = calculateDistanceKm(
+        providerLeafletCoords[0],
+        providerLeafletCoords[1],
+        serviceLeafletCoords[0],
+        serviceLeafletCoords[1]
+      );
+
+      const midLat = (providerLeafletCoords[0] + serviceLeafletCoords[0]) / 2;
+      const midLng = (providerLeafletCoords[1] + serviceLeafletCoords[1]) / 2;
+
+      const distIcon = L.divIcon({
+        className: 'custom-booking-route-badge',
+        html: `
+          <div style="transform: translate(-50%, -50%); background: #1e3a8a; color: white; padding: 3px 8px; border-radius: 9999px; font-size: 10px; font-weight: 800; border: 1.5px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); white-space: nowrap; pointer-events: none;">
+            ${distKm.toFixed(1)} km
+          </div>
+        `,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+      });
+
+      L.marker([midLat, midLng], { icon: distIcon, interactive: false }).addTo(map);
+
+      const bounds = L.latLngBounds([providerLeafletCoords, serviceLeafletCoords]);
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+    }
+
+    mapInstanceRef.current = map;
+
+    // Resizing & invalidation handling
+    const t1 = setTimeout(() => {
+      map.invalidateSize();
+    }, 120);
+    const t2 = setTimeout(() => {
+      map.invalidateSize();
+    }, 320);
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', handleResize);
+      map.remove();
+      mapInstanceRef.current = null;
+    };
+  }, [serviceLeafletCoords, providerLeafletCoords, booking?.serviceAddress, booking?.providerId]);
+
+  const handleRecenterMap = () => {
+    if (!mapInstanceRef.current || !serviceLeafletCoords) return;
+    if (providerLeafletCoords) {
+      const bounds = L.latLngBounds([providerLeafletCoords, serviceLeafletCoords]);
+      mapInstanceRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+    } else {
+      mapInstanceRef.current.setView(serviceLeafletCoords, 15, { animate: true });
+    }
+  };
 
   const fetchBooking = async () => {
     if (!id) return;
@@ -662,6 +873,76 @@ export const BookingDetailPage: React.FC = () => {
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* Map Service Location Section */}
+            <div className="pt-3 border-t border-slate-100 space-y-2.5">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-1.5">
+                  <Navigation className="w-3.5 h-3.5 text-blue-600" />
+                  <h4 className="text-xs font-bold text-slate-900">
+                    Exact Service Location Map
+                  </h4>
+                  {serviceLeafletCoords && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                      Verified Coordinates
+                    </span>
+                  )}
+                </div>
+
+                {serviceLeafletCoords && googleMapsUrl && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleRecenterMap}
+                      className="text-[11px] font-semibold text-slate-600 hover:text-blue-600 transition-colors cursor-pointer"
+                    >
+                      Recenter
+                    </button>
+                    <a
+                      href={googleMapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors cursor-pointer"
+                      title="Open destination in Google Maps for turn-by-turn navigation"
+                    >
+                      <span>Navigate</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {serviceLeafletCoords ? (
+                <div className="space-y-2">
+                  <div
+                    ref={mapContainerRef}
+                    className="w-full h-64 rounded-xl overflow-hidden border border-slate-200 shadow-inner z-0 bg-slate-100"
+                  />
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 flex-wrap gap-2 px-1">
+                    <span>
+                      📍 Coordinates: <strong className="text-slate-800">{formatCoordinateLabel(serviceLeafletCoords[0], serviceLeafletCoords[1])}</strong>
+                    </span>
+                    {providerLeafletCoords && (
+                      <span className="text-[10px] text-blue-700 font-medium bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                        Route line shown between provider and service location
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-semibold text-slate-700">
+                      No precise map location was provided for this booking.
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      The specialist will arrive using the written address: {booking.serviceAddress?.streetAddress || 'Address on file'}{booking.serviceAddress?.city ? `, ${booking.serviceAddress.city}` : ''}.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Cancel option if eligible */}
