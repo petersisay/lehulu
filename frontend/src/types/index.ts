@@ -90,6 +90,7 @@ export interface ProviderProfile {
   reviewCount: number;
   completedBookingsCount: number;
   isAvailable: boolean;
+  distanceKm?: number;
   createdAt: string;
 }
 

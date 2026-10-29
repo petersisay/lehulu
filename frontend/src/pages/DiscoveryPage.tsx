@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import {
   Search,
@@ -6,6 +6,8 @@ import {
   ShieldCheck,
   Filter,
   Navigation,
+  Radio,
+  X,
   List,
   Map as MapIcon,
   Loader2,
@@ -15,7 +17,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { categoryApi, providerApi } from '../services/api';
 import { ServiceCategory, ProviderProfile } from '../types';
 import { ProviderCard } from '../components/ProviderCard';
-import { MapDiscovery } from '../components/MapDiscovery';
+import { MapDiscovery, UserLocation, calculateDistanceKm, normalizeCoordinates } from '../components/MapDiscovery';
 
 export const DiscoveryPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -31,9 +33,21 @@ export const DiscoveryPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || '');
   const [selectedCity, setSelectedCity] = useState<string>(searchParams.get('city') || '');
   const [verifiedOnly, setVerifiedOnly] = useState<boolean>(searchParams.get('verified') === 'true');
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [isLiveTracking, setIsLiveTracking] = useState<boolean>(false);
   const [locationLoading, setLocationLoading] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'split' | 'list' | 'map'>('split');
+  const watchIdRef = useRef<number | null>(null);
+
+  // Stop watching on unmount
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -65,8 +79,8 @@ export const DiscoveryPage: React.FC = () => {
       if (userLocation) {
         params.lat = userLocation.lat;
         params.lng = userLocation.lng;
-        params.maxDistance = 50000; // 50km
-        params.radiusKm = 50;
+        params.maxDistance = 60000; // 60km
+        params.radiusKm = 60;
       }
 
       const res = await providerApi.search(params);
@@ -95,6 +109,24 @@ export const DiscoveryPage: React.FC = () => {
     fetchProviders();
   }, [selectedCategory, selectedCity, verifiedOnly, userLocation]);
 
+  // Compute live real-time distances from customer coordinates to all providers
+  const computedProviders = useMemo(() => {
+    if (!userLocation) return providers;
+    return providers
+      .map((p) => {
+        const coords = normalizeCoordinates(p.location?.coordinates);
+        let dist = p.distanceKm;
+        if (coords) {
+          dist = calculateDistanceKm(userLocation.lat, userLocation.lng, coords[0], coords[1]);
+        }
+        return {
+          ...p,
+          distanceKm: dist,
+        };
+      })
+      .sort((a, b) => (a.distanceKm ?? 9999) - (b.distanceKm ?? 9999));
+  }, [providers, userLocation]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newParams = new URLSearchParams(searchParams);
@@ -108,11 +140,8 @@ export const DiscoveryPage: React.FC = () => {
     fetchProviders();
   };
 
-  const handleGetLocation = () => {
-    if (userLocation) {
-      setUserLocation(null);
-      return;
-    }
+  // 1. One-shot accurate GPS fix
+  const handleLocateMe = () => {
     if (!navigator.geolocation) {
       setError(language === 'am' ? 'የአሰሳ አካባቢ መለያ በአሳሽዎ አይደገፍም።' : 'Geolocation is not supported by your browser.');
       return;
@@ -124,29 +153,89 @@ export const DiscoveryPage: React.FC = () => {
         setUserLocation({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
+          isLiveTracking: false,
         });
         setLocationLoading(false);
       },
       (err) => {
+        setLocationLoading(false);
         let msg = language === 'am' ? 'የአሁኑን አካባቢ ማግኘት አልተቻለም።' : 'Unable to retrieve your location.';
         if (err.code === 1) {
           msg = language === 'am'
             ? 'የአካባቢ ፈቃድ ተከልክሏል። እባክዎ በአሳሽዎ ፈቃድ ይስጡ ወይም ከተማ ይምረጡ።'
             : 'Location access was denied. Please allow location permissions in your browser or select a city manually.';
-        } else if (err.code === 2) {
-          msg = language === 'am'
-            ? 'የጂፒኤስ መረጃ በአሁኑ ጊዜ አይገኝም።'
-            : 'GPS location information is currently unavailable.';
-        } else if (err.code === 3) {
-          msg = language === 'am'
-            ? 'የአካባቢ ጥያቄ ጊዜው አልቋል። እባክዎ ደግመው ይሞክሩ።'
-            : 'Location request timed out. Please try again.';
         }
         setError(msg);
+      },
+      { timeout: 15000, enableHighAccuracy: true, maximumAge: 0 }
+    );
+  };
+
+  // 2. Continuous real-time live GPS tracking
+  const handleToggleLiveTracking = () => {
+    if (!navigator.geolocation) {
+      setError(language === 'am' ? 'የአሰሳ አካባቢ መለያ በአሳሽዎ አይደገፍም።' : 'Geolocation is not supported by your browser.');
+      return;
+    }
+
+    if (isLiveTracking && watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+      setIsLiveTracking(false);
+      return;
+    }
+
+    setLocationLoading(true);
+    setError(null);
+    setIsLiveTracking(true);
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        setUserLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
+          isLiveTracking: true,
+        });
         setLocationLoading(false);
       },
-      { timeout: 10000, enableHighAccuracy: true }
+      (err) => {
+        setLocationLoading(false);
+        setIsLiveTracking(false);
+        if (watchIdRef.current !== null) {
+          navigator.geolocation.clearWatch(watchIdRef.current);
+          watchIdRef.current = null;
+        }
+        let msg = 'Unable to track your location.';
+        if (err.code === 1) {
+          msg = 'Location access was denied. Please allow location permissions in your browser.';
+        }
+        setError(msg);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      }
     );
+
+    watchIdRef.current = watchId;
+  };
+
+  // 3. User clicked anywhere on the map to place/adjust pin
+  const handleLocationSelect = (lat: number, lng: number, accuracy: number = 10) => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+      setIsLiveTracking(false);
+    }
+    setUserLocation({
+      lat,
+      lng,
+      accuracy,
+      isLiveTracking: false,
+    });
   };
 
   return (
@@ -180,26 +269,50 @@ export const DiscoveryPage: React.FC = () => {
               </select>
             </div>
 
-            <button
-              type="button"
-              onClick={handleGetLocation}
-              disabled={locationLoading}
-              className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                userLocation
-                  ? 'bg-blue-50 border-blue-300 text-blue-700'
-                  : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'
-              }`}
-              title="Filter by current geolocation"
-            >
-              {locationLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
-              ) : (
-                <Navigation className="w-4 h-4 text-blue-600" />
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={handleToggleLiveTracking}
+                disabled={locationLoading}
+                className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isLiveTracking
+                    ? 'bg-emerald-600 text-white border-emerald-500 shadow-xs'
+                    : userLocation
+                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'
+                }`}
+                title={isLiveTracking ? 'Live GPS tracking is active' : 'Turn on Live GPS Location tracking'}
+              >
+                {locationLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                ) : isLiveTracking ? (
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                ) : (
+                  <Navigation className="w-4 h-4 text-blue-600" />
+                )}
+                <span className="hidden md:inline">
+                  {isLiveTracking ? 'Live Tracking' : userLocation ? 'Location Set' : 'Near Me'}
+                </span>
+              </button>
+
+              {userLocation && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (watchIdRef.current !== null) {
+                      navigator.geolocation.clearWatch(watchIdRef.current);
+                      watchIdRef.current = null;
+                      setIsLiveTracking(false);
+                    }
+                    setUserLocation(null);
+                  }}
+                  className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 text-xs transition-colors cursor-pointer"
+                  title="Clear location filter"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               )}
-              <span className="hidden md:inline">
-                {userLocation ? 'Location Active' : 'Near Me'}
-              </span>
-            </button>
+            </div>
 
             <button
               type="submit"
@@ -250,10 +363,10 @@ export const DiscoveryPage: React.FC = () => {
                 type="checkbox"
                 checked={verifiedOnly}
                 onChange={(e) => setVerifiedOnly(e.target.checked)}
-                className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500"
+                className="w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500"
               />
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
                 Verified Only
               </span>
             </label>
@@ -386,12 +499,19 @@ export const DiscoveryPage: React.FC = () => {
           {/* List Area */}
           {(viewMode === 'split' || viewMode === 'list') && (
             <div className={viewMode === 'split' ? 'lg:col-span-7 space-y-4' : 'contents'}>
-              <div className="text-xs font-semibold text-slate-500 mb-2">
-                Showing {providers.length} local service specialist{providers.length > 1 ? 's' : ''}
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+                <span>
+                  Showing {computedProviders.length} local service specialist{computedProviders.length > 1 ? 's' : ''}
+                </span>
+                {userLocation && (
+                  <span className="text-blue-700 font-bold bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                    📍 Sorted by nearest to your live location
+                  </span>
+                )}
               </div>
               <div className={viewMode === 'split' ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'contents'}>
-                {providers.map((prov) => (
-                  <ProviderCard key={prov._id} provider={prov} distanceKm={(prov as any).distanceKm} />
+                {computedProviders.map((prov) => (
+                  <ProviderCard key={prov._id} provider={prov} distanceKm={prov.distanceKm} />
                 ))}
               </div>
             </div>
@@ -402,8 +522,14 @@ export const DiscoveryPage: React.FC = () => {
             <div className={viewMode === 'split' ? 'lg:col-span-5' : 'w-full'}>
               <div className="sticky top-28">
                 <MapDiscovery
-                  providers={providers}
+                  providers={computedProviders}
+                  userLocation={userLocation}
+                  onLocationSelect={handleLocationSelect}
                   selectedCity={selectedCity || 'Adama'}
+                  isLiveTracking={isLiveTracking}
+                  onToggleLiveTracking={handleToggleLiveTracking}
+                  onLocateMe={handleLocateMe}
+                  gpsLoading={locationLoading}
                 />
               </div>
             </div>

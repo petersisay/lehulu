@@ -75,8 +75,8 @@ export const ProviderCard: React.FC<ProviderCardProps> = ({ provider, distanceKm
                 {provider.serviceCities?.join(', ') || provider.publicAddress || 'Adama'}
               </span>
               {distanceKm !== undefined && (
-                <span className="text-emerald-600 font-medium">
-                  • {distanceKm.toFixed(1)} km
+                <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200 text-[11px]">
+                  📍 {distanceKm.toFixed(1)} km away
                 </span>
               )}
             </div>
