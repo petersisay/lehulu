@@ -24,9 +24,9 @@ router.get('/customer', requireRole('CUSTOMER'), getCustomerBookings);
 // Only SERVICE_PROVIDER can access assigned provider bookings
 router.get('/provider', requireRole('SERVICE_PROVIDER'), getProviderBookings);
 
-// General bookings list route dispatched by user role
+// General bookings list route dispatched by role query or user role
 router.get('/', requireAuth, (req: any, res) => {
-  if (req.user?.role === 'SERVICE_PROVIDER') {
+  if (req.query.role === 'SERVICE_PROVIDER' || (req.user?.role === 'SERVICE_PROVIDER' && req.query.role !== 'CUSTOMER')) {
     return getProviderBookings(req, res);
   }
   return getCustomerBookings(req, res);

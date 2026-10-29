@@ -27,10 +27,15 @@ export const BookingChat: React.FC<BookingChatProps> = ({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatListRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (chatListRef.current) {
+      chatListRef.current.scrollTo({
+        top: chatListRef.current.scrollHeight,
+        behavior,
+      });
+    }
   };
 
   useEffect(() => {
@@ -149,7 +154,7 @@ export const BookingChat: React.FC<BookingChatProps> = ({
       </div>
 
       {/* Messages List Area */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/50">
+      <div ref={chatListRef} className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/50">
         {loading ? (
           <div className="flex items-center justify-center h-full text-slate-400 text-xs">
             <Loader2 className="w-5 h-5 animate-spin mr-2 text-blue-600" />
@@ -192,7 +197,6 @@ export const BookingChat: React.FC<BookingChatProps> = ({
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {error && (

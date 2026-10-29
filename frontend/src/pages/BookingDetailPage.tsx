@@ -85,6 +85,10 @@ export const BookingDetailPage: React.FC = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [id]);
+
+  useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate('/login?redirect=/bookings/' + id);
       return;

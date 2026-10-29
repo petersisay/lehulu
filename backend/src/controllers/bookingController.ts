@@ -214,38 +214,10 @@ export const getProviderBookings = async (
     const queryObj: any = {};
 
     if (provider) {
-      const ownCount = await Booking.countDocuments({ providerId: provider._id });
-      if (ownCount === 0) {
-        // Connect recent platform booking so provider dashboard accurately displays their order progress and inquiries
-        const candidate = await Booking.findOne().sort({ createdAt: -1 });
-        if (candidate) {
-          candidate.providerId = provider._id;
-          await candidate.save();
-          await Quote.updateMany({ bookingId: candidate._id }, { providerId: provider._id });
-          await Review.updateMany({ bookingId: candidate._id }, { providerId: provider._id });
-
-          const completedCount = await Booking.countDocuments({ providerId: provider._id, status: 'COMPLETED' });
-          const allReviews = await Review.find({ providerId: provider._id });
-          const totalRating = allReviews.reduce((sum, r) => sum + r.rating, 0);
-          const avgRating = allReviews.length > 0 ? Number((totalRating / allReviews.length).toFixed(1)) : (completedCount > 0 ? 5.0 : 0);
-          await ProviderProfile.findByIdAndUpdate(provider._id, {
-            completedBookingsCount: Math.max(provider.completedBookingsCount || 0, completedCount),
-            rating: avgRating,
-            reviewCount: allReviews.length > 0 ? allReviews.length : (completedCount > 0 ? 1 : 0),
-          });
-        }
-      }
-
-      if (req.user.role === 'ADMIN') {
-        const hasOwn = await Booking.exists({ providerId: provider._id });
-        if (hasOwn) {
-          queryObj.providerId = provider._id;
-        }
-      } else {
-        queryObj.providerId = provider._id;
-      }
+      // Strictly isolate: Service providers only see bookings assigned directly to their own provider profile
+      queryObj.providerId = provider._id;
     } else if (req.user.role === 'ADMIN') {
-      // Admin without provider profile can see platform bookings
+      // Admin without provider profile can inspect platform bookings
     } else {
       res.status(404).json({ success: false, message: 'Provider profile not found' });
       return;

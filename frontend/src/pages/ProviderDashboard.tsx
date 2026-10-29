@@ -74,6 +74,10 @@ export const ProviderDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate('/login?redirect=/provider/dashboard');
       return;
@@ -397,9 +401,14 @@ export const ProviderDashboard: React.FC = () => {
 
       {/* Metrics Row */}
       {(() => {
-        const completedFromBookings = bookings.filter((b) => b.status === 'COMPLETED').length;
+        const myProviderBookings = bookings.filter((b) => {
+          if (!profile) return true;
+          const bProvId = typeof b.providerId === 'object' ? (b.providerId as any)?._id : b.providerId;
+          return !bProvId || bProvId.toString() === profile._id.toString();
+        });
+        const completedFromBookings = myProviderBookings.filter((b) => b.status === 'COMPLETED').length;
         const completedJobsCount = Math.max(profile?.completedBookingsCount || 0, completedFromBookings);
-        const totalBookingsCount = Math.max(bookings.length, completedJobsCount);
+        const totalBookingsCount = Math.max(myProviderBookings.length, completedJobsCount);
         const reviewCount = profile?.reviewCount || (completedJobsCount > 0 ? 1 : 0);
         const ratingValue = (profile && profile.reviewCount > 0) ? profile.rating.toFixed(1) : (completedJobsCount > 0 ? '5.0' : '—');
 
@@ -447,28 +456,43 @@ export const ProviderDashboard: React.FC = () => {
           <span>Active Service Orders & Inquiries</span>
         </h2>
 
-        {loading ? (
-          <div className="flex items-center justify-center py-16 text-slate-400">
-            <Loader2 className="w-6 h-6 animate-spin text-blue-600 mr-2" />
-            <span className="text-xs font-semibold">Loading job inquiries...</span>
-          </div>
-        ) : bookings.length === 0 ? (
-          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-3">
-            <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="text-sm font-bold text-slate-900">No Booking Requests Yet</h3>
-            <p className="text-xs text-slate-500">
-              When customers in {profile?.serviceCities?.join(' or ') || 'your area'} book your trades, requests will appear here with private address details.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {bookings.map((booking) => {
-              const customer = typeof booking.customerId === 'object' ? booking.customerId : null;
-              return (
-                <div
-                  key={booking._id}
-                  className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-                >
+        {(() => {
+          const myProviderBookings = bookings.filter((b) => {
+            if (!profile) return true;
+            const bProvId = typeof b.providerId === 'object' ? (b.providerId as any)?._id : b.providerId;
+            return !bProvId || bProvId.toString() === profile._id.toString();
+          });
+
+          if (loading) {
+            return (
+              <div className="flex items-center justify-center py-16 text-slate-400">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 mr-2" />
+                <span className="text-xs font-semibold">Loading job inquiries...</span>
+              </div>
+            );
+          }
+
+          if (myProviderBookings.length === 0) {
+            return (
+              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center max-w-md mx-auto space-y-3">
+                <Briefcase className="w-10 h-10 text-slate-300 mx-auto" />
+                <h3 className="text-sm font-bold text-slate-900">No Booking Requests Yet</h3>
+                <p className="text-xs text-slate-500">
+                  When customers in {profile?.serviceCities?.join(' or ') || 'your area'} book your trades, requests will appear here with private address details.
+                </p>
+              </div>
+            );
+          }
+
+          return (
+            <div className="space-y-3">
+              {myProviderBookings.map((booking) => {
+                const customer = typeof booking.customerId === 'object' ? booking.customerId : null;
+                return (
+                  <div
+                    key={booking._id}
+                    className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+                  >
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-mono font-bold text-slate-500">
@@ -558,8 +582,9 @@ export const ProviderDashboard: React.FC = () => {
               );
             })}
           </div>
-        )}
-      </div>
+        );
+      })()}
+    </div>
 
       {/* Create Quotation Modal */}
       {quoteBooking && (
