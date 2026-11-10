@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="lh-grad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="lh-grad-emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="lh-grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded Base Background -->
+  <rect width="128" height="128" rx="28" fill="url(#lh-grad-bg)"/>
+  <rect x="2" y="2" width="124" height="124" rx="26" stroke="#10b981" stroke-opacity="0.3" stroke-width="2"/>
+  
+  <!-- Handshake Clasp Graphic -->
+  <g transform="translate(14, 16)">
+    <!-- Left Hand / Cuff -->
+    <path d="M 6 46 L 24 16 L 38 24 L 20 54 Z" fill="url(#lh-grad-emerald)" opacity="0.9" />
+    <path d="M 24 16 L 38 24 L 54 36 L 46 48 L 30 38 Z" fill="url(#lh-grad-emerald)" />
+    
+    <!-- Right Hand / Cuff -->
+    <path d="M 94 46 L 76 16 L 62 24 L 80 54 Z" fill="url(#lh-grad-amber)" opacity="0.9" />
+    <path d="M 76 16 L 62 24 L 46 36 L 54 48 L 70 38 Z" fill="url(#lh-grad-amber)" />
+    
+    <!-- Central Interlocking Clasp -->
+    <path d="M 42 34 C 47 30, 53 30, 58 34 L 66 42 C 70 46, 68 52, 62 56 L 50 68 C 46 72, 40 70, 36 66 L 32 60 C 28 56, 30 50, 34 46 Z" fill="url(#lh-grad-emerald)" stroke="#047857" stroke-width="2" />
+    <path d="M 58 34 C 53 30, 47 30, 42 34 L 34 42 C 30 46, 32 52, 38 56 L 50 68 C 54 72, 60 70, 64 66 L 68 60 C 72 56, 70 50, 66 46 Z" fill="url(#lh-grad-amber)" fill-opacity="0.85" stroke="#b45309" stroke-width="2" />
+
+    <!-- Trust Clasp Highlight Rings -->
+    <circle cx="50" cy="50" r="16" stroke="#34d399" stroke-width="2" stroke-dasharray="3 3" fill="none" opacity="0.7"/>
+    <circle cx="50" cy="50" r="6" fill="#f59e0b" />
+  </g>
+</svg>
