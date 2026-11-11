@@ -75,8 +75,8 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
       return {
         googleId: `mock-google-id-${email}`,
         email,
-        name: isAdmin ? 'Lehulu Administrator' : email.split('@')[0],
-        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(isAdmin ? 'Lehulu Admin' : email.split('@')[0])}&background=059669&color=fff`,
+        name: isAdmin ? 'Petros Sisay (Administrator)' : email.split('@')[0],
+        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(isAdmin ? 'Petros Sisay' : email.split('@')[0])}&background=059669&color=fff`,
       };
     }
 
@@ -85,8 +85,8 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
       return {
         googleId: `mock-google-id-${email}`,
         email,
-        name: 'Lehulu Administrator',
-        picture: 'https://ui-avatars.com/api/?name=Lehulu+Admin&background=059669&color=fff',
+        name: 'Petros Sisay (Administrator)',
+        picture: 'https://ui-avatars.com/api/?name=Petros+Sisay&background=059669&color=fff',
       };
     }
 
@@ -116,6 +116,8 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
   // Real Google ID Token Verification
   const validAudiences = [
     env.GOOGLE_CLIENT_ID,
+    '764795198689-41h522pnno7r3ifmb6im3iu12418m31f.apps.googleusercontent.com',
+    '1084242194821-lehulu-test-client-id.apps.googleusercontent.com',
   ].filter(Boolean);
 
   let verifiedPayload: {

@@ -93,7 +93,7 @@ describe('Lehulu (ለሁሉ) Security, RBAC & Role Boundary Tests', () => {
     // Register Super Admin
     const resAdm = await request(app)
       .post('/api/v1/auth/google')
-      .send({ idToken: 'mock-google-token-admin@lehulu.et' });
+      .send({ idToken: 'mock-google-token-petrossisay1646@gmail.com' });
     adminCookie = (resAdm.headers['set-cookie'] as unknown as string[])[0].split(';')[0];
     adminUser = resAdm.body.user;
 

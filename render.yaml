@@ -28,7 +28,7 @@ services:
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: ADMIN_EMAIL
-        sync: false
+        value: petrossisay1646@gmail.com
       - key: CLIENT_URL
         sync: false
 

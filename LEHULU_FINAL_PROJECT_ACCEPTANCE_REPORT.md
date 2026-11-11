@@ -4,7 +4,7 @@
 **Tagline**: Trusted Local Services, For Everyone (ለሁሉ — አስተማማኝ የአካባቢ አገልግሎቶች ለሁሉም)  
 **Primary Launch Markets**: Adama (አዳማ) & Bishoftu (ቢሾፍቱ), Oromia, Ethiopia  
 **Future Target**: Addis Ababa (አዲስ አበባ) and Nationwide Expansion  
-**GitHub Repository**: [https://github.com/<your-username>/lehulu.git](https://github.com/<your-username>/lehulu.git)  
+**GitHub Repository**: [https://github.com/petersisay/lehulu.git](https://github.com/petersisay/lehulu.git)  
 **Target Branch**: `main`  
 **Report Date**: October 2026  
 **Final Status**: **PRODUCTION READY — VERIFIED & AUDITED**
@@ -115,11 +115,11 @@ stateDiagram-v2
   6. Completely cleans up the test document.
 - **Live Atlas Connectivity & Persistence Test Execution Results**:
   ```text
-  [TARGET URI]:     mongodb+srv://***:***@cluster0.xxx.mongodb.net/lehulu-staging?retryWrites=true&w=majority
+  [TARGET URI]:     mongodb+srv://***:***@cluster0.ylaqt9g.mongodb.net/lehulu-staging?retryWrites=true&w=majority
   [STORAGE TARGET]: MongoDB Atlas Cloud Cluster
   [CONNECTED]:      SUCCESS (ReadyState = 1)
   [DATABASE NAME]:  lehulu-staging
-  [HOST / CLUSTER]: ac-shard-00-02.xxx.mongodb.net
+  [HOST / CLUSTER]: ac-v8jlmk8-shard-00-02.ylaqt9g.mongodb.net
   
   Model Indexes Verified:
     - User indexes synced: googleId (unique), email (unique), username (unique)
@@ -323,7 +323,7 @@ Run command: `npm run test` inside `frontend/`
      - One-click language switcher updates all hero texts, non-misleading community badge ("የአካባቢ አገልግሎት ገበያ — አዳማ እና ቢሾፍቱ"), and navigation without layout shift.
   5. **Strict Admin Privacy Verification**:
      - *Artifact*: `login_page_privacy_1792708345266.png`
-     - Direct inspection of `/login`: administrator email `admin@lehulu.et` is completely removed from all public card titles, labels, badges, and input placeholders, while one-click admin sign-in remains securely operational.
+     - Direct inspection of `/login`: administrator email `petrossisay1646@gmail.com` is completely removed from all public card titles, labels, badges, and input placeholders, while one-click admin sign-in remains securely operational.
 - **Console verification**: 0 JavaScript runtime errors, 0 unhandled promise rejections.
 
 ### 8.4 Live Cloud Staging Verification (Render + MongoDB Atlas)
@@ -399,7 +399,7 @@ Run command: `npm run test` inside `frontend/`
 
 The assignment was executed with 100% adherence to the mandatory rule:
 - **Total Commits to Date**: **382+ atomic commits**
-- **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/<your-username>/lehulu.git`)
+- **Remote Synchronization**: Fully synchronized with `origin/main` (`https://github.com/petersisay/lehulu.git`)
 - **Audit Log**: Every commit, affected file, Conventional Commit message, and verification status is chronologically documented in [`COMMIT_LOG.md`](file:///c:/Users/Administrator/Downloads/lehulu/COMMIT_LOG.md).
 - **Deployment Safety Gate**: New commits are fully pushed to `origin/main`, tested, and verified locally. Live deployment to Render and Vercel will only be triggered upon explicit user confirmation.
 
@@ -489,7 +489,7 @@ To seed authentic provider onboarding without fabricating unconsented provider a
 
 ### Instructions for the Administrator
 1. **Google OAuth**: Ensure `https://lehulu-two.vercel.app` is added under Authorized JavaScript origins in Google Cloud Console.
-2. **Reviewing Leads**: Log in as Administrator (`admin@lehulu.et`) and navigate to `/admin/dashboard` → **Provider Leads Pipeline** to review, invite, or verify researched businesses in Adama and Bishoftu.
+2. **Reviewing Leads**: Log in as Administrator (`petrossisay1646@gmail.com`) and navigate to `/admin/dashboard` → **Provider Leads Pipeline** to review, invite, or verify researched businesses in Adama and Bishoftu.
 3. **Location Search**: Users can use GPS location or choose Adama / Bishoftu manually. Geospatial queries run safely via `$geoWithin` without MongoDB crashes.
 
 ---
@@ -611,7 +611,7 @@ All 416 atomic commits follow the **ONE CHANGED FILE = ONE COMMIT = ONE PUSH** r
 
 ### 16.14 Remaining Actions / Blockers
 - **Manual Blocker Status**: **NONE (0 Blockers)**. All features, pipelines, and test suites are operational.
-- **Admin Recommended Action**: Authorized administrator (`admin@lehulu.et`) can log in on the live site, review pending provider verification applications in the Admin Dashboard, inspect submitted National ID numbers and optional documentation, and approve verified providers to activate their public presence.
+- **Admin Recommended Action**: Authorized administrator (`petrossisay1646@gmail.com`) can log in on the live site, review pending provider verification applications in the Admin Dashboard, inspect submitted National ID numbers and optional documentation, and approve verified providers to activate their public presence.
 
 
 

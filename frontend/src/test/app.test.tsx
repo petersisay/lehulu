@@ -151,7 +151,7 @@ describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
       const mockAdminAuth = {
         user: {
           _id: 'adm-1',
-          email: 'admin@lehulu.et',
+          email: 'petrossisay1646@gmail.com',
           role: 'ADMIN',
           displayName: 'Platform Admin',
           username: 'admin',

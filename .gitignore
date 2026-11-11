@@ -3,20 +3,14 @@ node_modules/
 /.pnp
 .pnp.js
 
-# Environment variables & Secrets
+# Environment variables
 .env
-.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 *.env
 !*.env.example
-*.pem
-*.key
-*.cert
-*.crt
-*.pfx
-*.p12
-credentials.json
-client_secret*.json
-service-account*.json
 
 # Production builds
 dist/
@@ -52,10 +46,8 @@ desktop.ini
 coverage/
 .nyc_output/
 
-# Temporary / Scratch files & Archives
+# Temporary / Scratch files
 tmp/
 temp/
 scratch/
-*.zip
-*.tar.gz
-*.tgz
+lehulu-project.zip

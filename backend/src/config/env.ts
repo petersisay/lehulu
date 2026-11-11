@@ -19,7 +19,7 @@ const envSchema = z
     JWT_SECRET: z.string().default(DEV_FALLBACK_JWT),
     COOKIE_DOMAIN: z.string().default('localhost'),
     GOOGLE_CLIENT_ID: z.string().default(''),
-    ADMIN_EMAIL: z.string().default('admin@lehulu.et'),
+    ADMIN_EMAIL: z.string().default('petrossisay1646@gmail.com'),
     STORAGE_PROVIDER: z.enum(['local', 's3']).default('local'),
     UPLOAD_DIR: z.string().default('./uploads'),
     RATE_LIMIT_WINDOW_MS: z.string().transform((val) => parseInt(val, 10)).default('900000'),

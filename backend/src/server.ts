@@ -36,8 +36,8 @@ const startServer = async () => {
       await User.create({
         googleId: 'admin-auto-init',
         email: adminEmail,
-        displayName: 'Lehulu Administrator',
-        username: 'lehulu_admin',
+        displayName: 'Petros Sisay (Administrator)',
+        username: 'petros_admin',
         role: 'ADMIN',
         preferredLanguage: 'am',
         city: 'Adama',
@@ -54,8 +54,8 @@ const startServer = async () => {
         !existingAdmin.isOnboarded;
 
       if (needsProfileRepair) {
-        existingAdmin.username = existingAdmin.username || 'lehulu_admin';
-        existingAdmin.displayName = existingAdmin.displayName || 'Lehulu Administrator';
+        existingAdmin.username = existingAdmin.username || 'petros_admin';
+        existingAdmin.displayName = existingAdmin.displayName || 'Petros Sisay (Administrator)';
         existingAdmin.googleId = existingAdmin.googleId || 'admin-auto-init';
         existingAdmin.role = 'ADMIN';
         existingAdmin.isOnboarded = true;

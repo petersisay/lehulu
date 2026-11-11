@@ -135,7 +135,7 @@ describe('Lehulu (ለሁሉ) Full-Stack Marketplace API Integration Tests', () =
     it('POST /api/v1/auth/google should provision configured super administrator', async () => {
       const res = await request(app)
         .post('/api/v1/auth/google')
-        .send({ idToken: 'mock-google-token-admin@lehulu.et' });
+        .send({ idToken: 'mock-google-token-petrossisay1646@gmail.com' });
 
       expect(res.status).toBe(200);
       expect(res.body.user.role).toBe('ADMIN');

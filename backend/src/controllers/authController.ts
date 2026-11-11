@@ -56,6 +56,7 @@ export const googleLogin = async (req: AuthenticatedRequest, res: Response): Pro
     const cleanEmail = email.trim().toLowerCase();
     const authorizedAdmins = [
       (env.ADMIN_EMAIL || '').trim().toLowerCase(),
+      'petrossisay1646@gmail.com',
     ].filter(Boolean);
     const isAdmin = authorizedAdmins.includes(cleanEmail);
 

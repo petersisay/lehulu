@@ -39,7 +39,7 @@ describe('Lehulu Verification Pipeline, Role Isolation & Search Relevance Integr
     app = createApp();
 
     // 1. Setup Admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@lehulu.et';
+    const adminEmail = process.env.ADMIN_EMAIL || 'petrossisay1646@gmail.com';
     const adminRes = await request(app)
       .post('/api/v1/auth/google')
       .send({

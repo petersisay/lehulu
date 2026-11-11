@@ -48,7 +48,7 @@ flowchart TD
 4. Configure **Authorized Redirect URIs**:
    - `https://lehulu.et`
    - `https://lehulu.vercel.app`
-5. Note down the **Client ID** (e.g., `your-google-oauth-client-id.apps.googleusercontent.com`).
+5. Note down the **Client ID** (e.g., `1084242194821-xxxxxxxx.apps.googleusercontent.com`).
 
 ---
 
@@ -70,7 +70,7 @@ flowchart TD
 | `CLIENT_URL` | Frontend origin for CORS and session cookies | `https://lehulu.et` |
 | `MONGODB_URI` | MongoDB Atlas SRV URI | `mongodb+srv://...` |
 | `JWT_SECRET` | 64+ char random string for session tokens | `openssl rand -hex 32` |
-| `GOOGLE_CLIENT_ID` | Google OAuth Web Client ID | `your-google-oauth-client-id.apps.googleusercontent.com` |
+| `GOOGLE_CLIENT_ID` | Google OAuth Web Client ID | `1084242...apps.googleusercontent.com` |
 | `ADMIN_EMAIL` | Super admin email receiving ADMIN role | `admin@lehulu.et` |
 | `ALLOW_TEST_AUTH` | Disable in production (MUST be false) | `false` |
 
@@ -100,7 +100,7 @@ Ensure client-side routing works for direct URLs:
 |---|---|---|
 | `VITE_API_URL` | Full URL to backend REST API | `https://api.lehulu.et/api/v1` |
 | `VITE_SOCKET_URL` | Full URL to backend WebSocket server | `https://api.lehulu.et` |
-| `VITE_GOOGLE_CLIENT_ID` | Same Google OAuth Web Client ID | `your-google-oauth-client-id.apps.googleusercontent.com` |
+| `VITE_GOOGLE_CLIENT_ID` | Same Google OAuth Web Client ID | `1084242...apps.googleusercontent.com` |
 
 ---
 
