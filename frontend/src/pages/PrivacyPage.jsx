@@ -2,18 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Lock, ChevronLeft, ShieldCheck, EyeOff } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-
-export const PrivacyPage: React.FC = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+export const PrivacyPage = () => {
+    const { t } = useLanguage();
+    return (<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       <div>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700"
-        >
-          <ChevronLeft className="w-4 h-4" />
+        <Link to="/" className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700">
+          <ChevronLeft className="w-4 h-4"/>
           <span>Back to Home</span>
         </Link>
       </div>
@@ -21,7 +15,7 @@ export const PrivacyPage: React.FC = () => {
       <div className="bg-white rounded-xl border border-slate-200 p-8 sm:p-12 shadow-xs space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
-            <Lock className="w-6 h-6" />
+            <Lock className="w-6 h-6"/>
           </div>
           <div>
             <h1 className="text-2xl font-black text-slate-900">Privacy Policy</h1>
@@ -35,7 +29,7 @@ export const PrivacyPage: React.FC = () => {
           </p>
 
           <h3 className="text-base font-bold text-slate-900 pt-2 flex items-center gap-2">
-            <EyeOff className="w-4 h-4 text-blue-600" />
+            <EyeOff className="w-4 h-4 text-blue-600"/>
             <span>1. Customer Address & Location Privacy</span>
           </h3>
           <p>
@@ -43,7 +37,7 @@ export const PrivacyPage: React.FC = () => {
           </p>
 
           <h3 className="text-base font-bold text-slate-900 pt-2 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <ShieldCheck className="w-4 h-4 text-emerald-600"/>
             <span>2. Provider Credentials & Identity Security</span>
           </h3>
           <p>
@@ -61,6 +55,5 @@ export const PrivacyPage: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 };
