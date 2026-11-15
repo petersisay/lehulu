@@ -1,24 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { UserRole } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IUser extends Document {
-  googleId: string;
-  email: string;
-  displayName: string;
-  username: string;
-  avatarUrl?: string;
-  phoneNumber?: string;
-  role: UserRole;
-  preferredLanguage: 'en' | 'am';
-  city: string;
-  isActive: boolean;
-  isOnboarded: boolean;
-  lastLoginAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const UserSchema = new Schema<IUser>(
+const UserSchema = new Schema(
   {
     googleId: {
       type: String,
@@ -90,4 +73,8 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-export const User = mongoose.model<IUser>('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+
+module.exports = {
+  User,
+};
