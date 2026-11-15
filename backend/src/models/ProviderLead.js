@@ -1,33 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export type LeadStatus =
-  | 'RESEARCHED_LEAD'
-  | 'INVITED'
-  | 'PENDING_VERIFICATION'
-  | 'VERIFIED'
-  | 'REJECTED'
-  | 'SUSPENDED';
-
-export interface IProviderLead extends Document {
-  businessName: string;
-  categorySlug: string;
-  services: string[];
-  city: 'Adama' | 'Bishoftu' | 'Addis Ababa' | string;
-  serviceArea: string;
-  publicSourceUrl: string;
-  sourceVerificationDate: Date;
-  publicAddress: string;
-  contactPhone?: string;
-  contactEmail?: string;
-  website?: string;
-  status: LeadStatus;
-  notes?: string;
-  lastCheckedDate: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const ProviderLeadSchema = new Schema<IProviderLead>(
+const ProviderLeadSchema = new Schema(
   {
     businessName: {
       type: String,
@@ -114,4 +88,8 @@ const ProviderLeadSchema = new Schema<IProviderLead>(
 
 ProviderLeadSchema.index({ city: 1, categorySlug: 1, status: 1 });
 
-export const ProviderLead = mongoose.model<IProviderLead>('ProviderLead', ProviderLeadSchema);
+const ProviderLead = mongoose.model('ProviderLead', ProviderLeadSchema);
+
+module.exports = {
+  ProviderLead,
+};
