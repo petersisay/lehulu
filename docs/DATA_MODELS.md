@@ -35,7 +35,7 @@ erDiagram
 
 ### 3.1 User Model (`users`)
 Central identity store linked to Google authentication.
-```typescript
+```javascript
 interface IUser extends Document {
   googleId: string; // Indexed, unique
   email: string; // Indexed, unique, lowercase, trimmed
@@ -62,7 +62,7 @@ interface IUser extends Document {
 
 ### 3.2 ProviderProfile Model (`providerprofiles`)
 Detailed trade and business profile for service providers.
-```typescript
+```javascript
 interface IProviderProfile extends Document {
   userId: Types.ObjectId; // Ref: 'User', unique
   businessName: string;
@@ -111,7 +111,7 @@ interface IProviderProfile extends Document {
 
 ### 3.3 ProviderVerification Model (`providerverifications`)
 Administrative credential verification evidence submitted during onboarding.
-```typescript
+```javascript
 interface IProviderVerification extends Document {
   providerProfileId: Types.ObjectId; // Ref: 'ProviderProfile', unique
   userId: Types.ObjectId; // Ref: 'User'
@@ -139,7 +139,7 @@ interface IProviderVerification extends Document {
 
 ### 3.4 ServiceCategory Model (`servicecategories`)
 Hierarchical trade service catalog.
-```typescript
+```javascript
 interface ISubcategory {
   nameEn: string;
   nameAm: string;
@@ -168,7 +168,7 @@ interface IServiceCategory extends Document {
 
 ### 3.5 Booking Model (`bookings`)
 Core finite state machine tracking transactions through the 6-stage lifecycle.
-```typescript
+```javascript
 interface IBookingAddress {
   city: string; // 'Adama', 'Bishoftu', etc.
   subcityOrKebele: string; // e.g., 'Kebele 03'
@@ -220,7 +220,7 @@ interface IBooking extends Document {
 
 ### 3.6 Quote Model (`quotes`)
 Itemized formal price quotation submitted by providers before job confirmation.
-```typescript
+```javascript
 interface IQuoteItem {
   description: string;
   quantity: number;
@@ -254,7 +254,7 @@ interface IQuote extends Document {
 
 ### 3.7 Review Model (`reviews`)
 Authentic customer feedback tied strictly to completed bookings.
-```typescript
+```javascript
 interface IReview extends Document {
   bookingId: Types.ObjectId; // Ref: 'Booking', unique (1 review per booking)
   customerId: Types.ObjectId; // Ref: 'User'
@@ -279,7 +279,7 @@ interface IReview extends Document {
 
 ### 3.8 AuditLog Model (`auditlogs`)
 Immutable append-only administrative ledger.
-```typescript
+```javascript
 interface IAuditLog extends Document {
   actorId: Types.ObjectId; // Ref: 'User' (Admin)
   actorEmail: string;
@@ -302,7 +302,7 @@ interface IAuditLog extends Document {
 
 ### 3.9 Message Model (`messages`)
 Room-isolated in-app communications between booking participants.
-```typescript
+```javascript
 interface IMessage extends Document {
   bookingId: Types.ObjectId; // Ref: 'Booking'
   senderId: Types.ObjectId; // Ref: 'User'
@@ -321,7 +321,7 @@ interface IMessage extends Document {
 
 ### 3.10 Dispute Model (`disputes`)
 Formal conflict escalation mechanism for unresolvable service issues.
-```typescript
+```javascript
 interface IDispute extends Document {
   bookingId: Types.ObjectId; // Ref: 'Booking'
   initiatorId: Types.ObjectId; // Ref: 'User'
