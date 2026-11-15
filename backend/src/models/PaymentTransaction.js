@@ -1,21 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { PaymentMethod, PaymentStatus } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IPaymentTransaction extends Document {
-  bookingId: Types.ObjectId;
-  customerId: Types.ObjectId;
-  providerId: Types.ObjectId;
-  amount: number;
-  currency: 'ETB';
-  paymentMethod: PaymentMethod;
-  status: PaymentStatus;
-  transactionReference: string;
-  verifiedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const PaymentTransactionSchema = new Schema<IPaymentTransaction>(
+const PaymentTransactionSchema = new Schema(
   {
     bookingId: {
       type: Schema.Types.ObjectId,
@@ -70,7 +56,11 @@ const PaymentTransactionSchema = new Schema<IPaymentTransaction>(
   }
 );
 
-export const PaymentTransaction = mongoose.model<IPaymentTransaction>(
+const PaymentTransaction = mongoose.model(
   'PaymentTransaction',
   PaymentTransactionSchema
 );
+
+module.exports = {
+  PaymentTransaction,
+};
