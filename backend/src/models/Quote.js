@@ -1,31 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { QuoteStatus } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IQuoteItem {
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
-
-export interface IQuote extends Document {
-  bookingId: Types.ObjectId;
-  providerId: Types.ObjectId;
-  customerId: Types.ObjectId;
-  quoteNumber: string;
-  items: IQuoteItem[];
-  totalAmount: number;
-  currency: 'ETB';
-  estimatedDurationHours?: number;
-  inspectionIncluded: boolean;
-  notes?: string;
-  status: QuoteStatus;
-  validUntil: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const QuoteItemSchema = new Schema<IQuoteItem>(
+const QuoteItemSchema = new Schema(
   {
     description: { type: String, required: true, trim: true },
     quantity: { type: Number, required: true, min: 1, default: 1 },
@@ -35,7 +11,7 @@ const QuoteItemSchema = new Schema<IQuoteItem>(
   { _id: false }
 );
 
-const QuoteSchema = new Schema<IQuote>(
+const QuoteSchema = new Schema(
   {
     bookingId: {
       type: Schema.Types.ObjectId,
@@ -98,4 +74,8 @@ const QuoteSchema = new Schema<IQuote>(
   }
 );
 
-export const Quote = mongoose.model<IQuote>('Quote', QuoteSchema);
+const Quote = mongoose.model('Quote', QuoteSchema);
+
+module.exports = {
+  Quote,
+};
