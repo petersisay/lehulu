@@ -1,11 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { env } from '../config/env';
+const { env } = require('../config/env');
 
-export class AppError extends Error {
-  public statusCode: number;
-  public isOperational: boolean;
-
-  constructor(message: string, statusCode = 400) {
+class AppError extends Error {
+  constructor(message, statusCode = 400) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
@@ -13,12 +9,7 @@ export class AppError extends Error {
   }
 }
 
-export const errorHandler = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || (err.name === 'ValidationError' ? 400 : 500);
   const message = err.message || 'An unexpected internal server error occurred.';
 
@@ -29,4 +20,9 @@ export const errorHandler = (
     message,
     ...(env.NODE_ENV !== 'production' && { stack: err.stack }),
   });
+};
+
+module.exports = {
+  AppError,
+  errorHandler,
 };
