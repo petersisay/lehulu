@@ -1,25 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { VerificationStatus } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IProviderVerification extends Document {
-  providerProfileId: Types.ObjectId;
-  userId: Types.ObjectId;
-  nationalIdNumber: string;
-  idCardImageUrl?: string;
-  consentGiven?: boolean;
-  tradeLicenseUrl?: string;
-  certificateUrls: string[];
-  status: VerificationStatus;
-  reviewedBy?: Types.ObjectId;
-  rejectionReason?: string;
-  adminNotes?: string;
-  submittedAt: Date;
-  reviewedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const ProviderVerificationSchema = new Schema<IProviderVerification>(
+const ProviderVerificationSchema = new Schema(
   {
     providerProfileId: {
       type: Schema.Types.ObjectId,
@@ -85,7 +67,11 @@ const ProviderVerificationSchema = new Schema<IProviderVerification>(
 
 ProviderVerificationSchema.index({ status: 1, submittedAt: -1 });
 
-export const ProviderVerification = mongoose.model<IProviderVerification>(
+const ProviderVerification = mongoose.model(
   'ProviderVerification',
   ProviderVerificationSchema
 );
+
+module.exports = {
+  ProviderVerification,
+};
