@@ -7,31 +7,25 @@ import { AuthProvider } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import App from './App';
 import './index.css';
-
 // Automatically recover from stale chunks after production deployments
 window.addEventListener('vite:preloadError', (event) => {
-  event.preventDefault();
-  window.location.reload();
+    event.preventDefault();
+    window.location.reload();
 });
-
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      retry: 1,
-      staleTime: 1000 * 60 * 3, // 3 minutes cache validity
-      gcTime: 1000 * 60 * 15, // 15 minutes garbage collection
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true,
+            retry: 1,
+            staleTime: 1000 * 60 * 3, // 3 minutes cache validity
+            gcTime: 1000 * 60 * 15, // 15 minutes garbage collection
+        },
     },
-  },
 });
-
-const GOOGLE_CLIENT_ID =
-  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-  '1084242194821-lehulu-test-client-id.apps.googleusercontent.com';
-
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+    '1084242194821-lehulu-test-client-id.apps.googleusercontent.com';
+ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <QueryClientProvider client={queryClient}>
         <LanguageProvider>
@@ -43,5 +37,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         </LanguageProvider>
       </QueryClientProvider>
     </GoogleOAuthProvider>
-  </React.StrictMode>
-);
+  </React.StrictMode>);
