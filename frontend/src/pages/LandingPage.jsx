@@ -1,135 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Search,
-  MapPin,
-  ShieldCheck,
-  CheckCircle2,
-  Clock,
-  Sparkles,
-  ArrowRight,
-  Wrench,
-  Car,
-  Home,
-  Laptop,
-  Briefcase,
-  ChevronRight,
-  Star,
-  Users,
-  Award,
-  Zap,
-} from 'lucide-react';
+import { Search, MapPin, ShieldCheck, Clock, Sparkles, ArrowRight, Wrench, Car, Home, Laptop, Briefcase, ChevronRight, Star, Award, Zap, } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { categoryApi, providerApi } from '../services/api';
-import { ServiceCategory, ProviderProfile } from '../types';
 import { ProviderCard } from '../components/ProviderCard';
-
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  'home-maintenance': <Wrench className="w-6 h-6 text-blue-600" />,
-  'home-repairs': <Wrench className="w-6 h-6 text-blue-600" />,
-  automotive: <Car className="w-6 h-6 text-blue-600" />,
-  cleaning: <Home className="w-6 h-6 text-blue-600" />,
-  technology: <Laptop className="w-6 h-6 text-blue-600" />,
-  'personal-business': <Briefcase className="w-6 h-6 text-blue-600" />,
-  events: <Briefcase className="w-6 h-6 text-blue-600" />,
+const CATEGORY_ICONS = {
+    'home-maintenance': <Wrench className="w-6 h-6 text-blue-600"/>,
+    'home-repairs': <Wrench className="w-6 h-6 text-blue-600"/>,
+    automotive: <Car className="w-6 h-6 text-blue-600"/>,
+    cleaning: <Home className="w-6 h-6 text-blue-600"/>,
+    technology: <Laptop className="w-6 h-6 text-blue-600"/>,
+    'personal-business': <Briefcase className="w-6 h-6 text-blue-600"/>,
+    events: <Briefcase className="w-6 h-6 text-blue-600"/>,
 };
-
-export const LandingPage: React.FC = () => {
-  const { language, t } = useLanguage();
-  const navigate = useNavigate();
-
-  const [categories, setCategories] = useState<ServiceCategory[]>([]);
-  const [featuredProviders, setFeaturedProviders] = useState<ProviderProfile[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [catRes, provRes] = await Promise.all([
-          categoryApi.getAll(),
-          providerApi.search({ limit: 4, verifiedOnly: true }),
-        ]);
-
-        if (catRes.data.success) {
-          const catList = (catRes.data as any).categories || catRes.data.data || [];
-          setCategories(Array.isArray(catList) ? catList : []);
-        }
-        if (provRes.data.success) {
-          const provList = (provRes.data as any).providers || provRes.data.data || [];
-          setFeaturedProviders(Array.isArray(provList) ? provList : []);
-        }
-      } catch (err) {
-        console.error('Landing page data fetch error:', err);
-      } finally {
-        setLoading(false);
-      }
+export const LandingPage = () => {
+    const { language, t } = useLanguage();
+    const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+    const [featuredProviders, setFeaturedProviders] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [catRes, provRes] = await Promise.all([
+                    categoryApi.getAll(),
+                    providerApi.search({ limit: 4, verifiedOnly: true }),
+                ]);
+                if (catRes.data.success) {
+                    const catList = catRes.data.categories || catRes.data.data || [];
+                    setCategories(Array.isArray(catList) ? catList : []);
+                }
+                if (provRes.data.success) {
+                    const provList = provRes.data.providers || provRes.data.data || [];
+                    setFeaturedProviders(Array.isArray(provList) ? provList : []);
+                }
+            }
+            catch (err) {
+                console.error('Landing page data fetch error:', err);
+            }
+            finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const params = new URLSearchParams();
+        if (searchQuery.trim())
+            params.set('search', searchQuery.trim());
+        if (selectedCity)
+            params.set('city', selectedCity);
+        navigate(`/discover?${params.toString()}`);
     };
-
-    fetchData();
-  }, []);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (searchQuery.trim()) params.set('search', searchQuery.trim());
-    if (selectedCity) params.set('city', selectedCity);
-    navigate(`/discover?${params.toString()}`);
-  };
-
-  return (
-    <div className="space-y-20 pb-20 overflow-x-hidden">
+    return (<div className="space-y-20 pb-20 overflow-x-hidden">
       {/* Premium Animated Ethiopian Hero Section */}
       <section className="relative min-h-[580px] lg:min-h-[660px] flex items-center justify-center pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden">
         {/* Panoramic Ethiopian Landscape Background Plate */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
-          <img
-            src="/lehulu-hero-bg.jpg"
-            alt="Lehulu Ethiopian Local Services Marketplace"
-            className="w-full h-full object-cover object-[center_35%] filter brightness-[1.02] contrast-[1.03]"
-            loading="eager"
-          />
+          <img src="/lehulu-hero-bg.jpg" alt="Lehulu Ethiopian Local Services Marketplace" className="w-full h-full object-cover object-[center_35%] filter brightness-[1.02] contrast-[1.03]" loading="eager"/>
           {/* Subtle Ambient Vignettes & Contrast Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/20 via-transparent to-blue-950/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-950/20 via-transparent to-blue-950/20"/>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white"/>
         </div>
 
         {/* Subtle Animated Blue & Gold Connection Arcs */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-70"
-          viewBox="0 0 1440 700"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M-50 480 C 300 420, 500 560, 850 460 C 1100 390, 1300 480, 1500 420"
-            stroke="url(#blueTrail)"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-            className="animate-flow-dash"
-          />
-          <path
-            d="M-50 510 C 250 460, 600 580, 920 480 C 1180 410, 1350 500, 1500 450"
-            stroke="url(#goldTrail)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.6"
-            className="animate-flow-dash"
-          />
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-70" viewBox="0 0 1440 700" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M-50 480 C 300 420, 500 560, 850 460 C 1100 390, 1300 480, 1500 420" stroke="url(#blueTrail)" strokeWidth="3.5" strokeLinecap="round" className="animate-flow-dash"/>
+          <path d="M-50 510 C 250 460, 600 580, 920 480 C 1180 410, 1350 500, 1500 450" stroke="url(#goldTrail)" strokeWidth="2" strokeLinecap="round" opacity="0.6" className="animate-flow-dash"/>
           <defs>
             <linearGradient id="blueTrail" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#2563eb" stopOpacity="0.1" />
-              <stop offset="30%" stopColor="#1d4ed8" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.2" />
+              <stop offset="0%" stopColor="#2563eb" stopOpacity="0.1"/>
+              <stop offset="30%" stopColor="#1d4ed8" stopOpacity="0.9"/>
+              <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.8"/>
+              <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.2"/>
             </linearGradient>
             <linearGradient id="goldTrail" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
-              <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0"/>
+              <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.8"/>
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0"/>
             </linearGradient>
           </defs>
         </svg>
@@ -137,7 +89,7 @@ export const LandingPage: React.FC = () => {
         {/* Floating Service Badges (Desktop/Tablet) */}
         <div className="hidden lg:flex absolute top-24 left-6 xl:left-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-slow">
           <div className="w-8 h-8 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Zap className="w-4 h-4 text-blue-100" />
+            <Zap className="w-4 h-4 text-blue-100"/>
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Electrical & Wiring</p>
@@ -147,7 +99,7 @@ export const LandingPage: React.FC = () => {
 
         <div className="hidden lg:flex absolute bottom-28 left-8 xl:left-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-reverse">
           <div className="w-8 h-8 rounded-md bg-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Car className="w-4 h-4 text-blue-100" />
+            <Car className="w-4 h-4 text-blue-100"/>
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Auto Diagnostics</p>
@@ -157,7 +109,7 @@ export const LandingPage: React.FC = () => {
 
         <div className="hidden lg:flex absolute top-28 right-6 xl:right-12 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-blue-300/60 shadow-lg shadow-blue-950/5 animate-float-slow">
           <div className="w-8 h-8 rounded-md bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Home className="w-4 h-4 text-indigo-100" />
+            <Home className="w-4 h-4 text-indigo-100"/>
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Home & Office Cleaning</p>
@@ -167,7 +119,7 @@ export const LandingPage: React.FC = () => {
 
         <div className="hidden lg:flex absolute bottom-24 right-8 xl:right-16 z-10 items-center gap-2.5 px-3.5 py-2 rounded-lg bg-white/90 backdrop-blur-md border border-amber-300/70 shadow-lg shadow-amber-950/5 animate-float-reverse">
           <div className="w-8 h-8 rounded-md bg-amber-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <Sparkles className="w-4 h-4 text-amber-100" />
+            <Sparkles className="w-4 h-4 text-amber-100"/>
           </div>
           <div className="text-left">
             <p className="text-[11px] font-black text-slate-900 leading-tight">Fair ETB Quotations</p>
@@ -180,7 +132,7 @@ export const LandingPage: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-6">
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-white/90 backdrop-blur-md border border-blue-400/60 text-blue-950 text-xs font-black shadow-sm">
-              <Sparkles className="w-4 h-4 text-blue-600 animate-pulse-glow" />
+              <Sparkles className="w-4 h-4 text-blue-600 animate-pulse-glow"/>
               <span>{t('hero.badge')}</span>
             </div>
 
@@ -195,28 +147,15 @@ export const LandingPage: React.FC = () => {
             </p>
 
             {/* Search Bar */}
-            <form
-              onSubmit={handleSearch}
-              className="mt-8 p-2 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/90 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto"
-            >
+            <form onSubmit={handleSearch} className="mt-8 p-2 bg-white/95 backdrop-blur-xl rounded-xl shadow-lg border border-slate-200/90 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto">
               <div className="flex items-center gap-2.5 px-3 flex-1 w-full border-b sm:border-b-0 sm:border-r border-slate-200/80 py-2 sm:py-0">
-                <Search className="w-5 h-5 text-slate-400 shrink-0" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t('hero.searchPlaceholder')}
-                  className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent"
-                />
+                <Search className="w-5 h-5 text-slate-400 shrink-0"/>
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t('hero.searchPlaceholder')} className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent"/>
               </div>
 
               <div className="flex items-center gap-2 px-3 w-full sm:w-auto py-2 sm:py-0">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                <select
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  className="w-full sm:w-36 text-xs sm:text-sm font-semibold text-slate-700 focus:outline-none bg-transparent cursor-pointer"
-                >
+                <MapPin className="w-4 h-4 text-blue-600 shrink-0"/>
+                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className="w-full sm:w-36 text-xs sm:text-sm font-semibold text-slate-700 focus:outline-none bg-transparent cursor-pointer">
                   <option value="">{t('hero.allCities')}</option>
                   <option value="Adama">{t('locations.adama')}</option>
                   <option value="Bishoftu">{t('locations.bishoftu')}</option>
@@ -224,10 +163,7 @@ export const LandingPage: React.FC = () => {
                 </select>
               </div>
 
-              <button
-                type="submit"
-                className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all shrink-0 cursor-pointer"
-              >
+              <button type="submit" className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm rounded-lg shadow-sm hover:shadow-md transition-all shrink-0 cursor-pointer">
                 {t('hero.searchButton')}
               </button>
             </form>
@@ -235,22 +171,16 @@ export const LandingPage: React.FC = () => {
             {/* Popular Quick-Filter Chips */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 text-xs">
               <span className="text-slate-600 font-semibold">{t('hero.popularSearch')}:</span>
-              {['Electrician', 'Plumber', 'Mechanic', 'Cleaning'].map((term) => (
-                <button
-                  key={term}
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery(term);
-                    const params = new URLSearchParams();
-                    params.set('search', term);
-                    if (selectedCity) params.set('city', selectedCity);
-                    navigate(`/discover?${params.toString()}`);
-                  }}
-                  className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white text-slate-700 hover:text-blue-700 font-medium border border-slate-200/60 shadow-2xs transition-all cursor-pointer"
-                >
+              {['Electrician', 'Plumber', 'Mechanic', 'Cleaning'].map((term) => (<button key={term} type="button" onClick={() => {
+                setSearchQuery(term);
+                const params = new URLSearchParams();
+                params.set('search', term);
+                if (selectedCity)
+                    params.set('city', selectedCity);
+                navigate(`/discover?${params.toString()}`);
+            }} className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white text-slate-700 hover:text-blue-700 font-medium border border-slate-200/60 shadow-2xs transition-all cursor-pointer">
                   {term}
-                </button>
-              ))}
+                </button>))}
             </div>
           </div>
         </div>
@@ -261,7 +191,7 @@ export const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
             <div className="w-12 h-12 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-4">
-              <ShieldCheck className="w-6 h-6" />
+              <ShieldCheck className="w-6 h-6"/>
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t('trustBadges.verifiedBadge')}
@@ -273,7 +203,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
             <div className="w-12 h-12 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-4">
-              <Award className="w-6 h-6" />
+              <Award className="w-6 h-6"/>
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t('trustBadges.pricingBadge')}
@@ -285,7 +215,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
             <div className="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center mb-4">
-              <Clock className="w-6 h-6" />
+              <Clock className="w-6 h-6"/>
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t('trustBadges.chatBadge')}
@@ -297,7 +227,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition-colors">
             <div className="w-12 h-12 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-4">
-              <Star className="w-6 h-6" />
+              <Star className="w-6 h-6"/>
             </div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t('trustBadges.reviewBadge')}
@@ -320,12 +250,9 @@ export const LandingPage: React.FC = () => {
               {t('categories.subtitle')}
             </p>
           </div>
-          <Link
-            to="/discover"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800"
-          >
+          <Link to="/discover" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800">
             <span>{t('categories.viewAll')}</span>
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4"/>
           </Link>
         </div>
 
@@ -333,15 +260,10 @@ export const LandingPage: React.FC = () => {
           {categories.map((cat) => {
             const name = language === 'am' ? cat.nameAm : cat.nameEn;
             const desc = language === 'am' ? cat.descriptionAm : cat.descriptionEn;
-            return (
-              <Link
-                key={cat._id}
-                to={`/discover?category=${cat.slug}`}
-                className="group p-5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-blue-400 transition-all flex flex-col justify-between"
-              >
+            return (<Link key={cat._id} to={`/discover?category=${cat.slug}`} className="group p-5 bg-white rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:border-blue-400 transition-all flex flex-col justify-between">
                 <div>
                   <div className="w-12 h-12 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                    {CATEGORY_ICONS[cat.slug] || <Wrench className="w-6 h-6 text-blue-600" />}
+                    {CATEGORY_ICONS[cat.slug] || <Wrench className="w-6 h-6 text-blue-600"/>}
                   </div>
                   <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                     {name}
@@ -352,11 +274,10 @@ export const LandingPage: React.FC = () => {
                 </div>
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-700 font-semibold">
                   <span>Browse Trades</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"/>
                 </div>
-              </Link>
-            );
-          })}
+              </Link>);
+        })}
         </div>
       </section>
 
@@ -417,8 +338,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Featured Verified Providers */}
-      {featuredProviders.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {featuredProviders.length > 0 && (<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
@@ -428,22 +348,16 @@ export const LandingPage: React.FC = () => {
                 Background-checked local experts ready to handle your repair and maintenance needs.
               </p>
             </div>
-            <Link
-              to="/discover"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1"
-            >
+            <Link to="/discover" className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1">
               <span>Explore All</span>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4"/>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProviders.map((provider) => (
-              <ProviderCard key={provider._id} provider={provider} />
-            ))}
+            {featuredProviders.map((provider) => (<ProviderCard key={provider._id} provider={provider}/>))}
           </div>
-        </section>
-      )}
+        </section>)}
 
       {/* Become a Provider CTA Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -460,14 +374,10 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <Link
-            to="/login?role=SERVICE_PROVIDER"
-            className="px-8 py-3.5 bg-white text-blue-950 hover:bg-blue-50 text-sm font-extrabold rounded-lg shadow-lg transition-transform hover:scale-105 shrink-0"
-          >
+          <Link to="/login?role=SERVICE_PROVIDER" className="px-8 py-3.5 bg-white text-blue-950 hover:bg-blue-50 text-sm font-extrabold rounded-lg shadow-lg transition-transform hover:scale-105 shrink-0">
             {t('nav.becomeProvider')}
           </Link>
         </div>
       </section>
-    </div>
-  );
+    </div>);
 };
