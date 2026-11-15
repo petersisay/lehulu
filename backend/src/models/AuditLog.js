@@ -1,18 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IAuditLog extends Document {
-  actorId: Types.ObjectId;
-  actorEmail: string;
-  action: string;
-  entityType: string;
-  entityId: Types.ObjectId;
-  details: Record<string, any>;
-  ipAddress?: string;
-  userAgent?: string;
-  timestamp: Date;
-}
-
-const AuditLogSchema = new Schema<IAuditLog>(
+const AuditLogSchema = new Schema(
   {
     actorId: {
       type: Schema.Types.ObjectId,
@@ -59,4 +48,8 @@ const AuditLogSchema = new Schema<IAuditLog>(
   }
 );
 
-export const AuditLog = mongoose.model<IAuditLog>('AuditLog', AuditLogSchema);
+const AuditLog = mongoose.model('AuditLog', AuditLogSchema);
+
+module.exports = {
+  AuditLog,
+};
