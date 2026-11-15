@@ -1,22 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { DisputeStatus, UserRole } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IDispute extends Document {
-  bookingId: Types.ObjectId;
-  raisedByUserId: Types.ObjectId;
-  raisedByRole: UserRole;
-  reason: string;
-  description: string;
-  evidenceUrls: string[];
-  status: DisputeStatus;
-  resolutionNotes?: string;
-  resolvedBy?: Types.ObjectId;
-  resolvedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const DisputeSchema = new Schema<IDispute>(
+const DisputeSchema = new Schema(
   {
     bookingId: {
       type: Schema.Types.ObjectId,
@@ -69,4 +54,8 @@ const DisputeSchema = new Schema<IDispute>(
   }
 );
 
-export const Dispute = mongoose.model<IDispute>('Dispute', DisputeSchema);
+const Dispute = mongoose.model('Dispute', DisputeSchema);
+
+module.exports = {
+  Dispute,
+};
