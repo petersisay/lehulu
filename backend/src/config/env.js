@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import { z } from 'zod';
+const dotenv = require('dotenv');
+const { z } = require('zod');
 
 dotenv.config();
 
@@ -95,7 +95,7 @@ if (!parsedEnv.success) {
   process.exit(1);
 }
 
-export const env = {
+const env = {
   ...parsedEnv.data,
   IS_PRODUCTION:
     (parsedEnv.data.NODE_ENV === 'production' || parsedEnv.data.APP_ENV === 'production') &&
@@ -112,3 +112,5 @@ export const env = {
     !process.env.RENDER_SERVICE_NAME?.includes('staging'),
   ALLOW_TEST_AUTH: Boolean(parsedEnv.data.ALLOW_TEST_AUTH && parsedEnv.data.NODE_ENV === 'test'),
 };
+
+module.exports = { env };

@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import { connectDB, disconnectDB } from './db';
-import { env } from './env';
-import { ServiceCategory } from '../models/ServiceCategory';
-import { User } from '../models/User';
+const mongoose = require('mongoose');
+const { connectDB, disconnectDB } = require('./db');
+const { env } = require('./env');
+const { ServiceCategory } = require('../models/ServiceCategory');
+const { User } = require('../models/User');
 
-export const initialCategories = [
+const initialCategories = [
   {
     nameEn: 'Home Maintenance',
     nameAm: 'የቤት ጥገና እና እድሳት',
@@ -89,7 +89,7 @@ export const initialCategories = [
   },
 ];
 
-export const seedDatabase = async (): Promise<void> => {
+const seedDatabase = async () => {
   try {
     console.log('Seeding initial Lehulu database catalog...');
     await connectDB();
@@ -127,7 +127,7 @@ export const seedDatabase = async (): Promise<void> => {
     }
 
     console.log('Database seeding completed successfully without fake records.');
-  } catch (error: any) {
+  } catch (error) {
     console.error('Database seeding failed:', error.message);
   } finally {
     await disconnectDB();
@@ -140,3 +140,8 @@ if (require.main === module) {
     .then(() => process.exit(0))
     .catch(() => process.exit(1));
 }
+
+module.exports = {
+  initialCategories,
+  seedDatabase,
+};

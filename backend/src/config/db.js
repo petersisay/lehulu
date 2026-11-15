@@ -1,18 +1,11 @@
-import mongoose from 'mongoose';
-import { env } from './env';
+const mongoose = require('mongoose');
+const { env } = require('./env');
 
-let memoryServer: any = null;
+let memoryServer = null;
 let isInMemoryActive = false;
 let activeDatabaseUri = '';
 
-export interface DatabaseStatus {
-  isConnected: boolean;
-  isInMemory: boolean;
-  storageType: 'PERSISTENT_STORAGE' | 'TEMPORARY_IN_MEMORY_DEV';
-  databaseName: string;
-}
-
-export const getDatabaseStatus = (): DatabaseStatus => {
+const getDatabaseStatus = () => {
   const isConnected = mongoose.connection.readyState === 1;
   return {
     isConnected,
@@ -22,7 +15,7 @@ export const getDatabaseStatus = (): DatabaseStatus => {
   };
 };
 
-export const connectDB = async (): Promise<void> => {
+const connectDB = async () => {
   try {
     mongoose.set('strictQuery', true);
 
@@ -40,7 +33,7 @@ export const connectDB = async (): Promise<void> => {
     const urlPattern = /^(mongodb(?:\+srv)?:\/\/[^\/?#]+)(?:\/([^?#]*))?(\?.*)?$/;
     const match = uri.match(urlPattern);
 
-    const connectOptions: mongoose.ConnectOptions = {
+    const connectOptions = {
       serverSelectionTimeoutMS: 10000,
     };
 
@@ -70,7 +63,7 @@ export const connectDB = async (): Promise<void> => {
       console.log(`[INFO]: Records WILL survive backend server restarts.`);
       console.log(`===================================================================`);
       return;
-    } catch (err: any) {
+    } catch (err) {
       const isProductionOrStaging =
         env.IS_PRODUCTION || env.IS_STAGING || process.env.APP_ENV === 'staging' || process.env.STAGING === 'true';
 
@@ -87,8 +80,7 @@ export const connectDB = async (): Promise<void> => {
       console.warn(`To persist data locally, start a local MongoDB service or set MONGODB_URI in backend/.env.`);
       console.warn(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n`);
 
-      const memoryModule: any = 'mongodb-memory-server';
-      const { MongoMemoryServer } = await import(memoryModule);
+      const { MongoMemoryServer } = require('mongodb-memory-server');
       memoryServer = await MongoMemoryServer.create();
       uri = memoryServer.getUri();
       isInMemoryActive = true;
@@ -97,13 +89,13 @@ export const connectDB = async (): Promise<void> => {
       await mongoose.connect(uri);
       console.log(`[DATABASE]: Standalone in-memory MongoDB initialized successfully at: ${uri}`);
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Database connection initialization failed:', error.message);
     throw error;
   }
 };
 
-export const disconnectDB = async (): Promise<void> => {
+const disconnectDB = async () => {
   try {
     await mongoose.connection.close();
     if (memoryServer) {
@@ -111,7 +103,13 @@ export const disconnectDB = async (): Promise<void> => {
       memoryServer = null;
     }
     isInMemoryActive = false;
-  } catch (err: any) {
+  } catch (err) {
     console.error('Error during database disconnection:', err.message);
   }
+};
+
+module.exports = {
+  getDatabaseStatus,
+  connectDB,
+  disconnectDB,
 };
