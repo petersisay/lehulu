@@ -1,26 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface ISubcategory {
-  nameEn: string;
-  nameAm: string;
-  slug: string;
-}
-
-export interface IServiceCategory extends Document {
-  nameEn: string;
-  nameAm: string;
-  slug: string;
-  descriptionEn: string;
-  descriptionAm: string;
-  icon: string;
-  displayOrder: number;
-  isActive: boolean;
-  subcategories: ISubcategory[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const SubcategorySchema = new Schema<ISubcategory>(
+const SubcategorySchema = new Schema(
   {
     nameEn: { type: String, required: true, trim: true },
     nameAm: { type: String, required: true, trim: true },
@@ -29,7 +10,7 @@ const SubcategorySchema = new Schema<ISubcategory>(
   { _id: false }
 );
 
-const ServiceCategorySchema = new Schema<IServiceCategory>(
+const ServiceCategorySchema = new Schema(
   {
     nameEn: {
       type: String,
@@ -83,4 +64,8 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
 
 ServiceCategorySchema.index({ isActive: 1, displayOrder: 1 });
 
-export const ServiceCategory = mongoose.model<IServiceCategory>('ServiceCategory', ServiceCategorySchema);
+const ServiceCategory = mongoose.model('ServiceCategory', ServiceCategorySchema);
+
+module.exports = {
+  ServiceCategory,
+};
