@@ -1,24 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, MapPin, Heart, Phone, Mail } from 'lucide-react';
+import { ShieldCheck, MapPin, Heart } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-
-export const Footer: React.FC = () => {
-  const { t } = useLanguage();
-
-  return (
-    <footer className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-slate-300 border-t border-blue-900/40">
+export const Footer = () => {
+    const { t } = useLanguage();
+    return (<footer className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-slate-300 border-t border-blue-900/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-blue-500/30">
-                <img
-                  src="/lehulu-logo.jpg"
-                  alt="Lehulu ለሁሉ"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/lehulu-logo.jpg" alt="Lehulu ለሁሉ" className="w-full h-full object-cover"/>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-2xl tracking-tight text-white">
@@ -33,7 +26,7 @@ export const Footer: React.FC = () => {
               {t('brand.subtagline')}
             </p>
             <div className="flex items-center gap-2 text-xs font-medium text-blue-300 bg-blue-950/40 p-2.5 rounded-lg border border-blue-800/40 w-fit">
-              <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0"/>
               <span>{t('trustBadges.verifiedBadge')}</span>
             </div>
           </div>
@@ -45,19 +38,19 @@ export const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                <MapPin className="w-3.5 h-3.5 text-blue-400"/>
                 <span>{t('locations.adama')}</span>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                <MapPin className="w-3.5 h-3.5 text-blue-400"/>
                 <span>{t('locations.bishoftu')}</span>
               </li>
               <li className="flex items-center gap-2 text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-slate-600" />
+                <MapPin className="w-3.5 h-3.5 text-slate-600"/>
                 <span>{t('locations.addisAbaba')} (Coming Soon)</span>
               </li>
               <li className="flex items-center gap-2 text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-slate-600" />
+                <MapPin className="w-3.5 h-3.5 text-slate-600"/>
                 <span>{t('locations.hawassa')} (Future Expansion)</span>
               </li>
             </ul>
@@ -134,10 +127,9 @@ export const Footer: React.FC = () => {
           </p>
           <div className="flex items-center gap-1 text-slate-400">
             <span>Built with care for Ethiopian communities</span>
-            <Heart className="w-3.5 h-3.5 text-red-500 inline fill-red-500" />
+            <Heart className="w-3.5 h-3.5 text-red-500 inline fill-red-500"/>
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
 };
