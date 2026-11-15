@@ -1,6 +1,6 @@
-import { ProviderLead } from '../models/ProviderLead';
+const { ProviderLead } = require('../models/ProviderLead');
 
-export const authenticResearchedLeads = [
+const authenticResearchedLeads = [
   // 1. Home Maintenance
   {
     businessName: 'FAYA Electrical Works',
@@ -180,7 +180,7 @@ export const authenticResearchedLeads = [
   },
 ];
 
-export const seedProviderLeads = async (): Promise<number> => {
+const seedProviderLeads = async () => {
   let seededCount = 0;
   for (const lead of authenticResearchedLeads) {
     await ProviderLead.findOneAndUpdate(
@@ -191,4 +191,9 @@ export const seedProviderLeads = async (): Promise<number> => {
     seededCount++;
   }
   return seededCount;
+};
+
+module.exports = {
+  authenticResearchedLeads,
+  seedProviderLeads,
 };
