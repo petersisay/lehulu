@@ -59,7 +59,7 @@ flowchart TD
 ```
 
 ### Layer Responsibilities
-- **Presentation Layer**: React Single Page Application (SPA) with TypeScript, Vite, and Tailwind CSS. State is orchestrated via TanStack Query (server state), React Hook Form with Zod schemas (client forms), and React Context (`AuthContext`, `LanguageContext`, `SocketContext`).
+- **Presentation Layer**: React Single Page Application (SPA) with pure JavaScript JSX, Vite, and Tailwind CSS. State is orchestrated via TanStack Query (server state), React Hook Form with Zod schemas (client forms), and React Context (`AuthContext`, `LanguageContext`, `SocketContext`).
 - **Gateway & Security Layer**: Express.js REST API with versioned endpoints (`/api/v1/*`), Helmet security headers, CORS origin enforcement, rate limiting, and structured logging.
 - **Real-Time Communication Layer**: Socket.IO server coordinated with session authorization for instant booking updates, room-isolated chat messages, and notification broadcasts.
 - **Performance & Caching Layer**: In-memory TTL caching with atomic write-invalidation for catalog data, alongside optimized compound indexing and `.lean()` database queries.
