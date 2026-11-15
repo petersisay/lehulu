@@ -1,47 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { PricingModel, VerificationStatus } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IWorkingHour {
-  dayOfWeek: number; // 0 = Sunday, 6 = Saturday
-  open: string;
-  close: string;
-  isClosed: boolean;
-}
-
-export interface IProviderProfile extends Document {
-  userId: Types.ObjectId;
-  businessName: string;
-  bioEn: string;
-  bioAm: string;
-  experienceYears: number;
-  categoryIds: Types.ObjectId[];
-  skills: string[];
-  serviceCities: string[];
-  serviceRadiusKm: number;
-  location: {
-    type: 'Point';
-    coordinates: [number, number]; // [lng, lat]
-  };
-  publicAddress?: string;
-  pricing: {
-    model: PricingModel;
-    startingPrice: number;
-    hourlyRate?: number;
-    inspectionFee?: number;
-  };
-  workingHours: IWorkingHour[];
-  portfolioImages: string[];
-  isVerified: boolean;
-  verificationStatus: VerificationStatus;
-  rating: number;
-  reviewCount: number;
-  completedBookingsCount: number;
-  isAvailable: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const WorkingHourSchema = new Schema<IWorkingHour>(
+const WorkingHourSchema = new Schema(
   {
     dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
     open: { type: String, default: '08:00' },
@@ -51,7 +11,7 @@ const WorkingHourSchema = new Schema<IWorkingHour>(
   { _id: false }
 );
 
-const ProviderProfileSchema = new Schema<IProviderProfile>(
+const ProviderProfileSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -181,4 +141,8 @@ ProviderProfileSchema.index({ categoryIds: 1, isVerified: 1, isAvailable: 1 });
 ProviderProfileSchema.index({ isVerified: 1, verificationStatus: 1, isAvailable: 1 });
 ProviderProfileSchema.index({ serviceCities: 1, isVerified: 1, rating: -1 });
 
-export const ProviderProfile = mongoose.model<IProviderProfile>('ProviderProfile', ProviderProfileSchema);
+const ProviderProfile = mongoose.model('ProviderProfile', ProviderProfileSchema);
+
+module.exports = {
+  ProviderProfile,
+};
