@@ -1,43 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { BookingStatus, PricingModel } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface IBookingAddress {
-  city: string;
-  subcity?: string;
-  kebele?: string;
-  streetAddress: string;
-  coordinates?: [number, number];
-  contactPhone: string;
-}
-
-export interface IAgreedPrice {
-  amount: number;
-  currency: 'ETB';
-  pricingModel: PricingModel;
-  isFinal: boolean;
-}
-
-export interface IBooking extends Document {
-  bookingNumber: string;
-  customerId: Types.ObjectId;
-  providerId: Types.ObjectId;
-  categoryId: Types.ObjectId;
-  status: BookingStatus;
-  requestedDate: Date;
-  requestedTimeSlot: string;
-  problemDescription: string;
-  referenceImages: string[];
-  serviceAddress: IBookingAddress;
-  agreedPrice?: IAgreedPrice;
-  cancellationReason?: string;
-  cancelledBy?: Types.ObjectId;
-  completionRequestedAt?: Date;
-  completedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const BookingAddressSchema = new Schema<IBookingAddress>(
+const BookingAddressSchema = new Schema(
   {
     city: { type: String, required: true },
     subcity: { type: String, default: '' },
@@ -49,7 +13,7 @@ const BookingAddressSchema = new Schema<IBookingAddress>(
   { _id: false }
 );
 
-const AgreedPriceSchema = new Schema<IAgreedPrice>(
+const AgreedPriceSchema = new Schema(
   {
     amount: { type: Number, required: true, min: 0 },
     currency: { type: String, default: 'ETB' },
@@ -63,7 +27,7 @@ const AgreedPriceSchema = new Schema<IAgreedPrice>(
   { _id: false }
 );
 
-const BookingSchema = new Schema<IBooking>(
+const BookingSchema = new Schema(
   {
     bookingNumber: {
       type: String,
@@ -150,4 +114,8 @@ BookingSchema.index({ customerId: 1, status: 1 });
 BookingSchema.index({ providerId: 1, status: 1 });
 BookingSchema.index({ createdAt: -1 });
 
-export const Booking = mongoose.model<IBooking>('Booking', BookingSchema);
+const Booking = mongoose.model('Booking', BookingSchema);
+
+module.exports = {
+  Booking,
+};
