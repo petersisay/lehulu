@@ -6,9 +6,9 @@
 Lehulu is a production-grade digital marketplace designed for Ethiopian urban centers—initially serving **Adama** and **Bishoftu**, with architectural readiness for **Addis Ababa** and nationwide scaling. Lehulu connects households and businesses with thoroughly vetted, trustworthy local service professionals across essential trades: plumbing, electrical engineering, carpentry, automotive repair, home & office cleaning, electronics and appliance repair, IT & networking, painting, and tailoring.
 
 [![Backend Tests](https://img.shields.io/badge/backend%20tests-71%20passed-success?style=flat-square)](backend/tests)
-[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-11%20passed-success?style=flat-square)](frontend/src/test)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat-square&logo=react)](https://react.dev/)
+[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-12%20passed-success?style=flat-square)](frontend/src/test)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![React](https://img.shields.io/badge/React-18.3%20JSX-61dafb?style=flat-square&logo=react)](https://react.dev/)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-lightgrey?style=flat-square)](#license--contributions)
@@ -37,11 +37,11 @@ For service providers, informal operations constrain growth:
 
 ## 2. Core Architecture & Tech Stack
 
-Lehulu is built on an enterprise MERN stack featuring strict TypeScript typing, layered security, real-time WebSockets, and high-performance caching.
+Lehulu is built on an enterprise pure JavaScript MERN stack featuring native Node.js/Express CommonJS backend, React JSX frontend, layered security, real-time WebSockets, and high-performance caching.
 
 ```mermaid
 flowchart TD
-    Client["Frontend Client\n(React 18 + TS + Vite + Tailwind)"] -->|REST / HTTPS + HttpOnly Cookie| Gateway["Express.js API Gateway\n(/api/v1/*)"]
+    Client["Frontend Client\n(React 18 JSX + Vite + Tailwind)"] -->|REST / HTTPS + HttpOnly Cookie| Gateway["Express.js API Gateway\n(/api/v1/*)\n(Node.js + CommonJS)"]
     Client <-->|WSS WebSockets| SocketServer["Socket.IO Server\n(Real-Time Messaging & Status)"]
     Gateway --> Security["Security Pipeline\n(Helmet, CORS, RateLimiter, Zod)"]
     Security --> AuthMW["Session & RBAC Middleware"]
@@ -51,8 +51,8 @@ flowchart TD
 ```
 
 ### Technology Highlights
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, React Router v6, TanStack Query (React Query), React Hook Form, Zod, Lucide Icons.
-- **Backend**: Node.js, Express, TypeScript, Mongoose / MongoDB Atlas, Socket.IO, Helmet, CORS, Rate-Limiter, Zod Validation.
+- **Frontend**: React 18 (JSX), Vite 6, Tailwind CSS, React Router v7, TanStack Query, React Hook Form, Zod, Lucide Icons.
+- **Backend**: Node.js (>=18), Express.js (CommonJS JavaScript), Mongoose 8 / MongoDB Atlas, Socket.IO, Helmet, CORS, Rate-Limiter, Zod Validation.
 - **Authentication**: Google Identity Services token verification with secure `HttpOnly`, `SameSite` cookies, session management, and role-based onboarding.
 - **Performance**: In-memory TTL catalog caching (<1ms response time), $O(1)$ set-based admin verification synchronization, compound database indexing, and code-split frontend bundles (`vendor-react`, `vendor-icons`, `vendor-data`).
 - **Localization**: Native bilingual interface supporting **English** and **Amharic (አማርኛ)** with instant language toggling.
@@ -116,32 +116,30 @@ stateDiagram-v2
 
 ```
 lehulu/
-├── backend/                       # Express + TypeScript + Mongoose Backend
+├── backend/                       # Express + Node.js + Mongoose JavaScript Backend
 │   ├── src/
-│   │   ├── config/                # Environment, Atlas DB, Seed scripts
-│   │   ├── controllers/           # Auth, User, Provider, Booking, Quote, Review, Admin
-│   │   ├── middleware/            # Auth, RBAC, Rate-Limit, Validation, Audit Logging
-│   │   ├── models/                # Schemas with 2dsphere & Compound Indexes
-│   │   ├── routes/                # REST API Endpoints (/api/v1/*)
-│   │   ├── sockets/               # Real-time WebSocket handlers & room auth
-│   │   ├── types/                 # TypeScript interfaces, enums, type definitions
-│   │   ├── app.ts                 # Express Application setup & middleware pipeline
-│   │   └── server.ts              # Server bootstrap & WebSocket initialization
-│   ├── tests/                     # 71 automated integration & security tests
+│   │   ├── config/                # Environment, Atlas DB, Seed scripts (.js)
+│   │   ├── controllers/           # Auth, User, Provider, Booking, Quote, Review, Admin (.js)
+│   │   ├── middleware/            # Auth, RBAC, Rate-Limit, Validation, Audit Logging (.js)
+│   │   ├── models/                # Schemas with 2dsphere & Compound Indexes (.js)
+│   │   ├── routes/                # REST API Endpoints (/api/v1/*) (.js)
+│   │   ├── sockets/               # Real-time WebSocket handlers & room auth (.js)
+│   │   ├── app.js                 # Express Application setup & middleware pipeline
+│   │   └── server.js              # Server bootstrap & WebSocket initialization
+│   ├── tests/                     # 71 automated integration & security tests (.js)
 │   └── package.json
-├── frontend/                      # React 18 + TypeScript + Vite Frontend
+├── frontend/                      # React 18 (JSX) + Vite Pure JavaScript Frontend
 │   ├── src/
-│   │   ├── components/            # Reusable UI, Badges, Modals, Maps, Navbar, Footer
-│   │   ├── context/               # AuthContext, LanguageContext, SocketContext
-│   │   ├── locales/               # Bilingual dictionaries: en.ts & am.ts
-│   │   ├── pages/                 # Landing, Discovery, BookingDetail, Dashboards, Admin
-│   │   ├── services/              # Typed Axios API client
-│   │   ├── types/                 # Shared TypeScript interfaces
-│   │   ├── test/                  # 11 Vitest frontend component tests
-│   │   ├── App.tsx                # Route definitions & lazyRetry chunk resilience
-│   │   └── main.tsx               # React Query caching & Google OAuth initialization
+│   │   ├── components/            # Reusable UI, Badges, Modals, Maps, Navbar, Footer (.jsx)
+│   │   ├── context/               # AuthContext, LanguageContext, SocketContext (.jsx)
+│   │   ├── locales/               # Bilingual dictionaries: en.js & am.js
+│   │   ├── pages/                 # Landing, Discovery, BookingDetail, Dashboards, Admin (.jsx)
+│   │   ├── services/              # Pure JavaScript Axios API client (.js)
+│   │   ├── test/                  # 12 Vitest frontend component tests (.jsx, .js)
+│   │   ├── App.jsx                # Route definitions & lazyRetry chunk resilience
+│   │   └── main.jsx               # React Query caching & Google OAuth initialization
 │   ├── public/                    # Static assets & favicon
-│   ├── vite.config.ts             # Chunk splitting & test runner configuration
+│   ├── vite.config.js             # Chunk splitting & test runner configuration
 │   └── package.json
 ├── docs/                          # Comprehensive Technical Specifications
 │   ├── ARCHITECTURE.md            # System architecture, security, state machines
@@ -226,11 +224,11 @@ Lehulu maintains a comprehensive test suite across backend API endpoints, RBAC b
 cd backend
 npm test
 
-# Run Frontend Test Suite (11 Tests)
+# Run Frontend Test Suite (12 Tests)
 cd frontend
-npm test -- --run
+npm test
 
-# Run TypeScript Typecheck & Production Build
+# Run Pure JavaScript Production Build
 cd backend && npm run build
 cd ../frontend && npm run build
 ```
