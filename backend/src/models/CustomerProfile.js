@@ -1,20 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface ICustomerProfile extends Document {
-  userId: Types.ObjectId;
-  savedProviderIds: Types.ObjectId[];
-  defaultAddress?: {
-    street: string;
-    city: string;
-    subcity?: string;
-    kebele?: string;
-    coordinates?: [number, number]; // [lng, lat]
-  };
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const CustomerProfileSchema = new Schema<ICustomerProfile>(
+const CustomerProfileSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -45,4 +32,8 @@ const CustomerProfileSchema = new Schema<ICustomerProfile>(
   }
 );
 
-export const CustomerProfile = mongoose.model<ICustomerProfile>('CustomerProfile', CustomerProfileSchema);
+const CustomerProfile = mongoose.model('CustomerProfile', CustomerProfileSchema);
+
+module.exports = {
+  CustomerProfile,
+};
