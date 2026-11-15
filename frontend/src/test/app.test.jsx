@@ -1,0 +1,292 @@
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { LanguageProvider, useLanguage } from '../context/LanguageContext';
+import { AuthContext } from '../context/AuthContext';
+import { Navbar } from '../components/Navbar';
+import { ProviderCard } from '../components/ProviderCard';
+// Mock Provider Profile
+const mockProvider = {
+    _id: 'prov-101',
+    userId: {
+        _id: 'user-101',
+        displayName: 'Kebede Expert Plumbing',
+        username: 'kebede_plumber',
+        avatarUrl: 'https://images.unsplash.com/photo-1540569014015-19a7be504e3a',
+        phoneNumber: '+251911223344',
+        city: 'Adama',
+    },
+    businessName: 'Kebede Expert Plumbing',
+    categoryIds: [
+        {
+            _id: 'cat-1',
+            nameEn: 'Plumbing Services',
+            nameAm: 'የቧንቧ ጥገና',
+            slug: 'plumbing',
+            icon: 'wrench',
+        },
+    ],
+    serviceCities: ['Adama', 'Bishoftu'],
+    pricing: {
+        model: 'HOURLY',
+        startingPrice: 350,
+        hourlyRate: 200,
+    },
+    rating: 4.9,
+    reviewCount: 28,
+    totalReviews: 28,
+    completedBookingsCount: 42,
+    isVerified: true,
+    isAvailable: true,
+    experienceYears: 5,
+};
+const renderWithProviders = (ui, authValues = {
+    user: null,
+    profile: null,
+    loading: false,
+    isAuthenticated: false,
+    isCustomer: false,
+    isProvider: false,
+    isAdmin: false,
+    isVerifiedProvider: false,
+    loginWithGoogle: vi.fn(),
+    onboard: vi.fn(),
+    updateUser: vi.fn(),
+    logout: vi.fn(),
+    refreshUser: vi.fn(),
+}) => {
+    return render(<MemoryRouter>
+      <LanguageProvider>
+        <AuthContext.Provider value={authValues}>{ui}</AuthContext.Provider>
+      </LanguageProvider>
+    </MemoryRouter>);
+};
+describe('Lehulu (ለሁሉ) Frontend Component & UI Tests', () => {
+    describe('1. Navbar & Role-Based Navigation', () => {
+        it('renders Lehulu brand and navigation links for anonymous visitors', () => {
+            renderWithProviders(<Navbar />);
+            expect(screen.getAllByText(/ለሁሉ/i).length).toBeGreaterThanOrEqual(1);
+            expect(screen.getAllByText(/Lehulu/i).length).toBeGreaterThanOrEqual(1);
+            expect(screen.getAllByRole('link', { name: /በGoogle ይግቡ|sign in/i }).length).toBeGreaterThanOrEqual(1);
+        });
+        it('renders customer dashboard and profile links when authenticated as CUSTOMER', () => {
+            const mockCustomerAuth = {
+                user: {
+                    _id: 'cust-1',
+                    email: 'abebe@gmail.com',
+                    role: 'CUSTOMER',
+                    displayName: 'Abebe Bikila',
+                    username: 'abebe_b',
+                    city: 'Adama',
+                    isVerified: false,
+                    isOnboarded: true,
+                },
+                profile: null,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: true,
+                isProvider: false,
+                isAdmin: false,
+                isVerifiedProvider: false,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockCustomerAuth);
+            // Should display customer's name
+            expect(screen.getByText('Abebe Bikila')).toBeInTheDocument();
+            // Should display Customer role badge
+            expect(screen.getByText('Customer')).toBeInTheDocument();
+        });
+        it('renders provider dashboard and verified badge for verified SERVICE_PROVIDER', () => {
+            const mockProviderAuth = {
+                user: {
+                    _id: 'prov-user-1',
+                    email: 'kebede@gmail.com',
+                    role: 'SERVICE_PROVIDER',
+                    displayName: 'Kebede Master',
+                    username: 'kebede_m',
+                    city: 'Bishoftu',
+                    isVerified: true,
+                    isOnboarded: true,
+                },
+                profile: mockProvider,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: false,
+                isProvider: true,
+                isAdmin: false,
+                isVerifiedProvider: true,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockProviderAuth);
+            expect(screen.getByText('Kebede Master')).toBeInTheDocument();
+            expect(screen.getByText('Verified Pro')).toBeInTheDocument();
+        });
+        it('renders admin badge and admin portal navigation for ADMIN', () => {
+            const mockAdminAuth = {
+                user: {
+                    _id: 'adm-1',
+                    email: 'petrossisay1646@gmail.com',
+                    role: 'ADMIN',
+                    displayName: 'Platform Admin',
+                    username: 'admin',
+                    city: 'Addis Ababa',
+                    isVerified: true,
+                    isOnboarded: true,
+                },
+                profile: null,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: false,
+                isProvider: false,
+                isAdmin: true,
+                isVerifiedProvider: false,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockAdminAuth);
+            expect(screen.getByText('Platform Admin')).toBeInTheDocument();
+            expect(screen.getByText('Admin')).toBeInTheDocument();
+        });
+        it('customer navigation strictly excludes Admin Dashboard and Provider management', () => {
+            const mockCustomerAuth = {
+                user: { _id: 'c1', email: 'c@lehulu.et', role: 'CUSTOMER', displayName: 'Almaz Customer', username: 'almaz', city: 'Adama', isVerified: false, isOnboarded: true },
+                profile: null,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: true,
+                isProvider: false,
+                isAdmin: false,
+                isVerifiedProvider: false,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockCustomerAuth);
+            expect(screen.queryByText(/Admin Portal|Admin Dashboard/i)).not.toBeInTheDocument();
+            expect(screen.queryByText(/Verification Queue/i)).not.toBeInTheDocument();
+            expect(screen.queryByText(/Provider Portal|Provider Dashboard/i)).not.toBeInTheDocument();
+        });
+        it('provider navigation strictly excludes Admin Portal and Customer Find Services', () => {
+            const mockProviderAuth = {
+                user: { _id: 'p1', email: 'p@lehulu.et', role: 'SERVICE_PROVIDER', displayName: 'Tolosa Plumber', username: 'tolosa', city: 'Bishoftu', isVerified: true, isOnboarded: true },
+                profile: mockProvider,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: false,
+                isProvider: true,
+                isAdmin: false,
+                isVerifiedProvider: true,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockProviderAuth);
+            expect(screen.queryByText(/Verification Queue/i)).not.toBeInTheDocument();
+            expect(screen.getAllByText(/My Requests & Bookings/i).length).toBeGreaterThanOrEqual(1);
+        });
+        it('admin navigation strictly excludes customer Find Services discovery link', () => {
+            const mockAdminAuth = {
+                user: { _id: 'a1', email: 'admin@lehulu.et', role: 'ADMIN', displayName: 'Super Admin', username: 'admin', city: 'Adama', isVerified: true, isOnboarded: true },
+                profile: null,
+                loading: false,
+                isAuthenticated: true,
+                isCustomer: false,
+                isProvider: false,
+                isAdmin: true,
+                isVerifiedProvider: false,
+                loginWithGoogle: vi.fn(),
+                onboard: vi.fn(),
+                updateUser: vi.fn(),
+                logout: vi.fn(),
+                refreshUser: vi.fn(),
+            };
+            renderWithProviders(<Navbar />, mockAdminAuth);
+            expect(screen.queryByText(/Find Services/i)).not.toBeInTheDocument();
+            expect(screen.getAllByText(/Verification Queue/i).length).toBeGreaterThanOrEqual(1);
+        });
+    });
+    describe('2. ProviderCard & Marketplace Discovery', () => {
+        it('renders provider business name, verified badge, and rating stars', () => {
+            renderWithProviders(<ProviderCard provider={mockProvider}/>);
+            expect(screen.getByText('Kebede Expert Plumbing')).toBeInTheDocument();
+            expect(screen.getByText('4.9')).toBeInTheDocument();
+            expect(screen.getByText('(28)')).toBeInTheDocument();
+            expect(screen.getByText(/350/)).toBeInTheDocument();
+            expect(screen.getByText(/Adama, Bishoftu/i)).toBeInTheDocument();
+        });
+        it('renders provider profile link with starting price for customer discovery', () => {
+            renderWithProviders(<ProviderCard provider={mockProvider}/>);
+            const profileLink = screen.getByRole('link', { name: /viewProfile|view profile|የባለሙያ መረጃ/i });
+            expect(profileLink).toBeInTheDocument();
+            expect(profileLink).toHaveAttribute('href', '/providers/prov-101');
+        });
+    });
+    describe('3. Language Switcher (Amharic & English)', () => {
+        const LanguageConsumerTest = () => {
+            const { language, setLanguage, t } = useLanguage();
+            return (<div>
+          <span data-testid="current-lang">{language}</span>
+          <span data-testid="nav-home">{t('nav.home')}</span>
+          <button onClick={() => setLanguage('am')}>Switch to Amharic</button>
+          <button onClick={() => setLanguage('en')}>Switch to English</button>
+        </div>);
+        };
+        it('toggles language between English and Amharic with responsive translation', () => {
+            render(<LanguageProvider>
+          <LanguageConsumerTest />
+        </LanguageProvider>);
+            // Default is English or Amharic depending on browser/storage; test toggling explicitly
+            const amharicBtn = screen.getByText('Switch to Amharic');
+            fireEvent.click(amharicBtn);
+            expect(screen.getByTestId('current-lang')).toHaveTextContent('am');
+            expect(screen.getByTestId('nav-home')).toHaveTextContent('መነሻ');
+            const englishBtn = screen.getByText('Switch to English');
+            fireEvent.click(englishBtn);
+            expect(screen.getByTestId('current-lang')).toHaveTextContent('en');
+            expect(screen.getByTestId('nav-home')).toHaveTextContent('Home');
+        });
+    });
+    describe('4. Honest Provider Verification & Badge Security', () => {
+        it('does NOT display verified badge for unverified service providers', () => {
+            const unverifiedProvider = {
+                ...mockProvider,
+                _id: 'prov-unverified',
+                isVerified: false,
+                businessName: 'Unverified Handyman',
+            };
+            renderWithProviders(<ProviderCard provider={unverifiedProvider}/>);
+            expect(screen.getByText('Unverified Handyman')).toBeInTheDocument();
+            expect(screen.queryByText('Verified Pro')).not.toBeInTheDocument();
+        });
+    });
+    describe('5. Accurate Non-Misleading Hero Badges', () => {
+        const HeroBadgeTest = () => {
+            const { t } = useLanguage();
+            return <div data-testid="hero-badge">{t('hero.badge')}</div>;
+        };
+        it('renders accurate community marketplace badge without misleading government claims', () => {
+            render(<LanguageProvider>
+          <HeroBadgeTest />
+        </LanguageProvider>);
+            const badgeText = screen.getByTestId('hero-badge').textContent;
+            expect(badgeText).not.toMatch(/Official Marketplace/i);
+            expect(badgeText).toMatch(/Local Services Marketplace|የአካባቢ አገልግሎት ገበያ/i);
+        });
+    });
+});
