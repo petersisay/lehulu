@@ -2,18 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-
-export const TermsPage: React.FC = () => {
-  const { t } = useLanguage();
-
-  return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+export const TermsPage = () => {
+    const { t } = useLanguage();
+    return (<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       <div>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700"
-        >
-          <ChevronLeft className="w-4 h-4" />
+        <Link to="/" className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-blue-700">
+          <ChevronLeft className="w-4 h-4"/>
           <span>Back to Home</span>
         </Link>
       </div>
@@ -21,7 +15,7 @@ export const TermsPage: React.FC = () => {
       <div className="bg-white rounded-xl border border-slate-200 p-8 sm:p-12 shadow-xs space-y-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
-            <Shield className="w-6 h-6" />
+            <Shield className="w-6 h-6"/>
           </div>
           <div>
             <h1 className="text-2xl font-black text-slate-900">Terms of Service</h1>
@@ -55,6 +49,5 @@ export const TermsPage: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 };
