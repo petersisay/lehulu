@@ -1,12 +1,13 @@
-import mongoose, { Types } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import { env } from './env';
-import { User } from '../models/User';
-import { ProviderProfile } from '../models/ProviderProfile';
-import { ServiceCategory } from '../models/ServiceCategory';
-import { AuditLog } from '../models/AuditLog';
+const mongoose = require('mongoose');
+const { Types } = mongoose;
+const { v4: uuidv4 } = require('uuid');
+const { env } = require('./env');
+const { User } = require('../models/User');
+const { ProviderProfile } = require('../models/ProviderProfile');
+const { ServiceCategory } = require('../models/ServiceCategory');
+const { AuditLog } = require('../models/AuditLog');
 
-export const runAtlasVerification = async (): Promise<boolean> => {
+const runAtlasVerification = async () => {
   const rawUri = env.MONGODB_URI;
   const sanitizedUri = rawUri.replace(/\/\/[^@]*@/, '//***:***@');
   const isAtlas = rawUri.includes('mongodb+srv') || rawUri.includes('mongodb.net');
@@ -100,7 +101,7 @@ export const runAtlasVerification = async (): Promise<boolean> => {
 
     await mongoose.connection.close();
     return true;
-  } catch (error: any) {
+  } catch (error) {
     console.error('\n[ATLAS VERIFICATION ERROR]:', error.message);
     if (mongoose.connection.readyState !== 0) {
       await mongoose.connection.close();
@@ -114,3 +115,7 @@ if (require.main === module) {
     process.exit(success ? 0 : 1);
   });
 }
+
+module.exports = {
+  runAtlasVerification,
+};
