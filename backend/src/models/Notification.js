@@ -1,21 +1,7 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
-import { NotificationType } from '../types';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export interface INotification extends Document {
-  userId: Types.ObjectId;
-  type: NotificationType;
-  titleEn: string;
-  titleAm: string;
-  messageEn: string;
-  messageAm: string;
-  referenceId?: Types.ObjectId;
-  referenceType?: 'Booking' | 'Quote' | 'ProviderVerification';
-  isRead: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const NotificationSchema = new Schema<INotification>(
+const NotificationSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -54,4 +40,8 @@ const NotificationSchema = new Schema<INotification>(
 
 NotificationSchema.index({ userId: 1, isRead: 1, createdAt: -1 });
 
-export const Notification = mongoose.model<INotification>('Notification', NotificationSchema);
+const Notification = mongoose.model('Notification', NotificationSchema);
+
+module.exports = {
+  Notification,
+};
