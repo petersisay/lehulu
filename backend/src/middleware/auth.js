@@ -1,22 +1,20 @@
-import { Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { OAuth2Client } from 'google-auth-library';
-import { env } from '../config/env';
-import { AuthenticatedRequest, AuthUserPayload, UserRole } from '../types';
-import { User } from '../models/User';
-import { ProviderProfile } from '../models/ProviderProfile';
+const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const { env } = require('../config/env');
+const { User } = require('../models/User');
+const { ProviderProfile } = require('../models/ProviderProfile');
 
 const googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID);
 
-export const COOKIE_NAME = 'lehulu_token';
+const COOKIE_NAME = 'lehulu_token';
 
-export const createSessionToken = (payload: AuthUserPayload): string => {
+const createSessionToken = (payload) => {
   return jwt.sign(payload, env.JWT_SECRET, {
     expiresIn: '7d',
   });
 };
 
-export const setSessionCookie = (res: Response, token: string): void => {
+const setSessionCookie = (res, token) => {
   const isSecure = env.IS_PRODUCTION || env.IS_STAGING;
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
@@ -27,7 +25,7 @@ export const setSessionCookie = (res: Response, token: string): void => {
   });
 };
 
-export const clearSessionCookie = (res: Response): void => {
+const clearSessionCookie = (res) => {
   const isSecure = env.IS_PRODUCTION || env.IS_STAGING;
   res.clearCookie(COOKIE_NAME, {
     httpOnly: true,
@@ -37,12 +35,7 @@ export const clearSessionCookie = (res: Response): void => {
   });
 };
 
-export const verifyGoogleIdToken = async (idToken: string): Promise<{
-  googleId: string;
-  email: string;
-  name: string;
-  picture?: string;
-}> => {
+const verifyGoogleIdToken = async (idToken) => {
   const isMockToken = idToken.startsWith('mock') || idToken.startsWith('test-');
   const isProduction = env.IS_PRODUCTION;
   const isStaging = env.IS_STAGING || process.env.APP_ENV === 'staging' || process.env.STAGING === 'true';
@@ -120,14 +113,7 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
     '1084242194821-lehulu-test-client-id.apps.googleusercontent.com',
   ].filter(Boolean);
 
-  let verifiedPayload: {
-    sub: string;
-    email: string;
-    name?: string;
-    picture?: string;
-    email_verified?: boolean | string;
-    iss?: string;
-  } | null = null;
+  let verifiedPayload = null;
 
   try {
     const ticket = await googleClient.verifyIdToken({
@@ -151,7 +137,7 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
     try {
       const resp = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
       if (resp.ok) {
-        const info = (await resp.json()) as any;
+        const info = await resp.json();
         if (info && info.email) {
           verifiedPayload = {
             sub: info.sub,
@@ -189,15 +175,11 @@ export const verifyGoogleIdToken = async (idToken: string): Promise<{
   };
 };
 
-export const authenticate = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+const authenticate = async (req, res, next) => {
   try {
-    let token = req.cookies?.[COOKIE_NAME];
+    let token = req.cookies ? req.cookies[COOKIE_NAME] : undefined;
 
-    if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
       token = req.headers.authorization.split(' ')[1];
     }
 
@@ -205,7 +187,7 @@ export const authenticate = async (
       return next();
     }
 
-    const decoded = jwt.verify(token, env.JWT_SECRET) as AuthUserPayload;
+    const decoded = jwt.verify(token, env.JWT_SECRET);
     
     // Verify user still exists and is active in database
     const user = await User.findById(decoded._id).select('-__v');
@@ -218,7 +200,7 @@ export const authenticate = async (
     let isVerified = false;
     if (user.role === 'SERVICE_PROVIDER') {
       const providerProfile = await ProviderProfile.findOne({ userId: user._id }).select('isVerified verificationStatus');
-      isVerified = providerProfile?.isVerified || false;
+      isVerified = providerProfile ? providerProfile.isVerified : false;
     }
 
     req.user = {
@@ -239,4 +221,13 @@ export const authenticate = async (
     clearSessionCookie(res);
     next();
   }
+};
+
+module.exports = {
+  COOKIE_NAME,
+  createSessionToken,
+  setSessionCookie,
+  clearSessionCookie,
+  verifyGoogleIdToken,
+  authenticate,
 };
