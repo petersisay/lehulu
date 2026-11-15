@@ -1,11 +1,4 @@
-import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest, UserRole } from '../types';
-
-export const requireAuth = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+const requireAuth = (req, res, next) => {
   if (!req.user) {
     res.status(401).json({
       success: false,
@@ -16,8 +9,8 @@ export const requireAuth = (
   next();
 };
 
-export const requireRole = (...roles: UserRole[]) => {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+const requireRole = (...roles) => {
+  return (req, res, next) => {
     if (!req.user) {
       res.status(401).json({
         success: false,
@@ -38,11 +31,7 @@ export const requireRole = (...roles: UserRole[]) => {
   };
 };
 
-export const requireVerifiedProvider = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+const requireVerifiedProvider = (req, res, next) => {
   if (!req.user) {
     res.status(401).json({
       success: false,
@@ -71,11 +60,7 @@ export const requireVerifiedProvider = (
   next();
 };
 
-export const requireOnboarded = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+const requireOnboarded = (req, res, next) => {
   if (!req.user) {
     res.status(401).json({
       success: false,
@@ -94,4 +79,11 @@ export const requireOnboarded = (
   }
 
   next();
+};
+
+module.exports = {
+  requireAuth,
+  requireRole,
+  requireVerifiedProvider,
+  requireOnboarded,
 };
