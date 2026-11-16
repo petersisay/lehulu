@@ -2,7 +2,7 @@
 
 ## 1. Schema Design Principles
 
-- **MongoDB Atlas with Mongoose ORM**: Strict typing, schema validation, compound indexes, and referential constraints.
+- **MongoDB Atlas with Mongoose 8 ORM**: Native JavaScript CommonJS schemas, strict typing, schema validation, compound indexes, and referential constraints.
 - **Geospatial Proximity Queries**: GeoJSON `2dsphere` indexes on coordinates (`[longitude, latitude]`) enabling sub-10ms proximity searches across Adama, Bishoftu, and Addis Ababa.
 - **High-Performance Compound Indexing**: Pre-indexed query paths for category filtering, verification status checks, booking status tracking, and chronological feeds.
 - **Privacy by Design**: Sensitive customer residential addresses and national ID verification documents are isolated from public projection queries.
@@ -31,28 +31,39 @@ erDiagram
 
 ---
 
-## 3. Detailed Data Models
+## 3. Detailed Data Models (Native Mongoose Schemas)
 
 ### 3.1 User Model (`users`)
-Central identity store linked to Google authentication.
+Central identity store linked to Google authentication. Defined in `backend/src/models/User.js`.
+
 ```javascript
-interface IUser extends Document {
-  googleId: string; // Indexed, unique
-  email: string; // Indexed, unique, lowercase, trimmed
-  displayName: string;
-  avatarUrl?: string;
-  phoneNumber?: string;
-  role: 'CUSTOMER' | 'SERVICE_PROVIDER' | 'ADMIN';
-  preferredLanguage: 'en' | 'am';
-  city: string; // 'Adama', 'Bishoftu', 'Addis Ababa', etc.
-  isActive: boolean;
-  isOnboarded: boolean;
-  isVerified?: boolean;
-  lastLoginAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
+
+const UserSchema = new mongoose.Schema({
+  googleId: { type: String, required: true, unique: true, index: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
+  displayName: { type: String, required: true, trim: true },
+  avatarUrl: { type: String },
+  phoneNumber: { type: String, trim: true },
+  role: { 
+    type: String, 
+    enum: ['CUSTOMER', 'SERVICE_PROVIDER', 'ADMIN'], 
+    default: 'CUSTOMER',
+    index: true 
+  },
+  preferredLanguage: { type: String, enum: ['en', 'am'], default: 'am' },
+  city: { type: String, required: true, default: 'Adama' },
+  isActive: { type: Boolean, default: true },
+  isOnboarded: { type: Boolean, default: false },
+  isVerified: { type: Boolean, default: false },
+  lastLoginAt: { type: Date, default: Date.now }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('User', UserSchema);
 ```
+
 **Indexes**:
 - `{ googleId: 1 }` (unique)
 - `{ email: 1 }` (unique)
@@ -61,279 +72,341 @@ interface IUser extends Document {
 ---
 
 ### 3.2 ProviderProfile Model (`providerprofiles`)
-Detailed trade and business profile for service providers.
+Detailed trade and business profile for service providers. Defined in `backend/src/models/ProviderProfile.js`.
+
 ```javascript
-interface IProviderProfile extends Document {
-  userId: Types.ObjectId; // Ref: 'User', unique
-  businessName: string;
-  bioEn: string;
-  bioAm?: string;
-  experienceYears: number;
-  categoryIds: Types.ObjectId[]; // Ref: 'ServiceCategory'
-  skills: string[];
-  serviceCities: string[]; // e.g. ['Adama', 'Bishoftu']
-  serviceRadiusKm: number; // default: 15
+const mongoose = require('mongoose');
+
+const WorkingHourSchema = new mongoose.Schema({
+  dayOfWeek: { type: Number, min: 0, max: 6, required: true },
+  open: { type: String, default: '08:00' },
+  close: { type: String, default: '18:00' },
+  isClosed: { type: Boolean, default: false }
+}, { _id: false });
+
+const ProviderProfileSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
+  businessName: { type: String, required: true, trim: true },
+  bioEn: { type: String, required: true },
+  bioAm: { type: String },
+  experienceYears: { type: Number, required: true, min: 0 },
+  categoryIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ServiceCategory', required: true }],
+  skills: [{ type: String, trim: true }],
+  serviceCities: [{ type: String, required: true }], // e.g. ['Adama', 'Bishoftu']
+  serviceRadiusKm: { type: Number, default: 15, min: 1 },
   location: {
-    type: 'Point';
-    coordinates: [number, number]; // [lng, lat]
-  };
-  publicAddress?: string; // Workshop or commercial address, NOT private home
+    type: { type: String, enum: ['Point'], default: 'Point' },
+    coordinates: { type: [Number], required: true } // [longitude, latitude]
+  },
+  publicAddress: { type: String }, // Commercial/workshop address, NOT private home
   pricing: {
-    model: 'HOURLY' | 'FIXED' | 'INSPECTION' | 'CUSTOM';
-    startingPrice: number; // in ETB
-    hourlyRate?: number;
-    inspectionFee?: number;
-  };
-  workingHours: {
-    dayOfWeek: number; // 0 (Sun) - 6 (Sat)
-    open: string; // "08:00"
-    close: string; // "18:00"
-    isClosed: boolean;
-  }[];
-  portfolioImages: string[];
-  isVerified: boolean; // default: false (Admin controlled)
-  verificationStatus: 'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED' | 'NEEDS_RECHECK' | 'SUSPENDED';
-  rating: number; // 0.0 - 5.0, computed from verified reviews
-  reviewCount: number; // Count of reviews
-  completedBookingsCount: number; // Incremented on each Step 6 completion
-  isAvailable: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+    model: { type: String, enum: ['HOURLY', 'FIXED', 'INSPECTION', 'CUSTOM'], default: 'CUSTOM' },
+    startingPrice: { type: Number, required: true, min: 0 }, // in ETB
+    hourlyRate: { type: Number, min: 0 },
+    inspectionFee: { type: Number, min: 0 }
+  },
+  workingHours: [WorkingHourSchema],
+  portfolioImages: [{ type: String }],
+  isVerified: { type: Boolean, default: false, index: true },
+  verificationStatus: {
+    type: String,
+    enum: ['PENDING_REVIEW', 'VERIFIED', 'REJECTED', 'NEEDS_RECHECK', 'SUSPENDED'],
+    default: 'PENDING_REVIEW',
+    index: true
+  },
+  rating: { type: Number, default: 0, min: 0, max: 5 },
+  reviewCount: { type: Number, default: 0, min: 0 },
+  completedBookingsCount: { type: Number, default: 0, min: 0 },
+  isAvailable: { type: Boolean, default: true, index: true }
+}, {
+  timestamps: true
+});
+
+ProviderProfileSchema.index({ location: '2dsphere' });
+ProviderProfileSchema.index({ categoryIds: 1, isVerified: 1, isAvailable: 1 });
+ProviderProfileSchema.index({ isVerified: 1, verificationStatus: 1, isAvailable: 1 });
+ProviderProfileSchema.index({ serviceCities: 1, isVerified: 1, rating: -1 });
+
+module.exports = mongoose.model('ProviderProfile', ProviderProfileSchema);
 ```
-**Compound Indexes**:
-- `{ location: '2dsphere' }` (Geospatial queries)
-- `{ categoryIds: 1, isVerified: 1, isAvailable: 1 }` (Trade category filtering)
-- `{ isVerified: 1, verificationStatus: 1, isAvailable: 1 }` (Customer directory)
-- `{ serviceCities: 1, isVerified: 1, rating: -1 }` (City ranking)
 
 ---
 
 ### 3.3 ProviderVerification Model (`providerverifications`)
-Administrative credential verification evidence submitted during onboarding.
+Administrative credential verification evidence submitted during onboarding. Defined in `backend/src/models/ProviderVerification.js`.
+
 ```javascript
-interface IProviderVerification extends Document {
-  providerProfileId: Types.ObjectId; // Ref: 'ProviderProfile', unique
-  userId: Types.ObjectId; // Ref: 'User'
-  nationalIdNumber: string; // Masked on client (e.g., ET-***-4821)
-  idCardImageUrl?: string;
-  consentGiven?: boolean;
-  tradeLicenseUrl?: string;
-  certificateUrls: string[];
-  status: 'PENDING_REVIEW' | 'VERIFIED' | 'REJECTED' | 'NEEDS_RECHECK' | 'SUSPENDED';
-  reviewedBy?: Types.ObjectId; // Ref: 'User' (Admin)
-  rejectionReason?: string;
-  adminNotes?: string;
-  submittedAt: Date;
-  reviewedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
+
+const ProviderVerificationSchema = new mongoose.Schema({
+  providerProfileId: { type: mongoose.Schema.Types.ObjectId, ref: 'ProviderProfile', required: true, unique: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  nationalIdNumber: { type: String, required: true }, // Masked on client (e.g., ET-***-4821)
+  idCardImageUrl: { type: String },
+  consentGiven: { type: Boolean, default: true },
+  tradeLicenseUrl: { type: String },
+  certificateUrls: [{ type: String }],
+  status: {
+    type: String,
+    enum: ['PENDING_REVIEW', 'VERIFIED', 'REJECTED', 'NEEDS_RECHECK', 'SUSPENDED'],
+    default: 'PENDING_REVIEW',
+    index: true
+  },
+  reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  rejectionReason: { type: String },
+  adminNotes: { type: String },
+  submittedAt: { type: Date, default: Date.now },
+  reviewedAt: { type: Date }
+}, {
+  timestamps: true
+});
+
+ProviderVerificationSchema.index({ status: 1, submittedAt: -1 });
+
+module.exports = mongoose.model('ProviderVerification', ProviderVerificationSchema);
 ```
-**Indexes**:
-- `{ providerProfileId: 1 }` (unique)
-- `{ userId: 1 }`
-- `{ status: 1, submittedAt: -1 }` (Admin verification queue sorting)
 
 ---
 
 ### 3.4 ServiceCategory Model (`servicecategories`)
-Hierarchical trade service catalog.
-```javascript
-interface ISubcategory {
-  nameEn: string;
-  nameAm: string;
-  slug: string;
-}
+Hierarchical trade service catalog. Defined in `backend/src/models/ServiceCategory.js`.
 
-interface IServiceCategory extends Document {
-  nameEn: string;
-  nameAm: string;
-  slug: string; // unique, lowercase (e.g., 'plumbing')
-  descriptionEn: string;
-  descriptionAm: string;
-  icon: string; // Lucide icon identifier (e.g., 'Wrench', 'Zap')
-  displayOrder: number;
-  isActive: boolean;
-  subcategories: ISubcategory[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+```javascript
+const mongoose = require('mongoose');
+
+const SubcategorySchema = new mongoose.Schema({
+  nameEn: { type: String, required: true },
+  nameAm: { type: String, required: true },
+  slug: { type: String, required: true }
+}, { _id: false });
+
+const ServiceCategorySchema = new mongoose.Schema({
+  nameEn: { type: String, required: true, trim: true },
+  nameAm: { type: String, required: true, trim: true },
+  slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  descriptionEn: { type: String, required: true },
+  descriptionAm: { type: String, required: true },
+  icon: { type: String, required: true, default: 'Wrench' }, // Lucide icon identifier
+  displayOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true, index: true },
+  subcategories: [SubcategorySchema]
+}, {
+  timestamps: true
+});
+
+ServiceCategorySchema.index({ isActive: 1, displayOrder: 1 });
+
+module.exports = mongoose.model('ServiceCategory', ServiceCategorySchema);
 ```
-**Indexes**:
-- `{ slug: 1 }` (unique)
-- `{ isActive: 1, displayOrder: 1 }` (Cached catalog query optimization)
 
 ---
 
 ### 3.5 Booking Model (`bookings`)
-Core finite state machine tracking transactions through the 6-stage lifecycle.
-```javascript
-interface IBookingAddress {
-  city: string; // 'Adama', 'Bishoftu', etc.
-  subcityOrKebele: string; // e.g., 'Kebele 03'
-  specificLocation: string; // Private street address or landmark
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
-}
+Core finite state machine tracking transactions through the 6-stage lifecycle. Defined in `backend/src/models/Booking.js`.
 
-interface IBooking extends Document {
-  bookingNumber: string; // Unique human-readable ID (e.g., 'BK-2026-9814')
-  customerId: Types.ObjectId; // Ref: 'User'
-  providerId: Types.ObjectId; // Ref: 'ProviderProfile'
-  categoryId: Types.ObjectId; // Ref: 'ServiceCategory'
-  status:
-    | 'REQUESTED'
-    | 'AWAITING_QUOTE'
-    | 'QUOTED'
-    | 'CONFIRMED'
-    | 'IN_PROGRESS'
-    | 'COMPLETION_PENDING'
-    | 'COMPLETED'
-    | 'CANCELLED'
-    | 'DISPUTED';
-  requestedDate: Date;
-  requestedTimeSlot: string; // e.g., '09:00 - 12:00'
-  problemDescription: string;
-  referenceImages: string[];
-  serviceAddress: IBookingAddress; // Protected private address
-  agreedPrice?: {
-    amount: number; // in ETB
-    breakdown?: string;
-  };
-  cancellationReason?: string;
-  cancelledBy?: Types.ObjectId; // Ref: 'User'
-  completionRequestedAt?: Date;
-  completedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+```javascript
+const mongoose = require('mongoose');
+
+const BookingAddressSchema = new mongoose.Schema({
+  city: { type: String, required: true },
+  subcityOrKebele: { type: String, required: true },
+  specificLocation: { type: String, required: true }, // Protected private address
+  coordinates: {
+    latitude: { type: Number },
+    longitude: { type: Number }
+  }
+}, { _id: false });
+
+const BookingSchema = new mongoose.Schema({
+  bookingNumber: { type: String, required: true, unique: true }, // e.g. BK-2026-9814
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'ProviderProfile', required: true, index: true },
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'ServiceCategory', required: true },
+  status: {
+    type: String,
+    enum: [
+      'REQUESTED',
+      'AWAITING_QUOTE',
+      'QUOTED',
+      'CONFIRMED',
+      'IN_PROGRESS',
+      'COMPLETION_PENDING',
+      'COMPLETED',
+      'CANCELLED',
+      'DISPUTED'
+    ],
+    default: 'REQUESTED',
+    index: true
+  },
+  requestedDate: { type: Date, required: true },
+  requestedTimeSlot: { type: String, required: true }, // e.g. '09:00 - 12:00'
+  problemDescription: { type: String, required: true },
+  referenceImages: [{ type: String }],
+  serviceAddress: { type: BookingAddressSchema, required: true },
+  agreedPrice: {
+    amount: { type: Number, min: 0 }, // in ETB
+    breakdown: { type: String }
+  },
+  cancellationReason: { type: String },
+  cancelledBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  completionRequestedAt: { type: Date },
+  completedAt: { type: Date }
+}, {
+  timestamps: true
+});
+
+BookingSchema.index({ customerId: 1, status: 1 });
+BookingSchema.index({ providerId: 1, status: 1 });
+BookingSchema.index({ createdAt: -1 });
+
+module.exports = mongoose.model('Booking', BookingSchema);
 ```
-**Compound Indexes**:
-- `{ customerId: 1, status: 1 }` (Customer dashboard active bookings)
-- `{ providerId: 1, status: 1 }` (Provider dashboard active bookings)
-- `{ createdAt: -1 }` (Chronological ordering)
 
 ---
 
 ### 3.6 Quote Model (`quotes`)
-Itemized formal price quotation submitted by providers before job confirmation.
-```javascript
-interface IQuoteItem {
-  description: string;
-  quantity: number;
-  unitPrice: number; // ETB
-  total: number; // ETB
-}
+Itemized formal price quotation submitted by providers before job confirmation. Defined in `backend/src/models/Quote.js`.
 
-interface IQuote extends Document {
-  bookingId: Types.ObjectId; // Ref: 'Booking'
-  providerId: Types.ObjectId; // Ref: 'ProviderProfile'
-  customerId: Types.ObjectId; // Ref: 'User'
-  items: IQuoteItem[];
-  laborCost: number; // ETB
-  materialCost: number; // ETB
-  inspectionFee?: number; // ETB
-  totalAmount: number; // ETB
-  notes?: string;
-  estimatedDurationHours?: number;
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED';
-  validUntil: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+```javascript
+const mongoose = require('mongoose');
+
+const QuoteItemSchema = new mongoose.Schema({
+  description: { type: String, required: true },
+  quantity: { type: Number, required: true, min: 1 },
+  unitPrice: { type: Number, required: true, min: 0 }, // in ETB
+  total: { type: Number, required: true, min: 0 } // in ETB
+}, { _id: false });
+
+const QuoteSchema = new mongoose.Schema({
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true, index: true },
+  providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'ProviderProfile', required: true, index: true },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  items: [QuoteItemSchema],
+  laborCost: { type: Number, required: true, min: 0 },
+  materialCost: { type: Number, required: true, min: 0 },
+  inspectionFee: { type: Number, default: 0, min: 0 },
+  totalAmount: { type: Number, required: true, min: 0 }, // in ETB
+  notes: { type: String },
+  estimatedDurationHours: { type: Number, min: 0.5 },
+  status: {
+    type: String,
+    enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'EXPIRED'],
+    default: 'PENDING',
+    index: true
+  },
+  validUntil: { type: Date, required: true }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Quote', QuoteSchema);
 ```
-**Indexes**:
-- `{ bookingId: 1 }`
-- `{ providerId: 1 }`
-- `{ customerId: 1 }`
 
 ---
 
 ### 3.7 Review Model (`reviews`)
-Authentic customer feedback tied strictly to completed bookings.
+Authentic customer feedback tied strictly to completed bookings. Defined in `backend/src/models/Review.js`.
+
 ```javascript
-interface IReview extends Document {
-  bookingId: Types.ObjectId; // Ref: 'Booking', unique (1 review per booking)
-  customerId: Types.ObjectId; // Ref: 'User'
-  providerId: Types.ObjectId; // Ref: 'ProviderProfile'
-  rating: number; // 1 to 5 integer
-  comment: string;
-  providerResponse?: {
-    text: string;
-    respondedAt: Date;
-  };
-  isReported: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
+
+const ReviewSchema = new mongoose.Schema({
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true, unique: true },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'ProviderProfile', required: true, index: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, required: true, trim: true },
+  providerResponse: {
+    text: { type: String, trim: true },
+    respondedAt: { type: Date }
+  },
+  isReported: { type: Boolean, default: false }
+}, {
+  timestamps: true
+});
+
+ReviewSchema.index({ providerId: 1, rating: -1 });
+ReviewSchema.index({ providerId: 1, createdAt: -1 });
+
+module.exports = mongoose.model('Review', ReviewSchema);
 ```
-**Compound Indexes**:
-- `{ bookingId: 1 }` (unique constraint)
-- `{ providerId: 1, rating: -1 }` (Top ratings sort)
-- `{ providerId: 1, createdAt: -1 }` (Chronological reviews feed)
 
 ---
 
 ### 3.8 AuditLog Model (`auditlogs`)
-Immutable append-only administrative ledger.
+Immutable append-only administrative ledger. Defined in `backend/src/models/AuditLog.js`.
+
 ```javascript
-interface IAuditLog extends Document {
-  actorId: Types.ObjectId; // Ref: 'User' (Admin)
-  actorEmail: string;
-  action: string; // e.g. 'PROVIDER_VERIFIED', 'PROVIDER_REJECTED', 'CATEGORY_CREATED'
-  entityType: string; // 'ProviderProfile', 'ProviderVerification', 'ServiceCategory'
-  entityId: Types.ObjectId;
-  details: Record<string, any>;
-  ipAddress?: string;
-  userAgent?: string;
-  timestamp: Date;
-}
+const mongoose = require('mongoose');
+
+const AuditLogSchema = new mongoose.Schema({
+  actorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  actorEmail: { type: String, required: true },
+  action: { type: String, required: true, index: true }, // e.g. 'PROVIDER_VERIFIED', 'PROVIDER_REJECTED'
+  entityType: { type: String, required: true }, // e.g. 'ProviderProfile', 'ProviderVerification'
+  entityId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
+  details: { type: mongoose.Schema.Types.Mixed, default: {} },
+  ipAddress: { type: String },
+  userAgent: { type: String },
+  timestamp: { type: Date, default: Date.now, index: true }
+}, {
+  timestamps: false
+});
+
+module.exports = mongoose.model('AuditLog', AuditLogSchema);
 ```
-**Indexes**:
-- `{ timestamp: -1 }`
-- `{ actorId: 1 }`
-- `{ action: 1 }`
-- `{ entityId: 1 }`
 
 ---
 
 ### 3.9 Message Model (`messages`)
-Room-isolated in-app communications between booking participants.
+Room-isolated in-app communications between booking participants. Defined in `backend/src/models/Message.js`.
+
 ```javascript
-interface IMessage extends Document {
-  bookingId: Types.ObjectId; // Ref: 'Booking'
-  senderId: Types.ObjectId; // Ref: 'User'
-  receiverId: Types.ObjectId; // Ref: 'User'
-  content: string;
-  readAt?: Date;
-  attachments?: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
+
+const MessageSchema = new mongoose.Schema({
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true, index: true },
+  senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  content: { type: String, required: true, trim: true },
+  readAt: { type: Date },
+  attachments: [{ type: String }]
+}, {
+  timestamps: true
+});
+
+MessageSchema.index({ bookingId: 1, createdAt: 1 });
+
+module.exports = mongoose.model('Message', MessageSchema);
 ```
-**Indexes**:
-- `{ bookingId: 1, createdAt: 1 }`
 
 ---
 
 ### 3.10 Dispute Model (`disputes`)
-Formal conflict escalation mechanism for unresolvable service issues.
+Formal conflict escalation mechanism for unresolvable service issues. Defined in `backend/src/models/Dispute.js`.
+
 ```javascript
-interface IDispute extends Document {
-  bookingId: Types.ObjectId; // Ref: 'Booking'
-  initiatorId: Types.ObjectId; // Ref: 'User'
-  respondentId: Types.ObjectId; // Ref: 'User'
-  reason: string;
-  description: string;
-  evidenceUrls: string[];
-  status: 'OPEN' | 'UNDER_REVIEW' | 'RESOLVED' | 'CLOSED';
-  resolutionNotes?: string;
-  resolvedBy?: Types.ObjectId; // Ref: 'User' (Admin)
-  resolvedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
+
+const DisputeSchema = new mongoose.Schema({
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true, index: true },
+  initiatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  respondentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  reason: { type: String, required: true },
+  description: { type: String, required: true },
+  evidenceUrls: [{ type: String }],
+  status: {
+    type: String,
+    enum: ['OPEN', 'UNDER_REVIEW', 'RESOLVED', 'CLOSED'],
+    default: 'OPEN',
+    index: true
+  },
+  resolutionNotes: { type: String },
+  resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  resolvedAt: { type: Date }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Dispute', DisputeSchema);
 ```
