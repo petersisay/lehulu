@@ -49,7 +49,79 @@ Lehulu implements strict server-side authorization partitioned into exactly thre
 
 ---
 
-## 3. Server-Side Security & Enforcement Rules
+## 3. Server-Side Security & Middleware Enforcement
+
+All authorization checks are executed server-side using pure JavaScript CommonJS Express middleware:
+
+### 3.1 Role Verification Middleware (`src/middleware/auth.js`)
+```javascript
+// Pure JavaScript Express Role Guard
+function requireRole(allowedRoles) {
+  const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        error: { code: 'UNAUTHORIZED', message: 'Authentication required' }
+      });
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        error: {
+          code: 'FORBIDDEN',
+          message: `Access denied. Requires one of: ${roles.join(', ')}`
+        }
+      });
+    }
+
+    next();
+  };
+}
+
+module.exports = { requireRole };
+```
+
+### 3.2 Booking Multi-Tenant Isolation Middleware
+```javascript
+// Pure JavaScript Booking Tenancy Check
+async function requireBookingParticipant(req, res, next) {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findById(id);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Booking not found' }
+      });
+    }
+
+    const userIdStr = req.user._id.toString();
+    const isCustomer = booking.customerId.toString() === userIdStr;
+    const isProvider = booking.providerId && booking.providerId.toString() === userIdStr;
+    const isAdmin = req.user.role === 'ADMIN';
+
+    if (!isCustomer && !isProvider && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You are not a participant in this booking' }
+      });
+    }
+
+    req.booking = booking;
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+```
+
+---
+
+## 4. Security Enforcement Rules
 
 1. **Role Escalation Protection**: An attempt to send `{ role: 'ADMIN' }` in profile update payloads is rejected with HTTP 403 Forbidden.
 2. **Provider Verification Integrity**: The `isVerified` flag on `ProviderProfile` is strictly immutable to the provider; only administrators can transition `verificationStatus` (`PENDING_REVIEW` -> `VERIFIED` / `REJECTED` / `NEEDS_RECHECK` / `SUSPENDED`).
