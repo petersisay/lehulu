@@ -1,6 +1,6 @@
 # Lehulu (ለሁሉ) — Production Deployment Runbook
 
-This guide details the complete deployment process for releasing Lehulu into staging and production environments.
+This guide details the complete deployment process for releasing the pure JavaScript MERN Lehulu application into staging and production environments.
 
 ---
 
@@ -9,13 +9,13 @@ This guide details the complete deployment process for releasing Lehulu into sta
 ```mermaid
 flowchart TD
     DNS["Custom Domain / DNS (e.g. lehulu.et)"]
-    Vercel["Frontend Hosting (Vercel)\nSingle Page Application (SPA)\nGlobal Edge CDN"]
-    Render["Backend API & WebSockets (Render / Docker)\nExpress.js + Node.js 20 LTS\nSocket.IO WebSockets Server"]
-    Atlas[("Database (MongoDB Atlas)\nM0/M10 Dedicated Cluster\nGeospatial 2dsphere & Compound Indexes")]
-    GoogleAuth["Google Identity Services\nOAuth 2.0 Client Credentials"]
-    Storage["Cloudinary / AWS S3\nObject Storage for Portfolios & ID Photos"]
+    Vercel["Frontend Hosting (Vercel)\nPure JavaScript React 18 JSX SPA\nGlobal Edge CDN & Route Rewrites"]
+    Render["Backend API & WebSockets (Render / Docker)\nNode.js 20 LTS + Express.js CommonJS\nPersistent Socket.IO WebSockets Server"]
+    Atlas[("Database (MongoDB Atlas)\nM0 Staging / M10 Dedicated Production\nGeospatial 2dsphere & Compound Indexes")]
+    GoogleAuth["Google Identity Services\nOAuth 2.0 Web Client Credentials"]
+    Storage["Cloudinary / AWS S3\nObject Storage for Portfolios & Verification Evidence"]
 
-    DNS -->|lehulu.et| Vercel
+    DNS -->|lehulu.et / lehulu-two.vercel.app| Vercel
     DNS -->|api.lehulu.et| Render
     Vercel -->|REST API / HTTPS| Render
     Vercel <-->|WebSockets (WSS)| Render
@@ -43,11 +43,11 @@ flowchart TD
 3. Configure **Authorized JavaScript Origins**:
    - `https://lehulu.et`
    - `https://www.lehulu.et`
-   - `https://lehulu.vercel.app` (Vercel preview domains)
+   - `https://lehulu-two.vercel.app` (Production / Staging deployment)
    - `http://localhost:5173` (for local development)
 4. Configure **Authorized Redirect URIs**:
    - `https://lehulu.et`
-   - `https://lehulu.vercel.app`
+   - `https://lehulu-two.vercel.app`
 5. Note down the **Client ID** (e.g., `1084242194821-xxxxxxxx.apps.googleusercontent.com`).
 
 ---
@@ -55,23 +55,27 @@ flowchart TD
 ## 3. Backend Deployment (Render / Docker)
 
 ### 3.1 Render Web Service Settings
-- **Environment**: Node / Docker
+- **Environment**: Node (or Docker)
+- **Node Version**: `20.18.0` LTS
 - **Branch**: `main`
 - **Root Directory**: `backend`
-- **Build Command**: `npm install && npm run build`
-- **Start Command**: `node dist/server.js`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start` (executes `node src/server.js`)
 - **Health Check Path**: `/api/v1/health`
+- **Auto Deploy**: Configured per environment branch
 
 ### 3.2 Backend Production Environment Variables
 | Variable | Value / Description | Example |
 |---|---|---|
 | `PORT` | Listening port assigned by Render | `5000` |
 | `NODE_ENV` | Environment mode | `production` |
-| `CLIENT_URL` | Frontend origin for CORS and session cookies | `https://lehulu.et` |
+| `APP_ENV` | Application environment stage | `production` or `staging` |
+| `CLIENT_URL` | Frontend origin for CORS and session cookies | `https://lehulu-two.vercel.app` |
 | `MONGODB_URI` | MongoDB Atlas SRV URI | `mongodb+srv://...` |
 | `JWT_SECRET` | 64+ char random string for session tokens | `openssl rand -hex 32` |
+| `SESSION_SECRET` | Secret for cookie signing and session protection | `openssl rand -hex 32` |
 | `GOOGLE_CLIENT_ID` | Google OAuth Web Client ID | `1084242...apps.googleusercontent.com` |
-| `ADMIN_EMAIL` | Super admin email receiving ADMIN role | `admin@lehulu.et` |
+| `ADMIN_EMAIL` | Super admin email receiving ADMIN role | `petrossisay1646@gmail.com` |
 | `ALLOW_TEST_AUTH` | Disable in production (MUST be false) | `false` |
 
 ---
@@ -86,7 +90,7 @@ flowchart TD
 - **Install Command**: `npm install`
 
 ### 4.2 SPA Route Rewrites (`frontend/vercel.json`)
-Ensure client-side routing works for direct URLs:
+Ensure client-side routing works for direct URLs and bookmarks:
 ```json
 {
   "rewrites": [
@@ -98,8 +102,8 @@ Ensure client-side routing works for direct URLs:
 ### 4.3 Frontend Production Environment Variables
 | Variable | Value / Description | Example |
 |---|---|---|
-| `VITE_API_URL` | Full URL to backend REST API | `https://api.lehulu.et/api/v1` |
-| `VITE_SOCKET_URL` | Full URL to backend WebSocket server | `https://api.lehulu.et` |
+| `VITE_API_URL` | Full URL to backend REST API | `https://lehulu-api.onrender.com/api/v1` |
+| `VITE_SOCKET_URL` | Full URL to backend WebSocket server | `https://lehulu-api.onrender.com` |
 | `VITE_GOOGLE_CLIENT_ID` | Same Google OAuth Web Client ID | `1084242...apps.googleusercontent.com` |
 
 ---
@@ -122,13 +126,13 @@ This provisions:
 
 1. **Health Check Verification**:
    ```bash
-   curl -i https://api.lehulu.et/api/v1/health
+   curl -i https://lehulu-api.onrender.com/api/v1/health
    # Expected: HTTP 200 OK with {"status": "UP", "database": "connected"}
    ```
 
 2. **Catalog In-Memory Cache Verification**:
    ```bash
-   curl -i https://api.lehulu.et/api/v1/categories
+   curl -i https://lehulu-api.onrender.com/api/v1/categories
    # First request: X-Cache: MISS (< 50ms)
    # Subsequent requests: X-Cache: HIT (< 1ms)
    ```
@@ -151,7 +155,7 @@ This provisions:
 
 5. **Security & RBAC Boundary Check**:
    - Ensure `ALLOW_TEST_AUTH=false` in production.
-   - Attempt unauthorized access to `/api/v1/admin/verifications` as customer (must return HTTP 403).
+   - Attempt unauthorized access to `/api/v1/admin/verifications` as customer (must return HTTP 403 Forbidden).
 
 ---
 
