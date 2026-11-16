@@ -1,3 +1,7 @@
+/**
+ * Lehulu (ለሁሉ) — Ethiopian Local Services Marketplace API
+ * Pure JavaScript MERN Architecture (Node.js + Express)
+ */
 const http = require('http');
 const { createApp } = require('./app');
 const { env } = require('./config/env');
