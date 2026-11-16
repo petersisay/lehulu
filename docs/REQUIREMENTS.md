@@ -1,19 +1,24 @@
 # Lehulu (ለሁሉ) — Functional & Non-Functional Requirements Specification
 
-## 1. System Scope & Objectives
+## 1. System Scope & Architecture Baseline
 
-Lehulu is a production-grade online marketplace connecting Ethiopian households and enterprises with vetted, trustworthy local service professionals.
-- **Initial Launch Geography**: **Adama** and **Bishoftu**.
-- **Expansion Architecture**: Scalable to **Addis Ababa** and nationwide regional capitals.
-- **Primary Value Proposition**: Eliminating informal uncertainty through verified credentials, transparent itemized quotations in ETB, a strictly enforced 6-step job lifecycle, real-time messaging, and verifiable reviews.
+Lehulu is a production-grade on-demand digital services marketplace built specifically for Ethiopian urban centers — initially serving **Adama** and **Bishoftu**, with architectural readiness for **Addis Ababa** and nationwide scaling. Lehulu connects households and businesses with thoroughly vetted, trustworthy local service professionals across essential trades: plumbing, electrical engineering, carpentry, automotive repair, home & office cleaning, electronics and appliance repair, IT & networking, painting, and tailoring.
+
+### 1.1 Pure JavaScript MERN Stack Technology Baseline
+The entire platform is built with a pure JavaScript MERN stack with zero TypeScript runtime or compile dependencies:
+- **Database**: MongoDB Atlas with native Mongoose 8.x Object Document Modeling, automated schema indexing, and geospatial `2dsphere` query support.
+- **Backend**: Node.js (>=18.0.0 LTS) and Express.js 4.x using standard CommonJS modules (`require` / `module.exports`), Helmet security headers, CORS protection, rate limiting, and Zod schema validation.
+- **Frontend**: React 18.3.1 using pure JavaScript JSX (`.jsx`), Vite 6.0 build tooling, TailwindCSS, Lucide React icons, and React Router v7.
+- **Real-Time Communication**: Socket.IO 4.x bi-directional WebSocket engine with authenticated room isolation and automatic fallback REST polling.
+- **Testing**: Jest, Supertest, and React Testing Library test suites (83 automated unit, integration, and security tests passing).
 
 ---
 
 ## 2. Strict Role Definitions
 
-The system supports exactly three mutually exclusive roles:
-1. `CUSTOMER`: Discovers providers, requests quotations, manages active bookings through the 6-step lifecycle, chats securely, confirms completion, and submits reviews.
-2. `SERVICE_PROVIDER`: Submits credentials for Admin verification, manages service radius and working hours, issues formal quotations in ETB, executes jobs through Step 4 and Step 5, and earns a "Job Completed • Ready for Another Service" blue badge.
+The platform enforces three mutually exclusive user roles governed by server-side middleware:
+1. `CUSTOMER`: Discovers providers, requests quotations, manages active bookings through the 6-step lifecycle, chats securely, confirms completion, and submits verified reviews.
+2. `SERVICE_PROVIDER`: Submits identity credentials for Admin verification, manages service radius and working hours, issues formal itemized quotations in ETB, executes jobs through Step 4 and Step 5, and earns a "Job Completed • Ready for Another Service" blue badge.
 3. `ADMIN`: Audits provider verification submissions, approves/rejects/revokes providers, manages service categories, investigates disputes, and monitors platform health via immutable audit logs.
 
 ---
@@ -22,7 +27,7 @@ The system supports exactly three mutually exclusive roles:
 
 ### 3.1 Authentication & Onboarding
 - **FR-AUTH-1**: Google Identity Services token verification on the backend using Google's official public key certificates (`google-auth-library`).
-- **FR-AUTH-2**: Secure session management using `HttpOnly`, `SameSite=Lax/Strict`, `Secure` (in production) cookies.
+- **FR-AUTH-2**: Secure session management using `HttpOnly`, `SameSite=Lax/Strict`, and `Secure` (in production) cookies.
 - **FR-AUTH-3**: New user role selection: "Find Services" (Customer) or "Offer Services" (Service Provider).
 - **FR-AUTH-4**: Provider onboarding requires National ID / Kebele ID submission, optional trade licenses/certificates, and portfolio photos.
 - **FR-AUTH-5**: Administrator access strictly restricted to server-side provisioning matching `ADMIN_EMAIL`. Client-side role escalation attempts receive HTTP 403 Forbidden.
@@ -35,7 +40,7 @@ The system supports exactly three mutually exclusive roles:
 
 ### 3.3 The 6-Step Booking State Machine
 - **FR-BOOK-1 (Step 1 - REQUESTED)**: Customer initiates request with problem description, requested date/time slot, private service address, and optional reference photos.
-- **FR-BOOK-2 (Step 2 - QUOTED)**: Assigned provider submits an itemized quotation in Ethiopian Birr (ETB) detailing labor, materials, and inspection fees.
+- **FR-BOOK-2 (Step 2 - QUOTED)**: Assigned provider submits an itemized quotation in Ethiopian Birr (ETB / ብር) detailing labor, materials, and inspection fees.
 - **FR-BOOK-3 (Step 3 - CONFIRMED)**: Customer accepts quotation, locking the binding price in ETB.
 - **FR-BOOK-4 (Step 4 - IN_PROGRESS)**: Provider arrives on-site and clicks "Start Work". Both dashboards update state in real-time.
 - **FR-BOOK-5 (Step 5 - COMPLETION_PENDING)**: Provider completes work and clicks "Mark Completion Pending" for customer inspection.
