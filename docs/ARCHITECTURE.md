@@ -2,19 +2,19 @@
 
 ## 1. Architectural Overview
 
-Lehulu is built following clean, layered architectural principles designed for performance, resilience, and strict domain boundaries:
+Lehulu is built following clean, layered MERN architectural principles designed for performance, resilience, domain boundary isolation, and a 100% pure JavaScript implementation:
 
 ```mermaid
 flowchart TD
-    subgraph Presentation["Presentation Layer (Client)"]
+    subgraph Presentation["Presentation Layer (Client - Pure React 18 JSX)"]
         UI["React 18 SPA + Tailwind CSS"]
-        Router["React Router v6 with lazyRetry"]
+        Router["React Router v7 with lazyRetry"]
         Query["TanStack Query Cache (3m stale / 15m gc)"]
         Grid["Responsive Provider Discovery Grid"]
         I18n["Bilingual Engine (English & Amharic)"]
     end
 
-    subgraph Gateway["API & Security Gateway"]
+    subgraph Gateway["API & Security Gateway (Express.js CommonJS)"]
         Helmet["Helmet Security Headers"]
         CORS["CORS Dynamic Origin Allowlist"]
         RateLimit["Rate Limiting (500 req/15m with polling exemption)"]
@@ -23,7 +23,7 @@ flowchart TD
         AuditMW["Structured Audit Logger"]
     end
 
-    subgraph RealTime["Real-Time Gateway"]
+    subgraph RealTime["Real-Time Gateway (Socket.IO)"]
         SocketServer["Socket.IO Server"]
         RoomAuth["Room Participant Authorization"]
         EventBroker["Event Broker (Status & Chat Sync)"]
@@ -34,7 +34,7 @@ flowchart TD
         LeanQuery["Mongoose .lean() Projections"]
     end
 
-    subgraph Services["Domain Services"]
+    subgraph Services["Domain Services (Node.js ES6+)"]
         AuthSvc["Auth & Onboarding Service"]
         CatSvc["Category & Catalog Service"]
         ProvSvc["Provider Discovery & Ranking Service"]
@@ -45,8 +45,8 @@ flowchart TD
         AdminSvc["Verification Queue & Audit Service"]
     end
 
-    subgraph Data["Persistence & Storage Layer"]
-        Mongo[("MongoDB Atlas (Mongoose with 2dsphere & Compound Indexes)")]
+    subgraph Data["Persistence & Storage Layer (MongoDB Atlas)"]
+        Mongo[("MongoDB Atlas (Mongoose 8 with 2dsphere & Compound Indexes)")]
         Storage[("Cloudinary / Object Storage (Portfolios & ID Evidence)")]
     end
 
@@ -59,11 +59,14 @@ flowchart TD
 ```
 
 ### Layer Responsibilities
-- **Presentation Layer**: React Single Page Application (SPA) with pure JavaScript JSX, Vite, and Tailwind CSS. State is orchestrated via TanStack Query (server state), React Hook Form with Zod schemas (client forms), and React Context (`AuthContext`, `LanguageContext`, `SocketContext`).
-- **Gateway & Security Layer**: Express.js REST API with versioned endpoints (`/api/v1/*`), Helmet security headers, CORS origin enforcement, rate limiting, and structured logging.
+- **Presentation Layer**: Pure React 18 Single Page Application (SPA) utilizing JavaScript JSX and Vite 6. Application state is managed across three tiers:
+  - **Server State**: TanStack React Query with automated background revalidation and cache garbage collection (`staleTime: 3min`, `gcTime: 15min`).
+  - **Client Forms**: React Hook Form with Zod runtime validation resolvers.
+  - **Global Contexts**: Native React Context API for authentication (`AuthContext`), localization (`LanguageContext`), and real-time connectivity (`SocketContext`).
+- **Gateway & Security Layer**: Express.js REST API with versioned endpoints (`/api/v1/*`), Helmet security headers, CORS origin allowlisting, rate limiting (500 req/15m with real-time polling exemptions), and structured audit logging.
 - **Real-Time Communication Layer**: Socket.IO server coordinated with session authorization for instant booking updates, room-isolated chat messages, and notification broadcasts.
-- **Performance & Caching Layer**: In-memory TTL caching with atomic write-invalidation for catalog data, alongside optimized compound indexing and `.lean()` database queries.
-- **Data Persistence Layer**: MongoDB Atlas accessed via Mongoose ORM with schema validation, geospatial 2dsphere indexing, and referential constraints.
+- **Performance & Caching Layer**: In-memory TTL caching (<1ms response time) with atomic write-invalidation for category catalog data, alongside optimized compound indexing and `.lean()` database queries.
+- **Data Persistence Layer**: MongoDB Atlas accessed via Mongoose 8 with strict JavaScript schemas, geospatial `2dsphere` coordinates, and referential constraints.
 
 ---
 
@@ -168,6 +171,6 @@ To support low-latency queries as data scales, the following composite indexes a
   - `{ timestamp: -1 }` (Audit trail log ordering)
 
 ### 5.3 Frontend Resilience & Chunk Splitting
-- **Code Splitting**: Rollup `manualChunks` divides application code into `vendor-react`, `vendor-maps`, `vendor-icons`, `vendor-data`, and lazy-loaded page modules.
+- **Code Splitting**: Rollup `manualChunks` in Vite 6 divides application code into `vendor-react`, `vendor-maps`, `vendor-icons`, `vendor-data`, and lazy-loaded page modules.
 - **Dynamic Chunk Recovery**: `lazyRetry` wrapper around `React.lazy` combined with the window `vite:preloadError` listener automatically reloads outdated client tabs after new production deployments, eliminating blank screen chunk-load errors.
 - **Optimized Server-State Caching**: TanStack Query is configured with `staleTime: 3min`, `gcTime: 15min`, and `refetchOnReconnect: true`, minimizing redundant network roundtrips while preserving instantaneous navigation.
