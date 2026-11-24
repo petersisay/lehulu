@@ -85,7 +85,9 @@ const searchProviders = async (req, res) => {
                         { 'subcategories.nameEn': { $regex: new RegExp(`^${catStr}$`, 'i') } },
                         { 'subcategories.nameAm': category },
                     ],
-                });
+                })
+                    .select('_id')
+                    .lean();
                 activeCategoryDocIds = catDocs.map((c) => c._id);
             }
             if (activeCategoryDocIds.length > 0) {
@@ -141,7 +143,9 @@ const searchProviders = async (req, res) => {
                         { 'subcategories.nameEn': { $regex: new RegExp(cleanQ, 'i') } },
                         { 'subcategories.nameAm': { $regex: new RegExp(cleanQ, 'i') } },
                     ],
-                });
+                })
+                    .select('_id')
+                    .lean();
                 const queryCatIds = matchedCatsForQuery.map((c) => c._id);
                 const regexPattern = Array.from(matchedKeywords)
                     .map((kw) => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
@@ -177,16 +181,19 @@ const searchProviders = async (req, res) => {
             sortObj = { 'pricing.startingPrice': 1 };
         if (sort === 'price_desc')
             sortObj = { 'pricing.startingPrice': -1 };
-        const [rawProviders, total] = await Promise.all([
+        const [providers, total] = await Promise.all([
             ProviderProfile.find(queryObj)
                 .populate('userId', 'displayName username avatarUrl phoneNumber')
                 .populate('categoryIds', 'nameEn nameAm slug icon')
                 .sort(sortObj)
                 .skip(skip)
-                .limit(limitNum),
+                .limit(limitNum)
+                .lean(),
             ProviderProfile.countDocuments(queryObj),
         ]);
-        const providers = rawProviders.map((p) => p.toObject());
+        if (!isAdmin) {
+            res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=120');
+        }
         res.status(200).json({
             success: true,
             providers,

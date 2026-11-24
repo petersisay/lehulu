@@ -33,6 +33,7 @@ const getCategories = async (req, res) => {
         const now = Date.now();
         if (cachedCategories && now - cacheTimestamp < CACHE_TTL_MS) {
             res.setHeader('X-Cache', 'HIT');
+            res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
             res.status(200).json({
                 success: true,
                 categories: cachedCategories,
@@ -46,6 +47,7 @@ const getCategories = async (req, res) => {
         cachedCategories = categories;
         cacheTimestamp = now;
         res.setHeader('X-Cache', 'MISS');
+        res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
         res.status(200).json({
             success: true,
             categories,
