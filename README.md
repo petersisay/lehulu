@@ -269,18 +269,7 @@ npm run build
 
 ---
 
-## 8. Production Deployment
-
-Lehulu is architected for zero-downtime, continuous deployment:
-- **Frontend**: Hosted on [Vercel](https://vercel.com) with global Edge CDN caching and client-side route rewrites.
-- **Backend API & WebSockets**: Hosted on [Render](https://render.com) running Node.js 20 LTS with persistent WebSocket connectivity.
-- **Database**: [MongoDB Atlas](https://www.mongodb.com/atlas) with automated backups and geospatial indexing.
-
-For full staging and production deployment instructions, see the [Production Deployment Runbook](docs/DEPLOYMENT_GUIDE.md).
-
----
-
-## 9. Documentation Index
+## 8. Documentation Index
 
 - [Architecture & State Machines](docs/ARCHITECTURE.md)
 - [Database Schema & Data Models](docs/DATA_MODELS.md)
