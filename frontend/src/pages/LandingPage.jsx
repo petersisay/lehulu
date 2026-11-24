@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Search, MapPin, ShieldCheck, Clock, Sparkles, ArrowRight, Wrench, Car, Home, Laptop, Briefcase, ChevronRight, Star, Award, Zap, } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { categoryApi, providerApi } from '../services/api';
@@ -16,37 +17,31 @@ const CATEGORY_ICONS = {
 export const LandingPage = () => {
     const { language, t } = useLanguage();
     const navigate = useNavigate();
-    const [categories, setCategories] = useState([]);
-    const [featuredProviders, setFeaturedProviders] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const [catRes, provRes] = await Promise.all([
-                    categoryApi.getAll(),
-                    providerApi.search({ limit: 4, verifiedOnly: true }),
-                ]);
-                if (catRes.data.success) {
-                    const catList = catRes.data.categories || catRes.data.data || [];
-                    setCategories(Array.isArray(catList) ? catList : []);
-                }
-                if (provRes.data.success) {
-                    const provList = provRes.data.providers || provRes.data.data || [];
-                    setFeaturedProviders(Array.isArray(provList) ? provList : []);
-                }
-            }
-            catch (err) {
-                console.error('Landing page data fetch error:', err);
-            }
-            finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+    const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+        queryKey: ['categories'],
+        queryFn: async () => {
+            const catRes = await categoryApi.getAll();
+            if (!catRes.data.success)
+                return [];
+            const catList = catRes.data.categories || catRes.data.data || [];
+            return Array.isArray(catList) ? catList : [];
+        },
+        staleTime: 1000 * 60 * 10,
+    });
+    const { data: featuredProviders = [], isLoading: providersLoading } = useQuery({
+        queryKey: ['providers', 'featured'],
+        queryFn: async () => {
+            const provRes = await providerApi.search({ limit: 4, verifiedOnly: true });
+            if (!provRes.data.success)
+                return [];
+            const provList = provRes.data.providers || provRes.data.data || [];
+            return Array.isArray(provList) ? provList : [];
+        },
+        staleTime: 1000 * 60 * 3,
+    });
+    const loading = categoriesLoading || providersLoading;
     const handleSearch = (e) => {
         e.preventDefault();
         const params = new URLSearchParams();
@@ -61,7 +56,7 @@ export const LandingPage = () => {
       <section className="relative min-h-[580px] lg:min-h-[660px] flex items-center justify-center pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden">
         {/* Panoramic Ethiopian Landscape Background Plate */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
-          <img src="/lehulu-hero-bg.jpg" alt="Lehulu Ethiopian Local Services Marketplace" className="w-full h-full object-cover object-[center_35%] filter brightness-[1.02] contrast-[1.03]" loading="eager"/>
+          <img src="/lehulu-hero-bg.jpg" alt="Lehulu Ethiopian Local Services Marketplace" className="w-full h-full object-cover object-[center_35%] filter brightness-[1.02] contrast-[1.03]" loading="eager" fetchPriority="high" decoding="async"/>
           {/* Subtle Ambient Vignettes & Contrast Overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-950/20 via-transparent to-blue-950/20"/>
           <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/40 to-white"/>

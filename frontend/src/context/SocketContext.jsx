@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 const SocketContext = createContext(undefined);
 const SOCKET_URL = import.meta.env.VITE_API_URL
@@ -18,22 +17,30 @@ export const SocketProvider = ({ children }) => {
             }
             return;
         }
-        const newSocket = io(SOCKET_URL, {
-            withCredentials: true,
-            transports: ['websocket', 'polling'],
-            autoConnect: true,
-            reconnectionAttempts: 5,
-            reconnectionDelay: 1000,
+        let isCancelled = false;
+        let activeSocket = null;
+        import('socket.io-client').then(({ io }) => {
+            if (isCancelled)
+                return;
+            const newSocket = io(SOCKET_URL, {
+                withCredentials: true,
+                transports: ['websocket', 'polling'],
+                autoConnect: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000,
+            });
+            newSocket.on('connect', () => {
+                setIsConnected(true);
+            });
+            newSocket.on('disconnect', () => {
+                setIsConnected(false);
+            });
+            activeSocket = newSocket;
+            setSocket(newSocket);
         });
-        newSocket.on('connect', () => {
-            setIsConnected(true);
-        });
-        newSocket.on('disconnect', () => {
-            setIsConnected(false);
-        });
-        setSocket(newSocket);
         return () => {
-            newSocket.disconnect();
+            isCancelled = true;
+            activeSocket?.disconnect();
         };
     }, [isAuthenticated]);
     const joinBooking = (bookingId) => {

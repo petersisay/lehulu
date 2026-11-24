@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Search, MapPin, ShieldCheck, Loader2, AlertCircle, } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { categoryApi, providerApi } from '../services/api';
@@ -7,38 +8,30 @@ import { ProviderCard } from '../components/ProviderCard';
 export const DiscoveryPage = () => {
     const { language, t } = useLanguage();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [categories, setCategories] = useState([]);
-    const [providers, setProviders] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     // Filters state from query parameters
-    const [search, setSearch] = useState(searchParams.get('search') || '');
+    const [search, setSearch] = useState(searchParams.get('search') || searchParams.get('q') || '');
+    const [committedSearch, setCommittedSearch] = useState(searchParams.get('search') || searchParams.get('q') || '');
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
     const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
     const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get('verified') === 'true');
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await categoryApi.getAll();
-                if (res.data.success) {
-                    const list = res.data.categories || res.data.data || [];
-                    setCategories(Array.isArray(list) ? list : []);
-                }
-            }
-            catch (err) {
-                console.error('Failed to load categories', err);
-            }
-        };
-        fetchCategories();
-    }, []);
-    const fetchProviders = async () => {
-        setLoading(true);
-        setError(null);
-        try {
+    const { data: categories = [] } = useQuery({
+        queryKey: ['categories'],
+        queryFn: async () => {
+            const res = await categoryApi.getAll();
+            if (!res.data.success)
+                return [];
+            const list = res.data.categories || res.data.data || [];
+            return Array.isArray(list) ? list : [];
+        },
+        staleTime: 1000 * 60 * 10,
+    });
+    const { data: providers = [], isLoading: loading, error: queryError, refetch: fetchProviders, } = useQuery({
+        queryKey: ['providers', 'search', { q: committedSearch, category: selectedCategory, city: selectedCity, verifiedOnly }],
+        queryFn: async () => {
             const params = {};
-            if (search.trim()) {
-                params.q = search.trim();
-                params.search = search.trim();
+            if (committedSearch.trim()) {
+                params.q = committedSearch.trim();
+                params.search = committedSearch.trim();
             }
             if (selectedCategory)
                 params.category = selectedCategory;
@@ -46,18 +39,16 @@ export const DiscoveryPage = () => {
                 params.city = selectedCity;
             params.verifiedOnly = true;
             const res = await providerApi.search(params);
-            if (res.data.success) {
-                const list = res.data.providers || res.data.data || [];
-                setProviders(Array.isArray(list) ? list : []);
-            }
-        }
-        catch (err) {
-            setError(err.response?.data?.message || 'Failed to search providers.');
-        }
-        finally {
-            setLoading(false);
-        }
-    };
+            if (!res.data.success)
+                return [];
+            const list = res.data.providers || res.data.data || [];
+            return Array.isArray(list) ? list : [];
+        },
+        staleTime: 1000 * 60 * 3,
+    });
+    const error = queryError
+        ? queryError?.response?.data?.message || 'Failed to search providers.'
+        : null;
     // Keep URL parameters and filter state synchronized
     useEffect(() => {
         const urlSearch = searchParams.get('search') || searchParams.get('q') || '';
@@ -65,16 +56,16 @@ export const DiscoveryPage = () => {
         const urlCity = searchParams.get('city') || '';
         if (urlSearch !== search)
             setSearch(urlSearch);
+        if (urlSearch !== committedSearch)
+            setCommittedSearch(urlSearch);
         if (urlCat !== selectedCategory)
             setSelectedCategory(urlCat);
         if (urlCity !== selectedCity)
             setSelectedCity(urlCity);
     }, [searchParams]);
-    useEffect(() => {
-        fetchProviders();
-    }, [selectedCategory, selectedCity, verifiedOnly]);
     const handleSearchSubmit = (e) => {
         e.preventDefault();
+        setCommittedSearch(search);
         const newParams = new URLSearchParams(searchParams);
         if (search.trim())
             newParams.set('search', search.trim());
@@ -89,7 +80,6 @@ export const DiscoveryPage = () => {
         else
             newParams.delete('city');
         setSearchParams(newParams);
-        fetchProviders();
     };
     return (<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Search & Filter Header Bar */}
