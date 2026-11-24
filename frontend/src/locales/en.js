@@ -205,10 +205,13 @@ export const en = {
     hawassa: 'Hawassa',
   },
   footer: {
+    legalTitle: 'Trust & Legal',
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
+    safety: 'Trust & Safety Standards',
     providerPortal: 'Service Provider Portal',
     rights: 'All rights reserved.',
+    builtWithCare: 'Built with care for Ethiopian communities',
   },
   common: {
     currency: 'ETB',

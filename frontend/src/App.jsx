@@ -40,6 +40,7 @@ const BookingDetailPage = lazyRetry(() => import('./pages/BookingDetailPage').th
 const ProfilePage = lazyRetry(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
 const TermsPage = lazyRetry(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })));
 const PrivacyPage = lazyRetry(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
+const SafetyPage = lazyRetry(() => import('./pages/SafetyPage').then((m) => ({ default: m.SafetyPage })));
 const NotFoundPage = lazyRetry(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 const RouteLoadingSpinner = () => (<div className="flex items-center justify-center min-h-[60vh] text-slate-400">
     <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"/>
@@ -62,10 +63,7 @@ const ProtectedRoute = ({ children, allowedRoles, }) => {
     return <>{children}</>;
 };
 const CustomerDiscoveryRoute = ({ children }) => {
-    const { user, isAuthenticated, loading } = useAuth();
-    if (loading) {
-        return <RouteLoadingSpinner />;
-    }
+    const { user, isAuthenticated } = useAuth();
     if (isAuthenticated && user) {
         if (user.role === 'SERVICE_PROVIDER') {
             return <Navigate to="/provider/dashboard" replace/>;
@@ -95,6 +93,7 @@ export const App = () => {
                 <Route path="/onboarding" element={<LoginPage />}/>
                 <Route path="/terms" element={<TermsPage />}/>
                 <Route path="/privacy" element={<PrivacyPage />}/>
+                <Route path="/safety" element={<SafetyPage />}/>
 
                 {/* Account & Profile Management */}
                 <Route path="/profile" element={<ProtectedRoute>

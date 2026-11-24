@@ -205,10 +205,13 @@ export const am = {
     hawassa: 'ሐዋሳ',
   },
   footer: {
+    legalTitle: 'እምነት እና ህጋዊ',
     privacy: 'የግላዊነት ፖሊሲ',
     terms: 'የአገልግሎት ውሎች',
+    safety: 'የእምነት እና ደህንነት መስፈርቶች',
     providerPortal: 'የባለሙያዎች ፖርታል',
     rights: 'መብቱ በህግ የተጠበቀ ነው።',
+    builtWithCare: 'ለኢትዮጵያ ማህበረሰብ በጥንቃቄ የተገነባ',
   },
   common: {
     currency: 'ETB',

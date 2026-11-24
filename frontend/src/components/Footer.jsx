@@ -11,7 +11,7 @@ export const Footer = () => {
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-blue-500/30">
-                <img src="/lehulu-logo.jpg" alt="Lehulu ለሁሉ" className="w-full h-full object-cover"/>
+                <img src="/lehulu-logo.jpg" alt="Lehulu ለሁሉ" width={40} height={40} loading="lazy" decoding="async" className="w-full h-full object-cover"/>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-2xl tracking-tight text-white">
@@ -63,7 +63,7 @@ export const Footer = () => {
             </h3>
             <ul className="space-y-2 text-sm text-slate-400">
               <li>
-                <Link to="/discover?category=home-repairs" className="hover:text-blue-400 transition-colors">
+                <Link to="/discover?category=home-maintenance" className="hover:text-blue-400 transition-colors">
                   Electricians & Plumbers
                 </Link>
               </li>
@@ -83,7 +83,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/discover?category=events" className="hover:text-blue-400 transition-colors">
+                <Link to="/discover?category=personal-business" className="hover:text-blue-400 transition-colors">
                   Photography & Events
                 </Link>
               </li>
@@ -93,26 +93,26 @@ export const Footer = () => {
           {/* Trust & Legal */}
           <div className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-              {t('howItWorks.title')}
+              {t('footer.legalTitle')}
             </h3>
             <ul className="space-y-2 text-sm text-slate-400">
               <li>
-                <Link to="/privacy" className="hover:text-blue-400 transition-colors">
+                <Link to="/privacy" className="hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70 rounded-xs">
                   {t('footer.privacy')}
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="hover:text-blue-400 transition-colors">
+                <Link to="/terms" className="hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70 rounded-xs">
                   {t('footer.terms')}
                 </Link>
               </li>
               <li>
-                <Link to="/safety" className="hover:text-blue-400 transition-colors">
-                  Trust & Safety Standards
+                <Link to="/safety" className="hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70 rounded-xs">
+                  {t('footer.safety')}
                 </Link>
               </li>
               <li>
-                <Link to="/login?role=SERVICE_PROVIDER" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+                <Link to="/login?role=SERVICE_PROVIDER" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/70 rounded-xs">
                   {t('footer.providerPortal')}
                 </Link>
               </li>
@@ -126,7 +126,7 @@ export const Footer = () => {
             &copy; {new Date().getFullYear()} {t('brand.name')} ({t('brand.amharicName')}) Marketplace. {t('footer.rights')}
           </p>
           <div className="flex items-center gap-1 text-slate-400">
-            <span>Built with care for Ethiopian communities</span>
+            <span>{t('footer.builtWithCare')}</span>
             <Heart className="w-3.5 h-3.5 text-red-500 inline fill-red-500"/>
           </div>
         </div>
